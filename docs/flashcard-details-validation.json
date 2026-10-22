@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "mother flashcard automatically gains example; translate button reveals Vietnamese without flipping",
+    "example audio and hide translation leave the card on its back",
+    "Enter on translation control activates only that control",
+    "saved example and translation survive page reload"
+  ],
+  "errors": []
+}

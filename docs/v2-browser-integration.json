@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-21",
+  "database": "isolated_in_memory",
+  "checks": [
+    "Browser decodes actual saved WAV",
+    "Wrong UI answer creates server mistake",
+    "Mistake UI submits one real review",
+    "Writing draft survives actual browser reload",
+    "All seven steps completed through UI",
+    "Progress history displays original submitted work",
+    "New eight-step lesson including reading works through existing UI and records actual reading evidence",
+    "Nine-step checkpoint works on existing UI, preserves server result and six graded question keys",
+    "Specialist email model preserves actual Subject/body line breaks in browser"
+  ],
+  "page_errors": [],
+  "server_errors": [],
+  "ai_requests": 0,
+  "limitations": [
+    "No physical microphone/speaker verification.",
+    "Chrome is testing the built frontend snapshot; Anti may change files afterwards."
+  ],
+  "checkpoint_lesson_id": "foundation-checkpoint-01",
+  "passed": true
+}

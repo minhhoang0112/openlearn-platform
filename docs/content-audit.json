@@ -1,0 +1,157 @@
+{
+  "generated_at": "2026-10-20T17:34:58.632Z",
+  "source": "server/toeic_data.mjs",
+  "sets": 50,
+  "word_entries": 600,
+  "unique_terms": 174,
+  "unique_word_lists": 15,
+  "duplicated_lists": [
+    [
+      {
+        "id": 314,
+        "title": "Thăng chức & Khen thưởng (Promotions & Awards)"
+      },
+      {
+        "id": 315,
+        "title": "Mua sắm & Bán buôn (Shopping)"
+      },
+      {
+        "id": 316,
+        "title": "Đặt hàng văn phòng phẩm (Ordering Supplies)"
+      },
+      {
+        "id": 317,
+        "title": "Vận chuyển & Giao nhận (Shipping)"
+      },
+      {
+        "id": 318,
+        "title": "Hóa đơn & Thu ngân (Invoices)"
+      },
+      {
+        "id": 319,
+        "title": "Quản lý kho & Kiểm kê (Inventory)"
+      },
+      {
+        "id": 320,
+        "title": "Nghiệp vụ ngân hàng (Banking)"
+      },
+      {
+        "id": 321,
+        "title": "Kế toán tài chính (Accounting)"
+      },
+      {
+        "id": 322,
+        "title": "Đầu tư tài chính (Investments)"
+      },
+      {
+        "id": 323,
+        "title": "Kê khai & Quyết toán thuế (Taxes)"
+      },
+      {
+        "id": 324,
+        "title": "Báo cáo tài chính (Financial Statements)"
+      },
+      {
+        "id": 325,
+        "title": "Bất động sản thương mại (Property & Real Estate)"
+      },
+      {
+        "id": 326,
+        "title": "Họp hội đồng quản trị (Board Meetings)"
+      },
+      {
+        "id": 327,
+        "title": "Kiểm soát chất lượng (Quality Control)"
+      },
+      {
+        "id": 328,
+        "title": "Nghiên cứu & Phát triển sản phẩm (Product Development)"
+      },
+      {
+        "id": 329,
+        "title": "Cho thuê mặt bằng & Tài sản (Renting & Leasing)"
+      },
+      {
+        "id": 330,
+        "title": "Lựa chọn nhà hàng (Selecting a Restaurant)"
+      },
+      {
+        "id": 331,
+        "title": "Đi ăn tiệm & Dịch vụ ẩm thực (Eating Out)"
+      },
+      {
+        "id": 332,
+        "title": "Gọi món & Phục vụ bàn (Ordering Food)"
+      },
+      {
+        "id": 333,
+        "title": "Nghề đầu bếp & Ẩm thực (Cooking as a Career)"
+      },
+      {
+        "id": 334,
+        "title": "Tổ chức sự kiện & Tiệc (Events)"
+      },
+      {
+        "id": 335,
+        "title": "Du lịch hàng không (Air Travel)"
+      },
+      {
+        "id": 336,
+        "title": "Giao thông đường bộ (Ground Transportation)"
+      },
+      {
+        "id": 337,
+        "title": "Tàu hỏa & Đường sắt (Trains)"
+      },
+      {
+        "id": 338,
+        "title": "Khách sạn & Lưu trú (Hotels)"
+      },
+      {
+        "id": 339,
+        "title": "Tham quan du lịch (Sightseeing)"
+      },
+      {
+        "id": 340,
+        "title": "Điện ảnh & Phim ảnh (Movies)"
+      },
+      {
+        "id": 341,
+        "title": "Sân khấu & Kịch nghệ (Theater)"
+      },
+      {
+        "id": 342,
+        "title": "Âm nhạc & Biểu diễn (Music)"
+      },
+      {
+        "id": 343,
+        "title": "Bảo tàng & Nghệ thuật (Museums)"
+      },
+      {
+        "id": 344,
+        "title": "Báo chí & Truyền thông (Media)"
+      },
+      {
+        "id": 345,
+        "title": "Phòng khám bác sĩ (Doctor Office)"
+      },
+      {
+        "id": 346,
+        "title": "Nha khoa & Chăm sóc răng (Dentist Office)"
+      },
+      {
+        "id": 347,
+        "title": "Bảo hiểm y tế & Sức khỏe (Health Insurance)"
+      },
+      {
+        "id": 348,
+        "title": "Bệnh viện & Điều trị (Hospitals)"
+      },
+      {
+        "id": 349,
+        "title": "Hiệu thuốc & Dược phẩm (Pharmacy)"
+      }
+    ]
+  ],
+  "original_content_verified": false
+}

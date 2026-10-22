@@ -1,0 +1,569 @@
+{
+  "source": "local_authored_starter_content",
+  "contract": "1.10.0",
+  "regular_lessons": 24,
+  "checkpoints": 3,
+  "total_items": 27,
+  "sentence_clips": 158,
+  "human_audio_reviewed": false,
+  "programs": [
+    {
+      "id": "english-foundation",
+      "title": "Nền tảng tiếng Anh",
+      "kind": "foundation",
+      "version": 1,
+      "status": "pilot",
+      "regular_lessons": 16,
+      "checkpoints": 2,
+      "lessons": [
+        {
+          "id": "foundation-introductions-01",
+          "title": "Giới thiệu bản thân",
+          "position": 0,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nói và viết ba câu giới thiệu bản thân.",
+            "Phân biệt I am và I study trong câu mẫu."
+          ],
+          "recommended_prerequisites": [],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 5
+        },
+        {
+          "id": "foundation-time-01",
+          "title": "Giờ giấc và lịch học",
+          "position": 1,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe được một số mốc giờ trong lịch học.",
+            "Nói và viết về lịch của mình với at + giờ."
+          ],
+          "recommended_prerequisites": [
+            "foundation-introductions-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 5
+        },
+        {
+          "id": "foundation-help-01",
+          "title": "Nhờ giúp đỡ và nói điều chưa làm được",
+          "position": 2,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Hiểu lời nhờ giúp và mô tả một khó khăn đơn giản.",
+            "Dùng Can you…? và cannot + động từ nguyên mẫu."
+          ],
+          "recommended_prerequisites": [
+            "foundation-introductions-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 5
+        },
+        {
+          "id": "foundation-routine-01",
+          "title": "Một ngày học tập",
+          "position": 3,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe và đọc để lấy thông tin về một lịch sinh hoạt.",
+            "Nói và viết về các việc mình làm trong ngày bằng hiện tại đơn."
+          ],
+          "recommended_prerequisites": [
+            "foundation-time-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-people-things-01",
+          "title": "Người, đồ vật và tính từ",
+          "position": 4,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nhận ra danh từ chỉ người/vật và tính từ trong câu đơn.",
+            "Giới thiệu một người và mô tả một đồ vật."
+          ],
+          "recommended_prerequisites": [
+            "foundation-introductions-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-places-01",
+          "title": "Hỏi vị trí và mô tả nơi chốn",
+          "position": 5,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe để tìm vị trí người/vật.",
+            "Dùng on, under, next to và Where is…? trong câu đơn."
+          ],
+          "recommended_prerequisites": [
+            "foundation-people-things-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 5
+        },
+        {
+          "id": "foundation-questions-01",
+          "title": "Hỏi và phủ định trong sinh hoạt",
+          "position": 6,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Hiểu Do you…? và câu trả lời ngắn.",
+            "Dùng I do not + động từ để nói việc không thường làm."
+          ],
+          "recommended_prerequisites": [
+            "foundation-routine-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 7
+        },
+        {
+          "id": "foundation-checkpoint-01",
+          "title": "Ôn chặng đầu: giới thiệu và sinh hoạt",
+          "position": 7,
+          "content_version": 1,
+          "lesson_kind": "checkpoint",
+          "objectives": [
+            "Tự nhớ lại mẫu câu đã học qua các tình huống mới.",
+            "Xác định nội dung cần ôn, không suy ra trình độ hoặc điểm chứng chỉ."
+          ],
+          "recommended_prerequisites": [
+            "foundation-people-things-01",
+            "foundation-places-01",
+            "foundation-questions-01",
+            "foundation-routine-01"
+          ],
+          "steps": 9,
+          "graded_tasks": 6,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-yesterday-01",
+          "title": "Kể việc đã làm hôm qua",
+          "position": 8,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe và đọc thông tin về một ngày đã qua.",
+            "Kể việc đã làm với một số động từ quá khứ có quy tắc."
+          ],
+          "recommended_prerequisites": [
+            "foundation-questions-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-past-questions-01",
+          "title": "Hỏi về một chuyến đi đã qua",
+          "position": 9,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Hiểu went và had trong một chuyến đi đơn giản.",
+            "Hỏi và trả lời với Did you…? mà không chia quá khứ hai lần."
+          ],
+          "recommended_prerequisites": [
+            "foundation-yesterday-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-plans-01",
+          "title": "Nói kế hoạch sắp tới",
+          "position": 10,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Phân biệt việc đã làm và kế hoạch ngày mai.",
+            "Dùng be going to + động từ để trình bày kế hoạch đơn giản."
+          ],
+          "recommended_prerequisites": [
+            "foundation-time-01",
+            "foundation-questions-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-now-01",
+          "title": "Nói việc đang diễn ra",
+          "position": 11,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe và đọc để biết ai đang làm gì.",
+            "Phân biệt một thói quen với việc đang diễn ra lúc nói."
+          ],
+          "recommended_prerequisites": [
+            "foundation-routine-01",
+            "foundation-questions-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-checkpoint-02",
+          "title": "Ôn chặng: hôm qua, bây giờ và ngày mai",
+          "position": 12,
+          "content_version": 1,
+          "lesson_kind": "checkpoint",
+          "objectives": [
+            "Chọn đúng thông tin theo mốc thời gian trong bài nghe và đọc.",
+            "Tự kể việc đã làm, đang làm và định làm mà không chép mẫu."
+          ],
+          "recommended_prerequisites": [
+            "foundation-yesterday-01",
+            "foundation-past-questions-01",
+            "foundation-plans-01",
+            "foundation-now-01"
+          ],
+          "steps": 9,
+          "graded_tasks": 6,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-quantities-01",
+          "title": "Nói số lượng và đồ vật cần dùng",
+          "position": 13,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Phân biệt một đồ vật, nhiều đồ vật và một lượng nước.",
+            "Dùng a/an và there is/are trong tình huống quen thuộc."
+          ],
+          "recommended_prerequisites": [
+            "foundation-people-things-01",
+            "foundation-places-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-frequency-01",
+          "title": "Hỏi tần suất và kể thói quen",
+          "position": 14,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe và đọc thông tin về mức độ thường xuyên.",
+            "Hỏi How often…? và dùng hiện tại đơn với I/She."
+          ],
+          "recommended_prerequisites": [
+            "foundation-routine-01",
+            "foundation-questions-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-clarification-01",
+          "title": "Nhờ nói lại và làm rõ điều chưa hiểu",
+          "position": 15,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nhận ra lời nhờ nói chậm, nhắc lại và viết vào chat.",
+            "Chủ động hỏi khi chưa hiểu trong lớp hoặc cuộc họp đơn giản."
+          ],
+          "recommended_prerequisites": [
+            "foundation-help-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-directions-01",
+          "title": "Hỏi đường và hướng dẫn đến nơi hẹn",
+          "position": 16,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe và đọc một hướng dẫn đường đi ngắn.",
+            "Dùng turn/go và at/on để chỉ đường rõ ràng."
+          ],
+          "recommended_prerequisites": [
+            "foundation-places-01",
+            "foundation-clarification-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "foundation-arrangements-01",
+          "title": "Mời và xác nhận lịch hẹn",
+          "position": 17,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Phân biệt giờ đề xuất và giờ đã thống nhất.",
+            "Mời bằng Would you like to…? và xác nhận thời gian, địa điểm."
+          ],
+          "recommended_prerequisites": [
+            "foundation-time-01",
+            "foundation-plans-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        }
+      ]
+    },
+    {
+      "id": "english-it-system",
+      "title": "English for IT/System",
+      "kind": "specialist",
+      "version": 1,
+      "status": "pilot",
+      "regular_lessons": 8,
+      "checkpoints": 1,
+      "lessons": [
+        {
+          "id": "system-introductions-01",
+          "title": "Giới thiệu việc học và hướng IT/System",
+          "position": 0,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nói và viết về ngành học bằng câu có hỗ trợ.",
+            "Phân biệt I am và I study trong câu mẫu."
+          ],
+          "recommended_prerequisites": [
+            "foundation-introductions-01"
+          ],
+          "steps": 7,
+          "graded_tasks": 2,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 5
+        },
+        {
+          "id": "system-files-01",
+          "title": "Hướng dẫn thao tác với tệp",
+          "position": 1,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Hiểu hướng dẫn ngắn có thứ tự thao tác.",
+            "Nói và viết một hướng dẫn đơn giản bằng động từ nguyên mẫu."
+          ],
+          "recommended_prerequisites": [
+            "system-introductions-01",
+            "foundation-help-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-service-status-01",
+          "title": "Hỏi và mô tả trạng thái dịch vụ",
+          "position": 2,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Phân biệt thông tin trạng thái và hành động trong một tình huống thử nghiệm.",
+            "Hỏi Is…? và dùng is/are phù hợp khi mô tả trạng thái."
+          ],
+          "recommended_prerequisites": [
+            "system-introductions-01",
+            "foundation-now-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-incident-handoff-01",
+          "title": "Báo sự cố và bàn giao ngắn",
+          "position": 3,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nghe/đọc để phân biệt sự cố, hành động đã làm và việc cần theo dõi.",
+            "Viết bàn giao ngắn có mốc giờ và trạng thái hiện tại."
+          ],
+          "recommended_prerequisites": [
+            "system-service-status-01",
+            "foundation-yesterday-01",
+            "foundation-plans-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-hardware-01",
+          "title": "Mô tả máy tính và so sánh đơn giản",
+          "position": 4,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Nhận ra thông tin về bàn phím, màn hình và tốc độ trong tình huống.",
+            "So sánh hai máy bằng slower/faster than, không tự suy ra nguyên nhân."
+          ],
+          "recommended_prerequisites": [
+            "foundation-people-things-01",
+            "system-files-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-check-results-01",
+          "title": "Đọc kết quả kiểm tra và báo điều chưa biết",
+          "position": 5,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Lấy thông tin từ kết quả kiểm tra và ghi nhận khác biệt giữa dịch vụ/máy khách.",
+            "Báo kết quả đã thấy và một bước kiểm tiếp."
+          ],
+          "recommended_prerequisites": [
+            "system-service-status-01",
+            "system-incident-handoff-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-incident-questions-01",
+          "title": "Hỏi thông tin để làm rõ sự cố",
+          "position": 6,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Hỏi được thời điểm bắt đầu, phạm vi ảnh hưởng và thông báo lỗi.",
+            "Dùng did + nguyên mẫu trong câu hỏi quá khứ."
+          ],
+          "recommended_prerequisites": [
+            "foundation-past-questions-01",
+            "foundation-clarification-01",
+            "system-service-status-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-handoff-email-01",
+          "title": "Viết cập nhật và bàn giao qua email",
+          "position": 7,
+          "content_version": 1,
+          "lesson_kind": "lesson",
+          "objectives": [
+            "Xác định trạng thái hiện tại, người theo dõi và hạn cập nhật.",
+            "Nối lý do yêu cầu bằng because và viết bàn giao rõ ràng."
+          ],
+          "recommended_prerequisites": [
+            "system-incident-handoff-01",
+            "system-check-results-01",
+            "system-incident-questions-01"
+          ],
+          "steps": 8,
+          "graded_tasks": 3,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        },
+        {
+          "id": "system-checkpoint-03",
+          "title": "Ôn chặng IT/System: kiểm tra và bàn giao",
+          "position": 8,
+          "content_version": 1,
+          "lesson_kind": "checkpoint",
+          "objectives": [
+            "Đọc/nghe bằng chứng công việc và phân biệt điều chưa xác nhận.",
+            "Tự báo trạng thái và bàn giao rõ người, việc, thời hạn."
+          ],
+          "recommended_prerequisites": [
+            "system-hardware-01",
+            "system-check-results-01",
+            "system-incident-questions-01",
+            "system-handoff-email-01"
+          ],
+          "steps": 9,
+          "graded_tasks": 6,
+          "audio_file_present": true,
+          "sentence_audio_files_present": true,
+          "sentence_count": 6
+        }
+      ]
+    }
+  ]
+}

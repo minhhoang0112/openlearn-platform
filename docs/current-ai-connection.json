@@ -1,0 +1,8 @@
+{
+  "model": "gemini-3.5-flash",
+  "status": 200,
+  "elapsed_ms": 1206,
+  "connected": true,
+  "finish_reason": "STOP",
+  "quota_violations": []
+}

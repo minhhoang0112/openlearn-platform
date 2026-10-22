@@ -1,0 +1,12 @@
+{
+  "provider": "controlled_gateway_fixture",
+  "checks": [
+    "grammar token draft and bookmark survive reload and resume",
+    "grammar remove/reorder/check/translation/next are server-backed",
+    "reading actual cloze and comprehension grade and persist completion",
+    "conversation setup/opening/translation/hint and failure-safe retry persist actual messages",
+    "conversation history resumes after reload",
+    "Speaking question/hint/feedback and history restore target word and learner response"
+  ],
+  "errors": []
+}

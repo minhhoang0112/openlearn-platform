@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "standalone Ctrl plays term; Ctrl+A does not trigger audio",
+    "Enter grades partial Vietnamese meaning; self-correction repairs server state",
+    "adaptive queue and cursor survive reload",
+    "settings persist on backend and change real filtered two-direction queue",
+    "sentence dictation plays actual example and grades the full sentence",
+    "quiz control changes real questions; selected option Enter grades; correct answer advances after delay",
+    "reset cancelled leaves progress; confirmed reset removes progress and starts new session",
+    "self-correction cancels pending automatic advance"
+  ],
+  "errors": [],
+  "audio": "Speech synthesis invocation observed with a browser spy; no microphone or audible-output claim."
+}

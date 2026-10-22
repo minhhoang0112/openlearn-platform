@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "register + authenticated dashboard",
+    "TOEIC catalog reads actual API",
+    "50 actual TOEIC sets",
+    "server grading + explicit feedback transition",
+    "matching pair stored on server",
+    "exam batch submission + real result shape",
+    "examples beyond third row are open, editable and persist"
+  ],
+  "errors": [
+    "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Hello & Goodbye/ })\u001b[22m\n"
+  ]
+}

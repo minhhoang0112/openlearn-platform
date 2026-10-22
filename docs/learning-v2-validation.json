@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-21",
+  "contract": "1.15.0",
+  "schema": 14,
+  "routes": 148,
+  "backend": {
+    "command": "node --test --test-isolation=none --test-reporter=dot --test-timeout=15000 server/tests/*.test.mjs",
+    "passed": 94,
+    "failed": 0,
+    "contract_tested": "1.15.0",
+    "current_contract_full_suite_rerun": true,
+    "note": "Final closeout after reading submit/resume fixes;94 full BE tests passed, no live AI."
+  },
+  "pilot": {
+    "programs": 2,
+    "lessons": 27,
+    "audio_source": "Windows Microsoft David Desktop TTS, saved WAV files",
+    "human_audio_reviewed": false,
+    "foundation_regular_lessons": 16,
+    "foundation_checkpoints": 2,
+    "system_lessons": 8,
+    "system_checkpoints": 1,
+    "target_regular_lessons": 24,
+    "target_checkpoints": 3,
+    "authored_count_target_met": true
+  },
+  "runtime": {
+    "health_http": 200,
+    "schema": 14
+  },
+  "frontend_integration": "Final build passed;7 browser suites passed after test-selector updates and reading BE fixes. See release-browser-validation.json.",
+  "remaining": [
+    "Human text/audio learning review; CONTENT-07 UI accepted by Anti with targeted Codex Chrome verification",
+    "Physical microphone and audio quality checks; fake microphone verification for LessonRunView still pending",
+    "Human audio quality review",
+    "Video library",
+    "Mistake review beyond V2 choice questions",
+    "Real-provider quota recovery and human pronunciation-feedback checks"
+  ],
+  "latest_targeted_validation": {
+    "file": "server/tests/exercises.test.mjs",
+    "included_in_current_full_suite": true,
+    "note": "Added submit/replay questions contract and completed-reading resume regressions."
+  },
+  "browser_validation": {
+    "report": "v2-browser-integration.json",
+    "passed": true,
+    "checks": 9,
+    "provider": "no AI",
+    "database": "isolated in-memory",
+    "checkpoint_lesson_id": "system-checkpoint-03"
+  },
+  "live_ai_validation": "learning-feedback-live-validation.json",
+  "listening_practice": {
+    "tracks": 27,
+    "sentence_clips": 158,
+    "source": "separately_synthesized_sentence",
+    "aligned_to_full_audio": false,
+    "pronunciation_assessed": false,
+    "frontend": "14 real Chrome checks pass on 17-item catalog, including explicit self-review, lost-response retry and fake-microphone stream/ObjectURL cleanup."
+  },
+  "listening_browser_validation": {
+    "report": "v2-browser-listening-audit.json",
+    "checks": 14,
+    "passed": true,
+    "physical_microphone_tested": false,
+    "fake_microphone_lifecycle_tested": true
+  },
+  "frontend_build": {
+    "passed": true,
+    "note": "tsc -b and vite build; existing large chunk warning remains."
+  },
+  "curriculum_inventory": "learning-curriculum-inventory.json",
+  "audio_reviews": {
+    "backend_implemented": true,
+    "frontend": "Anti integrated FE-AUDIO-02; latest review/delete fallback/session switching checks passed with sample feedback. Real Gemini audio quality remains unverified.",
+    "assessment_scope": "qualitative_audio_feedback",
+    "audio_stored": false,
+    "live_validation": "learning-audio-live-validation.json",
+    "live_provider_http": 429,
+    "live_provider_error": "AI_RATE_LIMITED",
+    "live_success_verified": false
+  },
+  "phrase_library": {
+    "backend_implemented": true,
+    "frontend": "Anti integrated; 12 Chrome phrase/audio checks re-run successfully.",
+    "uses_existing_srs": true,
+    "ai_required": false,
+    "marks_mastered_on_save": false
+  },
+  "materials": {
+    "backend_implemented": true,
+    "frontend": "FE-MATERIAL-01 integrated;13 Chrome checks independently rerun, remaining source-review findings documented in MATERIAL-CUES contract.",
+    "private_audio_stored_in_sqlite": true,
+    "ai_required": false,
+    "max_audio_bytes": 8388608,
+    "report": "material-audio-validation.json",
+    "native_media_checks": 5,
+    "product_material_ui_tested": true,
+    "product_ui_checks": 13,
+    "product_ui_limitations": [
+      "Generated WAV only; no real MP3 acceptance",
+      "Does not cover rapid autosave conflicts or leave-before-pause recovery"
+    ]
+  },
+  "material_cues": {
+    "backend_implemented": true,
+    "frontend_implemented": true,
+    "manual_timing": true,
+    "ai_required": false,
+    "comparison": "exact_normalized_tokens",
+    "assisted_flag": "client_reported",
+    "proficiency_assessed": false,
+    "contract": "UPGRADE-V2-MATERIAL-CUES.md",
+    "browser_checks": 18,
+    "report": "material-cues-ui-validation.json"
+  },
+  "material_subtitles": {
+    "backend_implemented": true,
+    "frontend_implemented": true,
+    "ai_required": false,
+    "preview_writes_database": false,
+    "alignment": "supplied_timestamps_not_audio_verified",
+    "subtitle_formats": [
+      "srt",
+      "vtt"
+    ],
+    "subset_only": true,
+    "contract": "UPGRADE-V2-SUBTITLES.md"
+  },
+  "release_closeout": "RELEASE-CLOSEOUT.md",
+  "feature_development_stopped": true
+}

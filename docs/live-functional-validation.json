@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-21",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "checks": [
+    {
+      "flow": "grammar_persisted_examples",
+      "passed": true,
+      "provider_call": false,
+      "model": "gemini-3.5-flash"
+    },
+    {
+      "flow": "reading_real_gemini_cloze_and_comprehension",
+      "passed": true,
+      "questions": 6,
+      "model": "gemini-3.8-flash"
+    },
+    {
+      "flow": "conversation_real_opening",
+      "passed": true,
+      "model": "gemini-3.5-flash"
+    },
+    {
+      "flow": "conversation_real_hint",
+      "passed": true,
+      "model": "gemini-3.5-flash"
+    },
+    {
+      "flow": "conversation_real_translation",
+      "passed": true,
+      "model": "gemini-3.5-flash"
+    },
+    {
+      "flow": "speaking_real_hint",
+      "passed": true,
+      "model": "gemini-3.5-flash"
+    }
+  ],
+  "errors": [],
+  "checked_at": "2026-10-21T06:27:34.465Z"
+}

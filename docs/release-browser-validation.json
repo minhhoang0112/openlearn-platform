@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-21T16:42:49.013Z",
+  "scope": "Built frontend snapshot; isolated local test databases, no live AI calls",
+  "suites": [
+    {
+      "script": "verify-v2-material-subtitles-fe.mjs",
+      "passed": true,
+      "milliseconds": 12635
+    },
+    {
+      "script": "verify-v2-material-cues-fe.mjs",
+      "passed": true,
+      "milliseconds": 7546
+    },
+    {
+      "script": "v2-browser-integration.mjs",
+      "passed": true,
+      "milliseconds": 7199
+    },
+    {
+      "script": "v2-browser-listening.mjs",
+      "passed": true,
+      "milliseconds": 4315
+    },
+    {
+      "script": "verify-v2-phrases-fe.mjs",
+      "passed": true,
+      "milliseconds": 2609
+    },
+    {
+      "script": "study-browser-qa.mjs",
+      "passed": true,
+      "retested_after_fix": true,
+      "note": "Updated legacy selectors;8 checks passed,0 errors."
+    },
+    {
+      "script": "functional-browser-qa.mjs",
+      "passed": true,
+      "retested_after_fix": true,
+      "note": "Updated legacy selectors and fixed real reading submit/resume defects;6 checks passed,0 errors."
+    }
+  ],
+  "passed": true,
+  "completed_at": "2026-10-21T16:56:17.763Z",
+  "backend": {
+    "passed": 94,
+    "failed": 0,
+    "command": "node --test --test-isolation=none --test-reporter=dot --test-timeout=15000 server/tests/*.test.mjs"
+  },
+  "fixed_defects": [
+    "Reading batch submit lacked questions, causing blank page",
+    "Reload completed reading created a new attempt and could call AI unintentionally"
+  ],
+  "live_ai_tested": false,
+  "physical_microphone_tested": false
+}

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-21",
+  "database": "isolated_in_memory",
+  "logical_live_feedback_requests": 1,
+  "passed": true,
+  "status": 200,
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "corrections": 2,
+  "source_preserved": true,
+  "pronunciation_assessed": false,
+  "cached_without_regeneration": true
+}

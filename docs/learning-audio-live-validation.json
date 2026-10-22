@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-21",
+  "database": "isolated_in_memory",
+  "input": "saved Windows TTS sentence, not a human recording",
+  "logical_live_audio_requests": 1,
+  "passed": false,
+  "http": 429,
+  "error_code": "AI_RATE_LIMITED",
+  "retry_after_seconds": 61152
+}

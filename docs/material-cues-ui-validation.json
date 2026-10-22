@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-21",
+  "command": "node scripts/verify-v2-material-cues-fe.mjs",
+  "verified_by": "Codex rerun after Anti implementation",
+  "build_passed": true,
+  "browser": "Chrome headless",
+  "database": "isolated in-memory",
+  "checks_passed": 18,
+  "page_errors": 0,
+  "server_errors": 0,
+  "ai_calls": 0,
+  "scope": "MATERIAL-02 UI and player fixes: draft A, rapid rates, hub label, two cues, Ctrl replay, correct/assisted/give-up/diff, history snapshot, reload and deletion",
+  "physical_audio_quality_reviewed": false,
+  "subtitle_ui_tested": false
+}

@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-21",
+  "checks": [
+    "Listening Library renders catalog header",
+    "Listening Library displays 27 lesson cards",
+    "Settings modal opens on practice click",
+    "Practice player loads with sentence session",
+    "Sentence WAV audio decodes in browser player",
+    "Self-review checkbox and repetition counters operate cleanly",
+    "Lost response after commit retries the same UUID/payload and records one practice event",
+    "Sentence completion mutation advances to next sentence",
+    "Skip button records skipped sentence without fake practice",
+    "History tab renders mode and true practice summary without crashing",
+    "Resume from history and reload retain exact third sentence",
+    "Fake microphone recording stops all tracks and produces one local playback URL",
+    "Leaving during fake recording ends streams and revokes previous URL without recreating it after unmount",
+    "Progress view includes listening_practice widget with accurate stats"
+  ],
+  "page_errors": [],
+  "server_errors": [],
+  "fe_followups": [],
+  "passed": true,
+  "scope": "Built FE and real BE on isolated in-memory database; fake Chrome microphone resource lifecycle tested. No AI calls or physical microphone/audio-quality test."
+}

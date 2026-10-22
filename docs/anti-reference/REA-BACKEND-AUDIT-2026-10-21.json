@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-21",
+  "target": "https://openquiz.ai/study/163",
+  "evidence_id": "ev_5337d326e6cf7e601c3b26d7e8ababff6bf985a62032f12a62f035953e6ad8ed",
+  "method": "Three bounded ordinary Playwright UI answers, followed by passive REA observation.",
+  "probe_file": "captures/learning-progress-probe.json",
+  "findings": [
+    "The original screen displayed 12 words and an initial 20-question counter.",
+    "The completed-word counter stayed at zero after three submitted questions; answering once and completing a word are distinct concepts."
+  ],
+  "limitations": [
+    "Only three steps observed; the exact source mastery threshold and scheduling algorithm remain unknown.",
+    "Source account progress was not imported into the local app.",
+    "The local required_correct=2 retrieval option is an explicit independent implementation choice, not a recovered source algorithm."
+  ]
+}

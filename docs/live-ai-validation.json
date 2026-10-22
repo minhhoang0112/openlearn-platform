@@ -1,0 +1,36 @@
+{
+  "model": "gemini-3.8-flash",
+  "checks": [
+    {
+      "kind": "speaking_feedback",
+      "stored": true,
+      "valid": true
+    },
+    {
+      "kind": "word_examples",
+      "stored": true,
+      "valid": true
+    },
+    {
+      "kind": "pronunciation",
+      "synthetic_fixture": true,
+      "valid": true
+    },
+    {
+      "kind": "speaking_question",
+      "stored": true,
+      "valid": true
+    },
+    {
+      "kind": "grammar",
+      "stored": true,
+      "valid": true
+    },
+    {
+      "kind": "reading",
+      "stored": true,
+      "valid": true
+    }
+  ],
+  "failures": []
+}

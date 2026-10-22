@@ -1,0 +1,850 @@
+[
+  {
+    "lesson_id": "foundation-introductions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Hi, I'm Linh."
+      },
+      {
+        "id": "s02",
+        "text": "I'm a university student."
+      },
+      {
+        "id": "s03",
+        "text": "I live in Hanoi."
+      },
+      {
+        "id": "s04",
+        "text": "I study in the morning."
+      },
+      {
+        "id": "s05",
+        "text": "What about you?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-time-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I study in the morning."
+      },
+      {
+        "id": "s02",
+        "text": "My class starts at eight."
+      },
+      {
+        "id": "s03",
+        "text": "I have lunch at twelve."
+      },
+      {
+        "id": "s04",
+        "text": "I go home at five."
+      },
+      {
+        "id": "s05",
+        "text": "What time does your class start?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-help-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Can you help me, please?"
+      },
+      {
+        "id": "s02",
+        "text": "I cannot open this file."
+      },
+      {
+        "id": "s03",
+        "text": "Please try again."
+      },
+      {
+        "id": "s04",
+        "text": "It works now."
+      },
+      {
+        "id": "s05",
+        "text": "Thank you for your help."
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-routine-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I get up at seven."
+      },
+      {
+        "id": "s02",
+        "text": "I have breakfast at home."
+      },
+      {
+        "id": "s03",
+        "text": "I go to university at eight."
+      },
+      {
+        "id": "s04",
+        "text": "After class, I study in the library."
+      },
+      {
+        "id": "s05",
+        "text": "I go home at five."
+      },
+      {
+        "id": "s06",
+        "text": "What do you do after class?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-people-things-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "This is my friend Anna."
+      },
+      {
+        "id": "s02",
+        "text": "She is a student."
+      },
+      {
+        "id": "s03",
+        "text": "Her bag is blue."
+      },
+      {
+        "id": "s04",
+        "text": "This is her laptop."
+      },
+      {
+        "id": "s05",
+        "text": "It is small, but it is useful."
+      },
+      {
+        "id": "s06",
+        "text": "What is in your bag?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-places-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Where is the library?"
+      },
+      {
+        "id": "s02",
+        "text": "It is next to the classroom."
+      },
+      {
+        "id": "s03",
+        "text": "My bag is under the desk."
+      },
+      {
+        "id": "s04",
+        "text": "My phone is on the desk."
+      },
+      {
+        "id": "s05",
+        "text": "Can you show me the library, please?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-questions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Do you study at night?"
+      },
+      {
+        "id": "s02",
+        "text": "Yes, I do."
+      },
+      {
+        "id": "s03",
+        "text": "I study after dinner."
+      },
+      {
+        "id": "s04",
+        "text": "I do not work on Sunday."
+      },
+      {
+        "id": "s05",
+        "text": "Do you work on Sunday?"
+      },
+      {
+        "id": "s06",
+        "text": "No, I do not."
+      },
+      {
+        "id": "s07",
+        "text": "I visit my family."
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-checkpoint-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Hi, my name is Alex."
+      },
+      {
+        "id": "s02",
+        "text": "I am a student."
+      },
+      {
+        "id": "s03",
+        "text": "My class starts at nine."
+      },
+      {
+        "id": "s04",
+        "text": "After class, I study in the library."
+      },
+      {
+        "id": "s05",
+        "text": "My blue bag is under the desk."
+      },
+      {
+        "id": "s06",
+        "text": "I do not study on Sunday."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-introductions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Hi, I'm Linh."
+      },
+      {
+        "id": "s02",
+        "text": "I'm a university student."
+      },
+      {
+        "id": "s03",
+        "text": "I study information technology."
+      },
+      {
+        "id": "s04",
+        "text": "I want to work with computer systems."
+      },
+      {
+        "id": "s05",
+        "text": "What do you study?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-yesterday-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Yesterday, I studied at home."
+      },
+      {
+        "id": "s02",
+        "text": "I finished my homework in the morning."
+      },
+      {
+        "id": "s03",
+        "text": "I called my friend after lunch."
+      },
+      {
+        "id": "s04",
+        "text": "We talked about our class."
+      },
+      {
+        "id": "s05",
+        "text": "I did not work in the evening."
+      },
+      {
+        "id": "s06",
+        "text": "What did you do yesterday?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-past-questions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Last weekend, I visited my family."
+      },
+      {
+        "id": "s02",
+        "text": "I went by bus on Saturday."
+      },
+      {
+        "id": "s03",
+        "text": "We had lunch together."
+      },
+      {
+        "id": "s04",
+        "text": "I did not travel on Sunday."
+      },
+      {
+        "id": "s05",
+        "text": "Did you visit your family last weekend?"
+      },
+      {
+        "id": "s06",
+        "text": "How did you travel?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-plans-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Tomorrow, I am going to study in the library."
+      },
+      {
+        "id": "s02",
+        "text": "I am going to meet Anna after class."
+      },
+      {
+        "id": "s03",
+        "text": "We are going to finish our project."
+      },
+      {
+        "id": "s04",
+        "text": "I am not going to stay late."
+      },
+      {
+        "id": "s05",
+        "text": "We are going to have dinner at home."
+      },
+      {
+        "id": "s06",
+        "text": "What are you going to do tomorrow?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-now-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I am studying in the library now."
+      },
+      {
+        "id": "s02",
+        "text": "Anna is reading a book."
+      },
+      {
+        "id": "s03",
+        "text": "We are working on a project."
+      },
+      {
+        "id": "s04",
+        "text": "We are not playing games."
+      },
+      {
+        "id": "s05",
+        "text": "Our teacher is helping another student."
+      },
+      {
+        "id": "s06",
+        "text": "What are you doing now?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-checkpoint-02",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I am studying in the library now."
+      },
+      {
+        "id": "s02",
+        "text": "Yesterday, I finished my homework at home."
+      },
+      {
+        "id": "s03",
+        "text": "I went by bus to visit my family last weekend."
+      },
+      {
+        "id": "s04",
+        "text": "Tomorrow, I am going to meet Anna after class."
+      },
+      {
+        "id": "s05",
+        "text": "We are going to finish our project."
+      },
+      {
+        "id": "s06",
+        "text": "I am not going to stay late."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-files-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "First, open the project folder."
+      },
+      {
+        "id": "s02",
+        "text": "Create a new file called notes."
+      },
+      {
+        "id": "s03",
+        "text": "Write a short note in the file."
+      },
+      {
+        "id": "s04",
+        "text": "Then, save the changes."
+      },
+      {
+        "id": "s05",
+        "text": "Close the file after you save it."
+      },
+      {
+        "id": "s06",
+        "text": "Can you open the file again?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-service-status-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "The test service is running."
+      },
+      {
+        "id": "s02",
+        "text": "Two clients are connected."
+      },
+      {
+        "id": "s03",
+        "text": "One client is waiting for a response."
+      },
+      {
+        "id": "s04",
+        "text": "The service is not returning any error messages now."
+      },
+      {
+        "id": "s05",
+        "text": "The status page is open on my screen."
+      },
+      {
+        "id": "s06",
+        "text": "Can you check that client's response, please?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-incident-handoff-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "The test service stopped at nine."
+      },
+      {
+        "id": "s02",
+        "text": "I checked the connection."
+      },
+      {
+        "id": "s03",
+        "text": "I restarted the test service."
+      },
+      {
+        "id": "s04",
+        "text": "It is working now."
+      },
+      {
+        "id": "s05",
+        "text": "Please check it again at ten."
+      },
+      {
+        "id": "s06",
+        "text": "I will send an update after the check."
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-quantities-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "There is a notebook on the desk."
+      },
+      {
+        "id": "s02",
+        "text": "There are three pens next to it."
+      },
+      {
+        "id": "s03",
+        "text": "I have an umbrella in my bag."
+      },
+      {
+        "id": "s04",
+        "text": "I need a bottle of water."
+      },
+      {
+        "id": "s05",
+        "text": "There is some water in the bottle."
+      },
+      {
+        "id": "s06",
+        "text": "How many pens do you have?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-frequency-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I usually study after class."
+      },
+      {
+        "id": "s02",
+        "text": "I visit the library twice a week."
+      },
+      {
+        "id": "s03",
+        "text": "Anna studies there every day."
+      },
+      {
+        "id": "s04",
+        "text": "She does not study on Sunday."
+      },
+      {
+        "id": "s05",
+        "text": "We sometimes work together."
+      },
+      {
+        "id": "s06",
+        "text": "How often do you study with a friend?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-clarification-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Could you speak more slowly, please?"
+      },
+      {
+        "id": "s02",
+        "text": "I do not understand this word."
+      },
+      {
+        "id": "s03",
+        "text": "Could you say it again?"
+      },
+      {
+        "id": "s04",
+        "text": "Please write it in the chat."
+      },
+      {
+        "id": "s05",
+        "text": "Thank you for your help."
+      },
+      {
+        "id": "s06",
+        "text": "Can I ask one more question?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-directions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Go straight to the library."
+      },
+      {
+        "id": "s02",
+        "text": "Turn left at the library."
+      },
+      {
+        "id": "s03",
+        "text": "The cafe is on your right."
+      },
+      {
+        "id": "s04",
+        "text": "It is next to the bookshop."
+      },
+      {
+        "id": "s05",
+        "text": "Could you show me the cafe on the map?"
+      },
+      {
+        "id": "s06",
+        "text": "We can meet there at three."
+      }
+    ]
+  },
+  {
+    "lesson_id": "foundation-arrangements-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Would you like to study together on Friday?"
+      },
+      {
+        "id": "s02",
+        "text": "I am free after two."
+      },
+      {
+        "id": "s03",
+        "text": "Can we meet at the library at three?"
+      },
+      {
+        "id": "s04",
+        "text": "Three works for me."
+      },
+      {
+        "id": "s05",
+        "text": "See you there."
+      },
+      {
+        "id": "s06",
+        "text": "Please bring your project notes."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-hardware-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "This is our old test laptop."
+      },
+      {
+        "id": "s02",
+        "text": "Its keyboard still works well."
+      },
+      {
+        "id": "s03",
+        "text": "The screen is larger than the new laptop's screen."
+      },
+      {
+        "id": "s04",
+        "text": "But the old laptop is slower in this test."
+      },
+      {
+        "id": "s05",
+        "text": "I am recording the results."
+      },
+      {
+        "id": "s06",
+        "text": "Can you check the new laptop?"
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-check-results-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I checked the test service at nine."
+      },
+      {
+        "id": "s02",
+        "text": "The service returned a response."
+      },
+      {
+        "id": "s03",
+        "text": "One client is still waiting."
+      },
+      {
+        "id": "s04",
+        "text": "The log shows a new error message."
+      },
+      {
+        "id": "s05",
+        "text": "I have not confirmed the cause."
+      },
+      {
+        "id": "s06",
+        "text": "Please keep the test record for review."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-incident-questions-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "When did the problem start?"
+      },
+      {
+        "id": "s02",
+        "text": "It started at eight this morning."
+      },
+      {
+        "id": "s03",
+        "text": "Does it affect both clients?"
+      },
+      {
+        "id": "s04",
+        "text": "No, only one client is affected."
+      },
+      {
+        "id": "s05",
+        "text": "Could you share the error message?"
+      },
+      {
+        "id": "s06",
+        "text": "Please do not include passwords in the message."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-handoff-email-01",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "Here is an update on the test service."
+      },
+      {
+        "id": "s02",
+        "text": "It is running, but one client is still waiting."
+      },
+      {
+        "id": "s03",
+        "text": "Lan is going to check the response next."
+      },
+      {
+        "id": "s04",
+        "text": "Please keep the test notes because we need to review them."
+      },
+      {
+        "id": "s05",
+        "text": "Send the next update before eleven."
+      },
+      {
+        "id": "s06",
+        "text": "Thank you for your help."
+      }
+    ]
+  },
+  {
+    "lesson_id": "system-checkpoint-03",
+    "content_version": 1,
+    "source": "separately_synthesized_sentence",
+    "voice": "Microsoft David Desktop",
+    "sentences": [
+      {
+        "id": "s01",
+        "text": "I checked the test service at nine."
+      },
+      {
+        "id": "s02",
+        "text": "It returned a response."
+      },
+      {
+        "id": "s03",
+        "text": "One client is still waiting."
+      },
+      {
+        "id": "s04",
+        "text": "Lan is going to check the response next."
+      },
+      {
+        "id": "s05",
+        "text": "Please send an update before eleven."
+      },
+      {
+        "id": "s06",
+        "text": "The cause is not confirmed."
+      }
+    ]
+  }
+]

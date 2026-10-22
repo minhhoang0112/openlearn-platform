@@ -1,0 +1,110 @@
+[
+  {
+    "id": "foundation-introductions-01",
+    "transcript": "Hi, I'm Linh. I'm a university student. I live in Hanoi. I study in the morning. What about you?"
+  },
+  {
+    "id": "system-introductions-01",
+    "transcript": "Hi, I'm Linh. I'm a university student. I study information technology. I want to work with computer systems. What do you study?"
+  },
+  {
+    "id": "foundation-time-01",
+    "transcript": "I study in the morning. My class starts at eight. I have lunch at twelve. I go home at five. What time does your class start?"
+  },
+  {
+    "id": "foundation-help-01",
+    "transcript": "Can you help me, please? I cannot open this file. Please try again. It works now. Thank you for your help."
+  },
+  {
+    "id": "foundation-routine-01",
+    "transcript": "I get up at seven. I have breakfast at home. I go to university at eight. After class, I study in the library. I go home at five. What do you do after class?"
+  },
+  {
+    "id": "foundation-people-things-01",
+    "transcript": "This is my friend Anna. She is a student. Her bag is blue. This is her laptop. It is small, but it is useful. What is in your bag?"
+  },
+  {
+    "id": "foundation-places-01",
+    "transcript": "Where is the library? It is next to the classroom. My bag is under the desk. My phone is on the desk. Can you show me the library, please?"
+  },
+  {
+    "id": "foundation-questions-01",
+    "transcript": "Do you study at night? Yes, I do. I study after dinner. I do not work on Sunday. Do you work on Sunday? No, I do not. I visit my family."
+  },
+  {
+    "id": "foundation-checkpoint-01",
+    "transcript": "Hi, my name is Alex. I am a student. My class starts at nine. After class, I study in the library. My blue bag is under the desk. I do not study on Sunday."
+  },
+  {
+    "id": "foundation-yesterday-01",
+    "transcript": "Yesterday, I studied at home. I finished my homework in the morning. I called my friend after lunch. We talked about our class. I did not work in the evening. What did you do yesterday?"
+  },
+  {
+    "id": "foundation-past-questions-01",
+    "transcript": "Last weekend, I visited my family. I went by bus on Saturday. We had lunch together. I did not travel on Sunday. Did you visit your family last weekend? How did you travel?"
+  },
+  {
+    "id": "foundation-plans-01",
+    "transcript": "Tomorrow, I am going to study in the library. I am going to meet Anna after class. We are going to finish our project. I am not going to stay late. We are going to have dinner at home. What are you going to do tomorrow?"
+  },
+  {
+    "id": "foundation-now-01",
+    "transcript": "I am studying in the library now. Anna is reading a book. We are working on a project. We are not playing games. Our teacher is helping another student. What are you doing now?"
+  },
+  {
+    "id": "foundation-checkpoint-02",
+    "transcript": "I am studying in the library now. Yesterday, I finished my homework at home. I went by bus to visit my family last weekend. Tomorrow, I am going to meet Anna after class. We are going to finish our project. I am not going to stay late."
+  },
+  {
+    "id": "system-files-01",
+    "transcript": "First, open the project folder. Create a new file called notes. Write a short note in the file. Then, save the changes. Close the file after you save it. Can you open the file again?"
+  },
+  {
+    "id": "system-service-status-01",
+    "transcript": "The test service is running. Two clients are connected. One client is waiting for a response. The service is not returning any error messages now. The status page is open on my screen. Can you check that client's response, please?"
+  },
+  {
+    "id": "system-incident-handoff-01",
+    "transcript": "The test service stopped at nine. I checked the connection. I restarted the test service. It is working now. Please check it again at ten. I will send an update after the check."
+  },
+  {
+    "id": "foundation-quantities-01",
+    "transcript": "There is a notebook on the desk. There are three pens next to it. I have an umbrella in my bag. I need a bottle of water. There is some water in the bottle. How many pens do you have?"
+  },
+  {
+    "id": "foundation-frequency-01",
+    "transcript": "I usually study after class. I visit the library twice a week. Anna studies there every day. She does not study on Sunday. We sometimes work together. How often do you study with a friend?"
+  },
+  {
+    "id": "foundation-clarification-01",
+    "transcript": "Could you speak more slowly, please? I do not understand this word. Could you say it again? Please write it in the chat. Thank you for your help. Can I ask one more question?"
+  },
+  {
+    "id": "foundation-directions-01",
+    "transcript": "Go straight to the library. Turn left at the library. The cafe is on your right. It is next to the bookshop. Could you show me the cafe on the map? We can meet there at three."
+  },
+  {
+    "id": "foundation-arrangements-01",
+    "transcript": "Would you like to study together on Friday? I am free after two. Can we meet at the library at three? Three works for me. See you there. Please bring your project notes."
+  },
+  {
+    "id": "system-hardware-01",
+    "transcript": "This is our old test laptop. Its keyboard still works well. The screen is larger than the new laptop's screen. But the old laptop is slower in this test. I am recording the results. Can you check the new laptop?"
+  },
+  {
+    "id": "system-check-results-01",
+    "transcript": "I checked the test service at nine. The service returned a response. One client is still waiting. The log shows a new error message. I have not confirmed the cause. Please keep the test record for review."
+  },
+  {
+    "id": "system-incident-questions-01",
+    "transcript": "When did the problem start? It started at eight this morning. Does it affect both clients? No, only one client is affected. Could you share the error message? Please do not include passwords in the message."
+  },
+  {
+    "id": "system-handoff-email-01",
+    "transcript": "Here is an update on the test service. It is running, but one client is still waiting. Lan is going to check the response next. Please keep the test notes because we need to review them. Send the next update before eleven. Thank you for your help."
+  },
+  {
+    "id": "system-checkpoint-03",
+    "transcript": "I checked the test service at nine. It returned a response. One client is still waiting. Lan is going to check the response next. Please send an update before eleven. The cause is not confirmed."
+  }
+]

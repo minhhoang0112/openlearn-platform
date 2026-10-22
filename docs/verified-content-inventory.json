@@ -1,0 +1,100 @@
+{
+  "paths": 10,
+  "sets": 180,
+  "entries": 8363,
+  "unique_terms": 5543,
+  "original_extended_content_imported": false,
+  "scope": "English vocabulary with Vietnamese definitions",
+  "items": [
+    {
+      "id": 14,
+      "title": "600 Essential words for the TOEIC Exam",
+      "tag": "TOEIC",
+      "source_url": "https://openquiz.ai/learning-path/14",
+      "sets": 50,
+      "entries": 600,
+      "partial_sets": []
+    },
+    {
+      "id": 20269,
+      "title": "Lộ trình A1-A2 tiếng Anh",
+      "tag": "Nền tảng",
+      "source_url": "https://openquiz.ai/learning-path/269",
+      "sets": 20,
+      "entries": 601,
+      "partial_sets": []
+    },
+    {
+      "id": 20270,
+      "title": "B1-B2 Everyday English",
+      "tag": "Nền tảng",
+      "source_url": "https://openquiz.ai/learning-path/270",
+      "sets": 20,
+      "entries": 1021,
+      "partial_sets": []
+    },
+    {
+      "id": 20271,
+      "title": "C1-C2 Everyday English",
+      "tag": "Nền tảng",
+      "source_url": "https://openquiz.ai/learning-path/271",
+      "sets": 20,
+      "entries": 1705,
+      "partial_sets": []
+    },
+    {
+      "id": 39443,
+      "title": "English Word Form Mastery Path",
+      "tag": "Nền tảng",
+      "source_url": "https://openquiz.ai/learning-path/19443",
+      "sets": 20,
+      "entries": 2112,
+      "partial_sets": []
+    },
+    {
+      "id": 102453,
+      "title": "Lộ trình làm chủ Chunking để giao tiếp trôi chảy - by OpenQuiz",
+      "tag": "Nền tảng",
+      "source_url": "https://openquiz.ai/learning-path/82453",
+      "sets": 10,
+      "entries": 500,
+      "partial_sets": []
+    },
+    {
+      "id": 20273,
+      "title": "English for Technology",
+      "tag": "Công việc",
+      "source_url": "https://openquiz.ai/learning-path/273",
+      "sets": 10,
+      "entries": 300,
+      "partial_sets": []
+    },
+    {
+      "id": 20275,
+      "title": "Tiếng Anh Y Tế Cơ Bản",
+      "tag": "Công việc",
+      "source_url": "https://openquiz.ai/learning-path/275",
+      "sets": 10,
+      "entries": 500,
+      "partial_sets": []
+    },
+    {
+      "id": 20274,
+      "title": "English for Technical Work",
+      "tag": "Công việc",
+      "source_url": "https://openquiz.ai/learning-path/274",
+      "sets": 10,
+      "entries": 510,
+      "partial_sets": []
+    },
+    {
+      "id": 20276,
+      "title": "English for Business",
+      "tag": "Công việc",
+      "source_url": "https://openquiz.ai/learning-path/276",
+      "sets": 10,
+      "entries": 514,
+      "partial_sets": []
+    }
+  ]
+}

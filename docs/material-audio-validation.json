@@ -1,0 +1,13 @@
+{
+  "database": "isolated_in_memory",
+  "checks": [
+    "Authenticated private import succeeds using actual WAV samples",
+    "Chrome decodes imported audio; actual duration agrees with WAV header",
+    "Private audio byte-range response contains exact original header",
+    "Saved playback position/speed and manual A-B markers round-trip and can be applied to browser audio",
+    "Deleting material revokes audio access without affecting authored curriculum"
+  ],
+  "product_material_ui_tested": false,
+  "ai_requests": 0,
+  "passed": true
+}

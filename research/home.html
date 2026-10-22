@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- interactive-widget=resizes-content: on Android (Chrome 108+/WebView), makes the layout
+         viewport (and thus 100vh/85vh-based fixed elements like our bottom-sheet dialogs) shrink
+         to fit ABOVE the on-screen keyboard instead of being overlaid/pushed off-screen by it.
+         Without this, a fixed bottom sheet sized in vh units keeps its pre-keyboard height and
+         gets partially hidden behind the keyboard, making its input field impossible to see while
+         typing (e.g. the "Tra từ" vocabulary lookup popup). Harmless no-op on browsers that don't
+         support the hint (iOS Safari, older Chrome). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+
+    <!-- Android web render-safe mode MUST be decided before first paint.
+         Buggy Chrome 148 Mali/Adreno drivers (crbug.com/513880229) fail to
+         invalidate raster tiles: anything painted before React mounts (the
+         SEO fallback below) can leave permanent ghost/striped tiles behind
+         the app. main.tsx runs too late (module scripts execute after HTML
+         parse), so this inline script sets the classes synchronously. -->
+    <script>
+      (function () {
+        var ua = navigator.userAgent;
+        if (/Android/i.test(ua) && !/; wv\)/i.test(ua)) {
+          document.documentElement.classList.add(
+            "android-chrome-render-safe",
+            "android-web-render-safe"
+          );
+        }
+      })();
+    </script>
+    <style>
+      /* Never paint the SEO fallback on render-safe devices: its pre-mount
+         paint is the poisoned raster the driver keeps as ghost tiles. */
+      html.android-web-render-safe #seo-fallback {
+        display: none !important;
+      }
+    </style>
+
+    <!-- Disable browser auto-translate -->
+    <meta name="google" content="notranslate" />
+
+    <!-- Primary Meta Tags -->
+    <title>OpenQuiz - Free Vocabulary Learning | Quizlet & Anki Alternative</title>
+    <meta name="title" content="OpenQuiz - Free Vocabulary Learning | Quizlet & Anki Alternative" />
+    <meta name="description" content="Free language learning platform with 120,000+ monthly active users. Learn English, Korean, Japanese, Chinese with AI flashcards, spaced repetition, and real-time AI conversation practice. Free forever — better than Quizlet, Anki, Knowt." />
+    <meta name="author" content="OpenQuiz" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://openquiz.ai/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://openquiz.ai/" />
+    <meta property="og:title" content="OpenQuiz - Free Vocabulary Learning | 120K+ Monthly Users" />
+    <meta property="og:description" content="Free language learning platform with 120,000+ monthly active users. AI flashcards, spaced repetition, real-time AI conversation for English, Korean, Japanese, Chinese. Free forever." />
+    <meta property="og:image" content="https://openquiz.ai/hero.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="OpenQuiz" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://openquiz.ai/" />
+    <meta name="twitter:title" content="OpenQuiz - Free Vocabulary Learning | 120K+ Monthly Users" />
+    <meta name="twitter:description" content="Free language learning platform. AI flashcards, speaking practice, AI conversation. Free forever — better than Quizlet, Anki, Knowt." />
+    <meta name="twitter:image" content="https://openquiz.ai/hero.jpg" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="OpenQuiz" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/logo.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+    
+    <!-- Android/Chrome Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="OpenQuiz" />
+
+    
+    <!-- Alternate Languages (Hreflang) -->
+    <link rel="alternate" hreflang="en" href="https://openquiz.ai/en/" />
+    <link rel="alternate" hreflang="vi" href="https://openquiz.ai/vi/" />
+    <link rel="alternate" hreflang="x-default" href="https://openquiz.ai/" />
+
+    <!-- Browser-language-based title/meta swap (no server redirect needed) -->
+    <script>
+      (function () {
+        var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (lang.startsWith('vi')) {
+          var vi = {
+            title: 'OpenQuiz - Web Học Từ Vựng Miễn Phí | Quizlet & Anki Alternative',
+            description: 'Web học từ vựng miễn phí cho người Việt với 120,000+ người dùng hoạt động hàng tháng. Học tiếng Anh, Hàn, Nhật, Trung miễn phí qua flashcard AI, lặp lại ngắt quãng và luyện hội thoại thực tế. Free forever — alternative tốt hơn Quizlet, Anki, Knowt.',
+            ogTitle: 'OpenQuiz - Web Học Từ Vựng Miễn Phí | 120,000+ Người Dùng Hàng Tháng',
+            ogDescription: 'Web học từ vựng miễn phí cho người Việt với 120,000+ MAU. Flashcard AI, lặp lại ngắt quãng, luyện hội thoại thực tế cho tiếng Anh, Hàn, Nhật, Trung. Free forever.',
+            twTitle: 'OpenQuiz - Web Học Từ Vựng Miễn Phí | 120,000+ Người Dùng',
+            twDescription: 'Web học từ vựng miễn phí cho người Việt. Flashcard AI, luyện nói, hội thoại AI. Free forever — alternative tốt hơn Quizlet, Anki, Knowt.'
+          };
+          document.title = vi.title;
+          var setMeta = function (sel, val) {
+            var el = document.querySelector(sel);
+            if (el) el.setAttribute('content', val);
+          };
+          setMeta('meta[name="title"]', vi.title);
+          setMeta('meta[name="description"]', vi.description);
+          setMeta('meta[property="og:title"]', vi.ogTitle);
+          setMeta('meta[property="og:description"]', vi.ogDescription);
+          setMeta('meta[name="twitter:title"]', vi.twTitle);
+          setMeta('meta[name="twitter:description"]', vi.twDescription);
+        }
+      })();
+    </script>
+    
+    <!-- Preconnect for Performance (system fonts only — no Google Fonts loaded) -->
+    
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "OpenQuiz",
+      "alternateName": ["OpenQuiz AI", "Web Học Từ Vựng OpenQuiz"],
+      "url": "https://openquiz.ai",
+      "description": "Free language learning platform with 120,000+ monthly active users. AI flashcards, spaced repetition, conversation practice. Web học từ vựng miễn phí cho người Việt.",
+      "applicationCategory": "EducationalApplication",
+      "applicationSubCategory": "LanguageLearning",
+      "operatingSystem": "Web Browser, iOS, Android",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Forever",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2027-12-31",
+          "url": "https://openquiz.ai/",
+          "description": "Unlimited spaced repetition, flashcards, dictation. Free forever, no credit card."
+        },
+        {
+          "@type": "Offer",
+          "name": "Premium Monthly",
+          "price": "159000",
+          "priceCurrency": "VND",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2027-12-31",
+          "url": "https://openquiz.ai/",
+          "description": "Unlimited AI flashcards, AI learning paths, conversation practice."
+        },
+        {
+          "@type": "Offer",
+          "name": "Premium Yearly",
+          "price": "790000",
+          "priceCurrency": "VND",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2027-12-31",
+          "url": "https://openquiz.ai/",
+          "description": "Save 50%. Equivalent to 66,000 VND/month."
+        }
+      ],
+      "interactionStatistic": {
+        "@type": "InteractionCounter",
+        "interactionType": "https://schema.org/UseAction",
+        "userInteractionCount": 60000,
+        "description": "Monthly active users"
+      },
+      "featureList": [
+        "AI-generated flashcards",
+        "AI-personalized learning paths",
+        "Spaced Repetition System (SRS)",
+        "Real-time AI conversation practice",
+        "Image-to-flashcard with AI",
+        "Grammar and sentence building",
+        "Dictation and pronunciation",
+        "50+ languages supported",
+        "Vietnamese-native UX",
+        "Chrome Extension",
+        "PWA + iOS + Android apps"
+      ],
+      "inLanguage": ["en", "vi", "ko", "ja", "zh", "es"],
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student"
+      },
+      "isAccessibleForFree": true
+    }
+    </script>
+
+    <!-- FAQ Schema for AI Overviews and ChatGPT citations -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Web học từ vựng free nào tốt nhất cho người Việt?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "OpenQuiz là web học từ vựng miễn phí được thiết kế riêng cho người Việt, hiện có hơn 120,000 người dùng hoạt động hàng tháng. Toàn bộ tính năng học cốt lõi (spaced repetition, flashcard thủ công, luyện chính tả, chế độ học cơ bản) miễn phí mãi mãi, không yêu cầu thẻ tín dụng."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "OpenQuiz có thật sự miễn phí không?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Có. Gói Free Forever bao gồm học lặp lại ngắt quãng, luyện chính tả không giới hạn, tạo flashcard thủ công, và các chế độ học cơ bản. Chỉ các tính năng AI cao cấp như AI tạo flashcard tự động, AI lộ trình học cá nhân hoá, và luyện hội thoại không giới hạn mới yêu cầu nâng cấp Premium."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hoctuvung free trên OpenQuiz khác gì Quizlet, Anki, Knowt?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "OpenQuiz tập trung vào việc đưa từ vựng từ kiến thức thụ động thành khả năng nói chủ động qua chế độ hội thoại AI và luyện nói thực tế — điều mà các app flashcard truyền thống không có. Quizlet khoá Learn/Test mode sau paywall, Anki có giao diện cũ và không tích hợp luyện nói, Knowt thiên về study notes hơn là speaking fluency."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "OpenQuiz có hỗ trợ học tiếng Hàn, Nhật, Trung không?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Có. OpenQuiz hỗ trợ 50+ ngôn ngữ bao gồm tiếng Anh, Hàn, Nhật, Trung, Tây Ban Nha, Pháp, Đức, Nga, Ả Rập và nhiều ngôn ngữ khác — tất cả đều miễn phí với gói cơ bản, có giao diện tiếng Việt hoàn chỉnh."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Làm sao bắt đầu học từ vựng miễn phí trên OpenQuiz?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Truy cập https://openquiz.ai, đăng ký miễn phí bằng tài khoản Google hoặc Apple, chọn ngôn ngữ muốn học và ngôn ngữ mẹ đẻ, sau đó bắt đầu với lộ trình học có sẵn hoặc tạo bộ flashcard riêng. Toàn bộ quá trình mất chưa tới 1 phút."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "OpenQuiz có bao nhiêu người dùng?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "OpenQuiz hiện có hơn 120,000 người dùng hoạt động hàng tháng (MAU) tính tới năm 2026, là một trong những web học từ vựng miễn phí phát triển nhanh nhất tại Việt Nam."
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "OpenQuiz",
+      "url": "https://openquiz.ai",
+      "logo": "https://openquiz.ai/logo.png",
+      "sameAs": [
+        "https://facebook.com/people/OpenQuizAI/61584228211480/",
+        "https://x.com/openquizai"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "email": "official@openquiz.ai"
+      }
+    }
+    </script>
+
+    <!-- Product schema with pricing — improves Google rich snippets for price queries -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "OpenQuiz Premium",
+      "description": "Gói Premium của OpenQuiz mở khoá AI flashcard không giới hạn, AI lộ trình học cá nhân hoá, luyện hội thoại AI thực tế và toàn bộ tính năng nâng cao cho 50+ ngôn ngữ.",
+      "brand": {
+        "@type": "Brand",
+        "name": "OpenQuiz"
+      },
+      "image": "https://openquiz.ai/hero.jpg",
+      "url": "https://openquiz.ai/",
+      "category": "EducationalApplication",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "VND",
+        "lowPrice": "0",
+        "highPrice": "790000",
+        "offerCount": "3",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "2027-12-31",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free Forever",
+            "price": "0",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2027-12-31",
+            "url": "https://openquiz.ai/",
+            "description": "Spaced repetition, flashcard, dictation không giới hạn. Miễn phí mãi mãi, không cần thẻ tín dụng."
+          },
+          {
+            "@type": "Offer",
+            "name": "Premium Monthly",
+            "price": "159000",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2027-12-31",
+            "url": "https://openquiz.ai/",
+            "description": "AI flashcard, AI lộ trình học, hội thoại AI không giới hạn — gói tháng.",
+            "eligibleDuration": {
+              "@type": "QuantitativeValue",
+              "value": 1,
+              "unitCode": "MON"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Premium Yearly",
+            "price": "790000",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2027-12-31",
+            "url": "https://openquiz.ai/",
+            "description": "Tiết kiệm 50%, tương đương 66.000đ/tháng — gói năm.",
+            "eligibleDuration": {
+              "@type": "QuantitativeValue",
+              "value": 12,
+              "unitCode": "MON"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://openquiz.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "English",
+          "item": "https://openquiz.ai/en/index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Tiếng Việt",
+          "item": "https://openquiz.ai/vi/index.html"
+        }
+      ]
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-B-PTL6ee.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-BpUKX3gr.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ui-ZiP_uunV.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-utils--BulIq_u.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-4SbyULt2.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-HlH0Q0H9.css">
+  </head>
+
+  <body>
+    <!-- Service Worker Health Check - deferred so it does not block first paint -->
+    <script src="/sw-check.js" defer></script>
+    
+    <div id="root">
+      <!-- SEO content for crawlers and AI engines (replaced by React on hydration).
+           Visible by default; React replaces #root contents on mount so this only
+           paints briefly before hydration. Avoids Google's hidden-text spam pattern.
+           Hidden pre-paint on Android web render-safe devices (see <style> in head):
+           on those buggy drivers this pre-mount paint leaves permanent ghost tiles. -->
+      <div id="seo-fallback" style="max-width: 960px; margin: 0 auto; padding: 24px; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6;">
+        <h1>OpenQuiz - Web Học Từ Vựng Miễn Phí Cho Người Việt</h1>
+        <p><strong>120,000+ người dùng hoạt động hàng tháng</strong>. Free forever - không cần thẻ tín dụng.</p>
+        <p>OpenQuiz là web học từ vựng free hàng đầu cho người Việt, kết hợp flashcard AI, lặp lại ngắt quãng (spaced repetition), và luyện hội thoại AI thực tế. Là alternative miễn phí tốt hơn Quizlet, Anki và Knowt - đặc biệt cho học tiếng Anh, tiếng Hàn, tiếng Nhật và tiếng Trung.</p>
+
+        <h2>Tại sao chọn OpenQuiz?</h2>
+        <ul>
+          <li><strong>Hoctuvung free mãi mãi:</strong> Spaced repetition không giới hạn, flashcard không giới hạn, luyện chính tả không giới hạn.</li>
+          <li><strong>AI tạo flashcard:</strong> Chụp ảnh menu, tài liệu, biển báo - AI tự động trích xuất từ vựng và tạo bộ học.</li>
+          <li><strong>Luyện nói thực tế:</strong> Chế độ hội thoại AI mô phỏng tình huống đời thực (du lịch, công việc, phỏng vấn).</li>
+          <li><strong>Giao diện tiếng Việt:</strong> Thiết kế cho người Việt, lộ trình học tối ưu cho người mới bắt đầu đến nâng cao.</li>
+          <li><strong>50+ ngôn ngữ:</strong> Tiếng Anh, Hàn, Nhật, Trung, Tây Ban Nha, Pháp, Đức và nhiều hơn nữa.</li>
+        </ul>
+
+        <h2>Web học miễn phí cho từng ngôn ngữ</h2>
+        <ul>
+          <li><a href="/vi/hoc-tu-vung-mien-phi/">Web học từ vựng miễn phí</a> - tổng hợp cho mọi ngôn ngữ</li>
+          <li><a href="/vi/hoc-tieng-anh-mien-phi/">Web học tiếng Anh miễn phí</a> - luyện thi IELTS, TOEIC, giao tiếp</li>
+          <li><a href="/vi/hoc-tieng-han-mien-phi/">Web học tiếng Hàn miễn phí</a> - luyện thi TOPIK, du học Hàn</li>
+          <li><a href="/vi/hoc-tieng-nhat-mien-phi/">Web học tiếng Nhật miễn phí</a> - luyện thi JLPT, du học Nhật</li>
+          <li><a href="/vi/hoc-tieng-trung-mien-phi/">Web học tiếng Trung miễn phí</a> - luyện thi HSK, kinh doanh</li>
+        </ul>
+
+        <h2>Lộ trình học từ vựng sẵn có</h2>
+        <p>OpenQuiz cung cấp các lộ trình từ vựng được biên soạn sẵn theo từng ngôn ngữ và mục tiêu thi cử:</p>
+        <h3>Tiếng Anh</h3>
+        <ul>
+          <li><strong>Vocabulary in Use Advanced</strong> - từ vựng tiếng Anh nâng cao theo Cambridge</li>
+          <li><strong>Vocabulary in Use Pre-Intermediate &amp; Intermediate</strong> - từ vựng tiếng Anh sơ-trung cấp theo Cambridge</li>
+          <li><strong>Vocabulary for IELTS Reading</strong> - từ vựng học thuật phục vụ kỹ năng đọc IELTS</li>
+          <li><strong>600 TOEIC Words</strong> – 600 từ vựng trọng tâm luyện thi TOEIC theo chủ đề</li>
+          <li><strong>English for Work</strong> – từ vựng tiếng Anh giao tiếp công việc và môi trường chuyên nghiệp</li>
+          <li><strong>Từ vựng THPT</strong> - từ vựng tiếng Anh cho học sinh THPT</li>
+          <li><strong>Từ vựng ôn thi THPTQG</strong> - từ vựng tiếng Anh cho học sinh THPT</li>
+
+        </ul>
+        <h3>Tiếng Trung (HSK)</h3>
+        <ul>
+          <li><strong>HSK I</strong> - từ vựng tiếng Trung sơ cấp (~150 từ)</li>
+          <li><strong>HSK II</strong> - từ vựng tiếng Trung sơ trung cấp (~300 từ)</li>
+          <li><strong>HSK III</strong> - từ vựng tiếng Trung trung cấp (~600 từ)</li>
+          <li><strong>HSK IV</strong> - từ vựng tiếng Trung trung cao cấp (~1.200 từ)</li>
+          <li><strong>HSK V</strong> - từ vựng tiếng Trung cao cấp (~2.500 từ)</li>
+          <li><strong>HSK VI</strong> - từ vựng tiếng Trung thành thạo (~5.000 từ)</li>
+        </ul>
+        <h3>Tiếng Hàn (TOPIK)</h3>
+        <ul>
+          <li><strong>TOPIK I (Level 1-2)</strong> - từ vựng tiếng Hàn sơ cấp cho kỳ thi TOPIK</li>
+          <li><strong>TOPIK II (Level 3-4)</strong> - từ vựng tiếng Hàn trung cấp cho kỳ thi TOPIK</li>
+          <li><strong>TOPIK II (Level 5-6)</strong> - từ vựng tiếng Hàn cao cấp cho kỳ thi TOPIK</li>
+        </ul>
+        <h3>Tiếng Nhật (JLPT)</h3>
+        <ul>
+          <li><strong>JLPT N5</strong> - từ vựng tiếng Nhật sơ cấp (~800 từ)</li>
+          <li><strong>JLPT N4</strong> - từ vựng tiếng Nhật sơ trung cấp (~1.500 từ)</li>
+          <li><strong>JLPT N3</strong> - từ vựng tiếng Nhật trung cấp (~3.750 từ)</li>
+          <li><strong>JLPT N2</strong> - từ vựng tiếng Nhật tiền cao cấp (~6.000 từ)</li>
+          <li><strong>JLPT N1</strong> - từ vựng tiếng Nhật cao cấp (~10.000 từ)</li>
+        </ul>
+
+        <h2>So sánh với các app khác</h2>
+        <ul>
+          <li><a href="/vi/openquiz-vs-quizlet/">OpenQuiz vs Quizlet</a></li>
+          <li><a href="/vi/openquiz-vs-anki/">OpenQuiz vs Anki</a></li>
+          <li><a href="/vi/openquiz-vs-knowt/">OpenQuiz vs Knowt</a></li>
+        </ul>
+
+        <h2>Bảng giá đơn giản</h2>
+        <ul>
+          <li><strong>Free Forever:</strong> 0đ - Spaced repetition, flashcard, dictation không giới hạn.</li>
+          <li><strong>Premium tháng:</strong> 159.000đ - Mở khoá AI flashcard, AI lộ trình học, hội thoại AI không giới hạn.</li>
+          <li><strong>Premium năm:</strong> 790.000đ - Tiết kiệm 50%, chỉ 66k/tháng.</li>
+        </ul>
+
+        <h2>Câu hỏi thường gặp</h2>
+        <dl>
+          <dt>Web học từ vựng free nào tốt nhất cho người Việt?</dt>
+          <dd>OpenQuiz là web học từ vựng miễn phí được thiết kế riêng cho người Việt, hiện có hơn 120,000 người dùng hoạt động hàng tháng. Toàn bộ tính năng học cốt lõi (spaced repetition, flashcard thủ công, luyện chính tả, chế độ học cơ bản) miễn phí mãi mãi, không yêu cầu thẻ tín dụng.</dd>
+          <dt>OpenQuiz có thật sự miễn phí không?</dt>
+          <dd>Có. Gói Free Forever bao gồm học lặp lại ngắt quãng, luyện chính tả không giới hạn, tạo flashcard thủ công, và các chế độ học cơ bản. Chỉ các tính năng AI cao cấp như AI tạo flashcard tự động, AI lộ trình học cá nhân hoá, và luyện hội thoại không giới hạn mới yêu cầu nâng cấp Premium.</dd>
+          <dt>Hoctuvung free trên OpenQuiz khác gì Quizlet, Anki, Knowt?</dt>
+          <dd>OpenQuiz tập trung vào việc đưa từ vựng từ kiến thức thụ động thành khả năng nói chủ động qua chế độ hội thoại AI và luyện nói thực tế — điều mà các app flashcard truyền thống không có. Quizlet khoá Learn/Test mode sau paywall, Anki có giao diện cũ và không tích hợp luyện nói, Knowt thiên về study notes hơn là speaking fluency.</dd>
+          <dt>OpenQuiz có hỗ trợ học tiếng Hàn, Nhật, Trung không?</dt>
+          <dd>Có. OpenQuiz hỗ trợ 50+ ngôn ngữ bao gồm tiếng Anh, Hàn, Nhật, Trung, Tây Ban Nha, Pháp, Đức, Nga, Ả Rập và nhiều ngôn ngữ khác — tất cả đều miễn phí với gói cơ bản, có giao diện tiếng Việt hoàn chỉnh.</dd>
+          <dt>Làm sao bắt đầu học từ vựng miễn phí trên OpenQuiz?</dt>
+          <dd>Truy cập https://openquiz.ai, đăng ký miễn phí bằng tài khoản Google hoặc Apple, chọn ngôn ngữ muốn học và ngôn ngữ mẹ đẻ, sau đó bắt đầu với lộ trình học có sẵn hoặc tạo bộ flashcard riêng. Toàn bộ quá trình mất chưa tới 1 phút.</dd>
+          <dt>OpenQuiz có bao nhiêu người dùng?</dt>
+          <dd>OpenQuiz hiện có hơn 120,000 người dùng hoạt động hàng tháng (MAU) tính tới năm 2026, là một trong những web học từ vựng miễn phí phát triển nhanh nhất tại Việt Nam.</dd>
+        </dl>
+
+        <p><a href="/vi/">→ Xem trang chủ tiếng Việt</a> · <a href="/en/">→ English homepage</a></p>
+
+        <noscript>
+          <p><strong>OpenQuiz cần JavaScript để chạy.</strong> Vui lòng bật JavaScript trong trình duyệt để bắt đầu học từ vựng miễn phí.</p>
+        </noscript>
+      </div>
+    </div>
+    <!-- Stale-chunk recovery: if the ENTRY bundle itself 404s (stale/cached
+         index.html referencing deleted hashed assets after a deploy), the
+         in-app recovery in main.tsx can never run because main.tsx IS the
+         failed script. This inline handler must be registered BEFORE the
+         module tag, with capture=true (resource load errors don't bubble).
+         It clears SW caches and reloads once with a cache-busting param. -->
+    <script>
+      (function () {
+        var KEY = 'oq-asset-recovery-ts';
+        window.addEventListener(
+          'error',
+          function (e) {
+            var t = e.target;
+            if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK')) return;
+            var src = t.src || t.href || '';
+            if (src.indexOf('/assets/') === -1) return;
+            try {
+              var last = Number(sessionStorage.getItem(KEY) || 0);
+              if (Date.now() - last < 60000) return; // max once per 60s
+              sessionStorage.setItem(KEY, String(Date.now()));
+            } catch (_) {}
+            var cleanup = [];
+            if (window.caches && caches.keys) {
+              cleanup.push(
+                caches.keys().then(function (keys) {
+                  return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+                })
+              );
+            }
+            if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+              cleanup.push(
+                navigator.serviceWorker.getRegistrations().then(function (regs) {
+                  return Promise.all(regs.map(function (r) { return r.update(); }));
+                })
+              );
+            }
+            Promise.all(cleanup)
+              .catch(function () {})
+              .then(function () {
+                var url = new URL(window.location.href);
+                url.searchParams.set('v', String(Date.now()));
+                window.location.replace(url.toString());
+              });
+          },
+          true
+        );
+      })();
+    </script>
+  <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4d8bbf03a8665aa',t:'MTc5MjUwNjc2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

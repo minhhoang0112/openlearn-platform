@@ -1,0 +1,117 @@
+{
+  "source": "ordinary_playwright_UI_not_REA",
+  "url": "https://openquiz.ai/study/163",
+  "steps": [
+    {
+      "before": {
+        "word": "apprentice",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "0",
+          "20"
+        ]
+      },
+      "feedback": {
+        "word": "apprentice",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "0",
+          "20"
+        ]
+      },
+      "accepted": false,
+      "afterContinue": {
+        "word": "apply",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "1",
+          "20"
+        ]
+      }
+    },
+    {
+      "before": {
+        "word": "apply",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "1",
+          "20"
+        ]
+      },
+      "feedback": {
+        "word": "apply",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "1",
+          "20"
+        ]
+      },
+      "accepted": true,
+      "afterContinue": {
+        "word": "apply for",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "2",
+          "20"
+        ]
+      }
+    },
+    {
+      "before": {
+        "word": "apply for",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "2",
+          "20"
+        ]
+      },
+      "feedback": {
+        "word": "apply for",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "2",
+          "20"
+        ]
+      },
+      "accepted": true,
+      "afterContinue": {
+        "word": "expert",
+        "completed": [
+          "0",
+          "12"
+        ],
+        "questions": [
+          "3",
+          "20"
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Only three answers observed; this does not recover the full scheduling algorithm."
+  ]
+}

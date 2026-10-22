@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-21",
+  "method": "REA passive CDP observation following ordinary Playwright UI collection",
+  "evidence_id": "ev_faaf951cadba919fc9af22d350d96d61cf8e1176a9116edaeccd5653690172bc",
+  "url": "https://openquiz.ai/study-set/90553",
+  "headings": [
+    "Essential Word Forms Part 20",
+    "Chưa học"
+  ],
+  "earlier_toeic_path_evidence_id": "ev_f72dc4cf6e0ffed2ef17e32db0f0e2abef8ea005599c25b695c0cd0d4c3300e8",
+  "collection_scripts": [
+    "research/collect-visible-vocabulary.mjs",
+    "research/collect-english-library.mjs"
+  ],
+  "collection_is_REA": false,
+  "excluded": [
+    "cookies",
+    "auth headers",
+    "browser storage values",
+    "locked examples",
+    "synonyms",
+    "images",
+    "audio"
+  ],
+  "limitations": [
+    "Visible vocabulary matching does not establish pedagogical correctness.",
+    "The original server algorithms and proprietary AI prompts remain unknown.",
+    "English-definition variants and extended lesson bodies were not imported."
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "model": "gemini-3.5-flash",
+  "http_status": 200,
+  "finish_reason": "STOP",
+  "token_usage": {
+    "promptTokenCount": 267,
+    "candidatesTokenCount": 405,
+    "totalTokenCount": 672,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 267
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "output_characters": 1334,
+  "root_keys": [
+    "summary",
+    "strengths",
+    "corrections",
+    "suggested_response",
+    "next_practice",
+    "task_relevance"
+  ],
+  "field_types": {
+    "summary": "string",
+    "strengths": "array",
+    "corrections": "array",
+    "suggested_response": "string",
+    "next_practice": "array",
+    "task_relevance": "string"
+  },
+  "correction_shapes": [
+    {
+      "keys": [
+        "original",
+        "corrected",
+        "explanation"
+      ],
+      "original_present": true,
+      "no_change": false
+    },
+    {
+      "keys": [
+        "original",
+        "corrected",
+        "explanation"
+      ],
+      "original_present": true,
+      "no_change": false
+    },
+    {
+      "keys": [
+        "original",
+        "corrected",
+        "explanation"
+      ],
+      "original_present": true,
+      "no_change": true
+    }
+  ],
+  "task_relevance": "on_topic",
+  "provider_parse_passed": true
+}
