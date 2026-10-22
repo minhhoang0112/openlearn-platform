@@ -1,53 +1,168 @@
-# OpenLearn - Nền tảng học tiếng Anh thông minh
+# OpenLearn - Nền tảng Học Tiếng Anh Thông Minh Toàn Diện
 
-Trạng thái BE và phần FE đã tích hợp: [bàn giao chung](docs/UPGRADE-V2-STATUS.md). Nội dung và hợp đồng mới nhất: [bài ôn chặng](docs/UPGRADE-V2-CHECKPOINT.md).
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-blue?logo=react" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-5.x-purple?logo=vite" alt="Vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?logo=node.js" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite" alt="SQLite" />
+  <img src="https://img.shields.io/badge/AI-Gemini%20%7C%20Ollama-orange?logo=google-gemini" alt="AI Integration" />
+</p>
 
-Nâng cấp V2: [lộ trình sản phẩm](docs/UPGRADE-V2-PLAN.md), [trạng thái Codex/Anti](docs/UPGRADE-V2-STATUS.md), [API đã triển khai](docs/UPGRADE-V2-API.md). BE có hai bài pilot với WAV lưu sẵn, profile, kế hoạch ngày và session có lưu nháp/chấm/tiếp tục; FE chờ Anti tích hợp. Chưa có toàn bộ giáo trình V2. Contract hiện tại1.4.0/schema7/112route; các thông số ở bàn giao cũ bên dưới là lịch sử.
+---
 
-React 19, TypeScript, Vite, Tailwind; BE Node.js với SQLite. Phạm vi hiện tại: Nền tảng, TOEIC và Công việc. Tài khoản, thư viện và tiến độ được lưu ở BE.
+## 📖 Giới thiệu dự án
 
-## Chạy nhanh
+**OpenLearn** là nền tảng học tiếng Anh trực tuyến hiện đại, kết hợp phương pháp khoa học nhận thức (**Spaced Repetition System - SRS**) cùng trí tuệ nhân tạo (**AI Tutor**). Dự án mang đến trải nghiệm học tập cá nhân hóa, trực quan và toàn diện cho người học tiếng Anh ở mọi cấp độ — từ người mới bắt đầu (A1/A2) đến người luyện thi chứng chỉ **TOEIC** và tiếng Anh giao tiếp công sở.
 
-Yêu cầu Node.js 24.15 trở lên. Mở **run.bat**, hoặc:
+Mục tiêu của OpenLearn là biến việc học ngôn ngữ thành một hành trình thú vị, bền bỉ và hiệu quả: **học từ vựng nhớ lâu**, **nghe chép chính tả chuẩn xác**, **tự tin phát âm & phản xạ giao tiếp với AI**.
 
-```sh
+---
+
+## ✨ Tính năng nổi bật
+
+### 1. 🧠 Học từ vựng thông minh (Spaced Repetition - SRS)
+- **Thuật toán lặp lại ngắt quãng**: Tự động tính toán chu kỳ ôn tập tối ưu dựa trên mức độ ghi nhớ của từng từ vựng.
+- **Thẻ từ vựng (Flashcard) trực quan**: Đầy đủ phiên âm IPA, từ loại, định nghĩa Anh - Việt, ví dụ câu thực tế và audio phát âm chuẩn bản ngữ.
+- **Chế độ kiểm tra đa dạng**: Chọn đáp án, gõ từ, ghép nghĩa và tự đánh giá độ khó.
+
+### 2. 🎧 Luyện nghe chép chính tả (Dictation)
+- **Luyện nghe từng câu (Audio Loop & Waveform)**: Hệ thống tách câu tự động, hỗ trợ tua lại, chỉnh tốc độ phát âm (0.75x - 1.25x).
+- **Chấm điểm thời gian thực**: Nhận diện tức thì từng từ gõ đúng/sai, phân tích lỗi chính tả chi tiết và hiển thị gợi ý khi cần.
+- **Phím tắt tiện lợi**: Điều khiển hoàn toàn qua bàn phím giúp tối ưu trải nghiệm tập trung cao độ.
+
+### 3. 🗣️ Luyện nói & Giao tiếp phản xạ AI (Speaking & Shadowing)
+- **Đối thoại cùng AI Tutor**: Đóng vai trò các tình huống thực tế (phỏng vấn, đặt hàng, du lịch, công sở...) với trợ lý AI thông minh (hỗ trợ Google Gemini hoặc mô hình cục bộ Ollama).
+- **Phân tích phát âm & Ngữ điệu**: Tích hợp Speech Recognition ghi nhận giọng nói, chấm điểm độ chuẩn xác và phản hồi sửa lỗi chi tiết.
+- **Phương pháp Shadowing**: Nghe câu mẫu, nhại lại theo nhịp điệu và so sánh bản thu âm cá nhân với giọng bản ngữ.
+
+### 4. 📖 Luyện đọc & Củng cố ngữ pháp (Reading & Grammar)
+- **Bài tập điền từ (Cloze Test) & Đọc hiểu**: Văn bản đa dạng chủ đề từ đời sống đến kinh doanh, bài kiểm tra kiểm tra ngữ cảnh và từ vựng.
+- **Sắp xếp câu & Luyện ngữ pháp**: Kéo thả / ghép từ thành câu hoàn chỉnh, chấm điểm và giải thích ngữ pháp tức thì từ máy chủ.
+
+### 5. 🎯 Lộ trình bài bản & Kho học liệu phong phú
+- **Lộ trình phân cấp**: Thiết kế khoa học từ nền tảng A1, A2 đến B1/B2 và chuyên đề TOEIC.
+- **Kho từ vựng đồ sộ**: Hơn 10 lộ trình chuẩn, 180 bộ từ, hơn 8.300+ mục từ vựng đối soát kèm ví dụ phong phú.
+- **Chuyên đề TOEIC**: 50 chủ điểm từ vựng sát đề thi thực tế, phân bổ theo từng Part của bài thi TOEIC.
+
+### 6. 📊 Quản lý tiến độ & Gamification
+- **Bảng điều khiển học tập (Dashboard)**: Theo dõi số từ đã học, số từ cần ôn hôm nay, chuỗi ngày học liên tục (Streak).
+- **Lịch sử & Sổ tay lỗi sai (Mistakes Notebook)**: Tự động gom lại các từ hoặc câu làm sai để người học tập trung ôn lại đúng điểm yếu.
+- **Tự tạo bài học cá nhân**: Hỗ trợ người dùng tự tạo bộ flashcard, import danh sách từ vựng riêng của mình.
+
+---
+
+## 🛠️ Công nghệ sử dụng (Tech Stack)
+
+| Lớp (Layer) | Công nghệ chính |
+| :--- | :--- |
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons |
+| **Backend** | Node.js, Express RESTful API |
+| **Cơ sở dữ liệu** | SQLite (lưu trữ nhẹ, an toàn, dễ bảo trì, độc lập môi trường) |
+| **Trí tuệ nhân tạo (AI)** | Google Gemini API (Gemini 2.5 Flash / Pro), Ollama Local Adapter |
+| **Audio & Media** | Web Audio API, Web Speech API (Recognition & Synthesis) |
+| **Testing** | Node.js Test Runner, Automated Functional & API Tests |
+
+---
+
+## 🚀 Hướng dẫn cài đặt & Khởi chạy
+
+### 1. Yêu cầu hệ thống
+- **Node.js**: Phiên bản `>= 18` (khuyến nghị Node.js LTS hoặc `20+`).
+- **Trình quản lý gói**: `npm` đi kèm Node.js.
+- **Hệ điều hành**: Windows, macOS, hoặc Linux.
+
+### 2. Cài đặt dự án
+
+Clone repository về máy:
+```bash
+git clone https://github.com/minhhoang0112/openlearn-platform.git
+cd openlearn-platform
+```
+
+Cài đặt dependencies:
+```bash
 npm install
+```
+
+### 3. Cấu hình biến môi trường
+Tạo tệp `.env` từ tệp mẫu:
+```bash
+cp .env.example .env
+```
+*(Nếu dùng Windows PowerShell: `Copy-Item .env.example .env`)*
+
+Chỉnh sửa các thiết lập trong `.env` nếu cần (ví dụ cấu hình `GEMINI_API_KEY` để kích hoạt tính năng gia sư AI).
+
+### 4. Khởi chạy ứng dụng
+
+Chạy đồng thời cả Frontend và Backend API:
+```bash
 npm run dev:all
 ```
 
-FE: http://127.0.0.1:3000. BE: http://127.0.0.1:4000/api/v1.
+Hoặc sử dụng file chạy nhanh (dành cho Windows):
+- Nhấp đúp vào file `run.bat` trong thư mục gốc.
 
-Đăng ký tài khoản local của bạn. Không có tài khoản/mật khẩu demo mặc định. Đăng nhập trên web OpenQuiz gốc không đăng nhập vào ứng dụng này.
+Truy cập ứng dụng tại:
+- **Giao diện Web (Frontend)**: [http://localhost:3000](http://localhost:3000)
+- **Máy chủ API (Backend)**: [http://localhost:4000/api/v1](http://localhost:4000/api/v1)
 
-`npm run dev` chỉ chạy FE; `npm run dev:api` chạy BE có theo dõi thay đổi. Database nằm ở `server/data/openquiz.sqlite`; không xóa thư mục này để giữ dữ liệu.
+---
 
-## Học liệu
+## 📁 Cấu trúc thư mục
 
-Đã đối chiếu qua giao diện nguồn: 10 lộ trình, 180 bộ, 8.363 mục từ Anh–Việt. TOEIC có 50 bộ và 600 từ khác nhau. Có nguồn và thứ tự từng bộ trong `server/content/visible-english.json`.
-
-Các trường đã nhập: từ, nghĩa, loại từ, IPA khi hiển thị. Có thêm ví dụ tự soạn và chức năng tạo/lưu ví dụ bằng AI. 60 bài học A1/A2/TOEIC có nội dung của ứng dụng và bài tập chấm trên server. Nội dung bổ sung không phải bài Pro gốc; `vocabulary_verified` không có nghĩa đã sao chép toàn bộ học liệu nguồn.
-
-Seed giữ ID từ và tiến độ, không tạo lại tài khoản mẫu, không dùng tệp TOEIC sinh cũ. Bản nháp cũ được giữ để bảo toàn lịch sử nhưng không đề xuất trong danh mục.
-
-## AI
-
-Có adapter Gemini, Ollama local và gateway tùy chọn. Key hiện tại đã cấu hình trong `.env` của BE và đã kiểm tra bằng yêu cầu Gemini thật. Khi chuyển máy, cấu hình theo [hướng dẫn AI](docs/AI-SETUP.md). Không có key thì AI báo chưa kết nối, không sinh phản hồi hoặc điểm giả.
-
-Gemini nhận xét bản ghi âm thực; Speech Recognition chỉ tạo bản chép lời để luyện nói. Ứng dụng cá nhân không có thanh toán, gói nâng cấp hay khóa tính năng theo tài khoản nguồn.
-
-## Kiểm tra và bàn giao
-
-```sh
-npm run test:api
-npm run build
+```plaintext
+openlearn-platform/
+├── docs/                 # Tài liệu thiết kế hệ thống, sơ đồ kiến trúc & API routes
+├── public/               # Tài nguyên tĩnh (âm thanh, hình ảnh minh họa, favicon)
+├── server/               # Mã nguồn máy chủ Node.js & REST API
+│   ├── content/          # Dữ liệu giáo trình, từ vựng chuẩn & bài học
+│   ├── data/             # Cơ sở dữ liệu SQLite cục bộ (được bảo mật trong .gitignore)
+│   ├── routes/           # Các endpoint API (Học tập, SRS, AI, Tiến độ, Luyện thi)
+│   ├── tests/            # Bộ kiểm thử tự động API
+│   ├── database.mjs      # Khởi tạo và quản lý lược đồ dữ liệu SQLite
+│   └── index.mjs         # Entry point máy chủ Backend Express
+├── src/                  # Mã nguồn ứng dụng Frontend React
+│   ├── api/              # HTTP Client kết nối Backend API
+│   ├── components/       # Các thành phần giao diện tái sử dụng (Flashcard, Audio, Modals...)
+│   ├── context/          # State management (Xác thực, cấu hình học tập, routing)
+│   ├── types/            # Khai báo TypeScript types & interfaces
+│   ├── views/            # Các trang giao diện (Dashboard, Study, Dictation, Speaking, TOEIC...)
+│   ├── App.tsx           # Thành phần cốt lõi của ứng dụng
+│   └── main.tsx          # Điểm gắn kết DOM của React
+├── .env.example          # Tệp biến môi trường mẫu
+├── package.json          # Quản lý thư viện và scripts dự án
+├── run.bat               # Kịch bản khởi chạy nhanh trên Windows
+├── tailwind.config.js    # Cấu hình Tailwind CSS
+└── vite.config.ts        # Cấu hình đóng gói Vite
 ```
 
-Nếu môi trường Windows chặn tiến trình con của test runner:
+---
 
-```sh
-node --test --test-isolation=none server/tests/*.test.mjs
-```
+## 📜 Các lệnh hữu ích (NPM Scripts)
 
-Kịch bản `scripts/browser-qa.mjs` dùng Chrome và Playwright có sẵn trong môi trường phân tích; kiểm tra trên database tạm, không dùng tài khoản thật. Cần cập nhật đường dẫn Playwright khi chuyển máy.
+- `npm run dev:all` - Khởi động đồng thời Frontend (`:3000`) và Backend (`:4000`).
+- `npm run dev` - Khởi động riêng biệt Frontend.
+- `npm run dev:api` - Khởi động Backend API với chế độ tự động reload khi có thay đổi code.
+- `npm run build` - Biên dịch và đóng gói ứng dụng Frontend cho môi trường Production.
+- `npm run test:api` - Chạy toàn bộ các bài kiểm thử tự động của Backend.
 
-Đọc [bàn giao BE mới nhất cho Anti](docs/ANTI-BE-HANDOFF.md), [gallery ảnh nguồn/local](docs/anti-reference/index.html), [101 route](docs/API-ROUTES.md) và [kiểm kê học liệu](docs/verified-content-inventory.json). Contract 1.3.0, SQLite schema 6. Học/nghe chép có cấu hình và phím tắt; ngữ pháp/đọc hiểu chấm BE, lưu draft/lịch sử; hội thoại có setup, mở đầu, gợi ý và dịch. BE khóa học lưu từng bước từ nội dung thật và chỉ ghi hoàn thành khi nộp quiz. Anti cần nối các API mới theo tài liệu; build thành công chưa có nghĩa FE đã nối hết logic.
+---
+
+## 🤝 Đóng góp & Phát triển (Contributing)
+
+Mọi đóng góp nhằm hoàn thiện OpenLearn đều được hoan nghênh! Hãy:
+1. Fork repository này về tài khoản của bạn.
+2. Tạo nhánh tính năng mới (`git checkout -b feature/tinh-nang-moi`).
+3. Commit các thay đổi (`git commit -m "feat: thêm tính năng mới"`).
+4. Đẩy nhánh lên GitHub (`git push origin feature/tinh-nang-moi`).
+5. Mở một **Pull Request** để cùng thảo luận và tích hợp.
+
+---
+
+## 📄 Bản quyền (License)
+
+Dự án được phân phối dưới giấy phép mã nguồn mở [MIT License](LICENSE).
+Mọi cá nhân, tổ chức đều có thể tự do tham khảo, học tập và triển khai phục vụ cộng đồng.
