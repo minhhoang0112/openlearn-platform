@@ -40,8 +40,8 @@ export const AuthView: React.FC = () => {
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl">
         {/* Brand */}
         <div className="flex flex-col items-center text-center mb-8">
-          <img src="/logo.svg" alt="OpenQuiz" className="w-14 h-14 rounded-2xl shadow-lg mb-3" />
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">OpenQuiz Platform</h1>
+          <img src="/logo.svg" alt="OpenLearn" className="w-14 h-14 rounded-2xl shadow-lg mb-3" />
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">OpenLearn Platform</h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Học thông minh, nhớ từ vựng vĩnh viễn với SRS & AI</p>
         </div>
 

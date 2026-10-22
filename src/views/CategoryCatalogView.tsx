@@ -42,7 +42,7 @@ export const CategoryCatalogView: React.FC = () => {
       title: 'Nền tảng',
       groups: [
         {
-          groupTitle: 'Essential Word Forms - by OpenQuiz',
+          groupTitle: 'Essential Word Forms - by OpenLearn',
           items: [
             {
               id: 39443,
@@ -51,7 +51,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -66,7 +66,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'basic'
             },
             {
@@ -76,7 +76,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'basic'
             }
           ]
@@ -86,12 +86,12 @@ export const CategoryCatalogView: React.FC = () => {
           items: [
             {
               id: 102453,
-              title: 'Lộ trình làm chủ Chunking để giao tiếp trôi chảy - by OpenQuiz',
+              title: 'Lộ trình làm chủ Chunking để giao tiếp trôi chảy - by OpenLearn',
               verified: true,
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -106,7 +106,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'advanced'
             },
             {
@@ -116,7 +116,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'advanced'
             }
           ]
@@ -131,7 +131,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             },
             {
@@ -141,7 +141,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -152,7 +152,7 @@ export const CategoryCatalogView: React.FC = () => {
       title: 'TOEIC',
       groups: [
         {
-          groupTitle: 'OpenQuiz đề xuất',
+          groupTitle: 'OpenLearn đề xuất',
           items: [
             {
               id: 14,
@@ -161,7 +161,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 50,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             },
             {
@@ -171,13 +171,13 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 50,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
         },
         {
-          groupTitle: 'Essential Word Forms - by OpenQuiz',
+          groupTitle: 'Essential Word Forms - by OpenLearn',
           items: [
             {
               id: 39443,
@@ -186,7 +186,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 20,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -206,7 +206,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             },
             {
@@ -216,7 +216,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -231,7 +231,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             },
             {
@@ -241,7 +241,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -256,7 +256,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'basic'
             },
             {
@@ -266,7 +266,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'basic'
             }
           ]
@@ -281,7 +281,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'vi',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             },
             {
@@ -291,7 +291,7 @@ export const CategoryCatalogView: React.FC = () => {
               learningLang: 'en',
               nativeLang: 'en',
               setsCount: 10,
-              author: 'Openquiz Team',
+              author: 'OpenLearn Team',
               level: 'intermediate'
             }
           ]
@@ -376,7 +376,7 @@ export const CategoryCatalogView: React.FC = () => {
                           {item.title}
                         </h3>
                         {item.verified && (
-                          <div className="shrink-0 text-blue-500 mt-0.5" title="Xác thực bởi OpenQuiz">
+                          <div className="shrink-0 text-blue-500 mt-0.5" title="Xác thực bởi OpenLearn">
                             <ShieldCheck className="w-4 h-4 fill-blue-50 text-blue-600" />
                           </div>
                         )}
