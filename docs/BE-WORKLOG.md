@@ -42,3 +42,10 @@ File này ghi chi tiết công việc BE, tách khỏi STATUS để giảm xung 
 - BE1.17/schema14/151 route: comprehensive word/step counts rõ, resume phiên khớp, restart chủ động, evidence whole terms tránh brandish=brand. SetCard.progress thống nhất counts/state/lastsession. Dictionary exact-entry local/prepared20 mục, bảo vệ note riêng. Readingtranslation explicit defaultfalse/cache+dedup, giữ drafts/grades vàowner.
 - Ngân hàng ví dụ tăng25→41, chỉ đúng sense/câu; ví dụAI thiếu dịch có exact known sentence được overlay bản dịch chuẩn bị sẵn, không sửa raw note/source.
 -102 full BE test đạt trước mở rộng16 mục;16 regression liên quan chạy lại đạt sau đó. Build qua, không gọi live AI hoặc đổi .env/schema. FE pending hợp đồng LEARNING-CONSISTENCY-ANTI.md.
+
+## 24/10/2026 — DICT-01: sửa tail thành detail và dịch ngoài thư viện
+
+- Gốc lỗi: utility lấy danh sách LIKE khi không có exact. Thay bằng POST /dictionary/translate: local exact rồi MyMemory EN↔VI, giữ query, không Gemini/key,500byte/segment, cache24h500entry/user-keyed và pending dedup, lỗi mạng/quota rõ.
+- Nối trực tiếp utility và modal tối thiểu: nguồn/notice dịch bên ngoài, stale response guard, lưu thẻ đúng chiều. Không thay thiết kế tổng thể của Anti.
+- Thử live1từ công khai tail: HTTP200, dịch đuôi, đoạn cuối.5 nhóm test BE mới và5 Chrome mock cases qua; build qua;107 toàn BE test qua. Update fixture thiếu ví dụ sang appraise để vẫn test nhánh missing sau prepared bank đã có apply.
+- Contract1.18/schema14/152route, không migration/env/model changes. Hợp đồng DICTIONARY-ONLINE.md; CLARITY-02 FE khác vẫn pending.

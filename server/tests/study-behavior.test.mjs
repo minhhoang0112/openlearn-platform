@@ -52,6 +52,8 @@ test('partial meanings, audited self-correction, idempotent rewards and bounded 
 });
 test('sentence dictation plays and grades the real example, refusing unavailable sentences',async t=>{
   const {api,set,words}=await fixture(t);
+  // Use a term outside the prepared example bank to exercise the missing-data path.
+  assert.equal((await api('PATCH',`/sets/${set.id}/words/${words[1].id}`,{term:'appraise',definition:'đánh giá',example:''})).status,200);
   const missing=await api('POST','/study/sessions',{set_id:set.id,mode:'dictation',settings:{dictation_content:'example'}});
   assert.equal(missing.status,409);assert.equal(missing.error.code,'EXAMPLES_REQUIRED');assert.deepEqual(missing.error.details.word_ids,[words[1].id]);
   const session=(await api('POST','/study/sessions',{set_id:set.id,mode:'dictation',settings:{dictation_content:'example',word_ids:[words[0].id]}})).data;

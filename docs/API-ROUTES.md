@@ -80,6 +80,7 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/conversations/:id/messages/:message_id/translation | Required | Translate and cache an owned message in Vietnamese |
 | GET | /api/v1/srs/practice | Required | Read-only per-set SRS practice scopes for all learning modes; real counts, selected IDs and explicit scheduling effects |
 | GET | /api/v1/dictionary/entry | Required | Exact English word/phrase details for synonym popovers, with local Vietnamese senses and examples; no AI |
+| POST | /api/v1/dictionary/translate | Required | Translate entered word/phrase/short sentence EN↔VI: exact local entries first, then MyMemory with bounded private cache; never substitutes a similar word or calls Gemini |
 | GET | /api/v1/sets/:id/lessons | Required | Observed comprehensive plan: five words per lesson, five named steps |
 | GET | /api/v1/sets/:id/lessons/:lesson_index | Required | Lesson words, step progress, and provider availability |
 | POST | /api/v1/sets/:id/lessons/:lesson_index/steps/:step_index/start | Required | Start a lesson step with a validated five-word subset |

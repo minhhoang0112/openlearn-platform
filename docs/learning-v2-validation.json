@@ -1,15 +1,14 @@
 {
   "date": "2026-10-24",
-  "contract": "1.17.0",
+  "contract": "1.18.0",
   "schema": 14,
-  "routes": 151,
+  "routes": 152,
   "backend": {
     "command": "node --test --test-isolation=none --test-reporter=dot --test-timeout=15000 server/tests/*.test.mjs",
-    "passed": 102,
+    "passed": 107,
     "failed": 0,
-    "contract_tested": "1.17.0",
-    "current_contract_full_suite_rerun": true,
-    "note": "Full102 passed before prepared bank expansion25→41; final16 related regressions passed afterwards; no live AI."
+    "contract_tested": "1.18.0",
+    "current_contract_full_suite_rerun": true
   },
   "pilot": {
     "programs": 2,
@@ -28,7 +27,7 @@
     "health_http": 200,
     "schema": 14
   },
-  "frontend_integration": "Build passed. CLARITY-02 user screenshots/source show remaining comprehension/navigation/synonym layout issues; FE pending, not release approved.",
+  "frontend_integration": "Build and5 dictionary Chrome checks passed; DICT-01 UI wired. Other CLARITY-02 UI acceptance still pending.",
   "remaining": [
     "CLARITY-02 shared comprehensive runner, uniform set progress, individual synonym speech/detail, translation layout and contextual navigation",
     "CLARITY-01 FE corrections for SRS scope/modes/fake save, navigation, practice discovery and explicit-only AI details",
@@ -145,5 +144,19 @@
     "frontend_pending": true,
     "no_live_ai": true,
     "prepared_dictionary_entries": 20
+  },
+  "dictionary_online": {
+    "backend": true,
+    "frontend": true,
+    "gemini_calls": 0,
+    "provider": "MyMemory",
+    "cache": "private per-user memory24h",
+    "browser_report": "dictionary-browser-validation.json",
+    "browser_checks": 5,
+    "live_sample": {
+      "query": "tail",
+      "http": 200,
+      "translation": "đuôi, đoạn cuối"
+    }
   }
 }

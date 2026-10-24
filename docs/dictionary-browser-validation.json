@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-24",
+  "provider": "controlled translation fixture; no Gemini",
+  "checks": [
+    "tail returns its online translation although local detail exists",
+    "UI identifies machine translation and Internet/provider limits",
+    "Repeated lookup uses cache, not another provider request",
+    "Unstored seek translates without a vocabulary card or Gemini key",
+    "Network failure is an honest error, never another word definition"
+  ],
+  "page_errors": [],
+  "passed": true
+}

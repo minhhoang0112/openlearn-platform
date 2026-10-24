@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Search,
   X,
@@ -42,6 +42,8 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
   const [result, setResult] = useState<DictionaryLookupResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [addedCards, setAddedCards] = useState<Record<number, boolean>>({});
+  const searchSequence = useRef(0);
+  useEffect(() => { if (!isOpen) searchSequence.current++; return () => { searchSequence.current++; }; }, [isOpen]);
 
   // Search History from localStorage
   const [history, setHistory] = useState<HistoryItem[]>(() => {
@@ -61,6 +63,8 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
       } else {
         setQuery('');
         setResult(null);
+        setLoading(false);
+        setError('');
       }
     }
   }, [isOpen, initialQuery]);
@@ -107,6 +111,7 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
   };
 
   const handleSearch = async (textToSearch?: string) => {
+    const sequence = ++searchSequence.current;
     const q = (textToSearch !== undefined ? textToSearch : query).trim();
     if (!q) {
       setResult(null);
@@ -121,13 +126,15 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
         sourceLang,
         targetLang === 'auto' ? 'vi' : targetLang
       );
+      if (sequence !== searchSequence.current) return;
       setResult(res);
       setAddedCards({});
       saveToHistory(res);
     } catch (err) {
+      if (sequence !== searchSequence.current) return;
       setError(err instanceof Error ? err.message : 'Không tra được từ này.');
     } finally {
-      setLoading(false);
+      if (sequence === searchSequence.current) setLoading(false);
     }
   };
 
@@ -141,7 +148,7 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
     setLoading(true);setError('');
     try {
       const sense=result.senses[senseIdx];
-      await api.createSet({title:'Tra cứu: '+result.term,visibility:'private',learning_language:'en',native_language:'vi',words:[{term:result.term,definition:sense.meaning,phonetic:result.phonetic,part_of_speech:sense.pos,example:sense.exampleEn||''}]});
+      await api.createSet({title:'Tra cứu: '+result.term,visibility:'private',learning_language:result.sourceLang,native_language:result.targetLang,words:[{term:result.term,definition:sense.meaning,phonetic:result.phonetic,part_of_speech:sense.pos,example:sense.exampleEn||''}]});
       setAddedCards(prev=>({...prev,[senseIdx]:true}));
     } catch(e) {setError(e instanceof Error?e.message:'Không lưu được bộ thẻ.');}
     finally {setLoading(false);}
@@ -173,6 +180,8 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
           </button>
         </div>
 
+        <p className="text-xs text-slate-500">Tra từ, cụm từ hoặc dịch câu ngắn Anh ↔ Việt. Khi chưa có nghĩa lưu sẵn, nội dung bạn tìm sẽ được gửi tới MyMemory để dịch; cần Internet và có hạn mức miễn phí.</p>
+        {result?.source === 'mymemory' && <p className="text-xs text-slate-500">Bản dịch tự động từ MyMemory{result.cached ? ' · Đã lưu tạm' : ''}. Không sử dụng quota Gemini; bản dịch có thể cần đối chiếu ngữ cảnh.</p>}
         {/* 2. Search Input & Controls matching Image 2 */}
         {error && <p role="alert" className="text-rose-600">{error}</p>}
         <form onSubmit={handleFormSubmit} className="space-y-3">
@@ -181,12 +190,17 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
               type="text"
               value={query}
               onChange={(e) => {
+                searchSequence.current++;
                 setQuery(e.target.value);
+                setLoading(false);
+                setError('');
+                setResult(null);
                 if (!e.target.value.trim()) {
                   setResult(null);
                 }
               }}
-              placeholder="Nhập một từ để tra cứu..."
+              aria-label="Từ hoặc câu cần dịch"
+              placeholder="Nhập từ, cụm từ hoặc câu ngắn..."
               className="w-full pl-4 pr-14 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs"
               autoFocus
             />
@@ -377,7 +391,7 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
                           {idx + 1}
                         </span>
                         <span className="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs">
-                          {sense.pos}
+                          {sense.pos || 'Bản dịch'}
                         </span>
                         <span className="text-base font-bold text-slate-900 dark:text-white">
                           {sense.meaning}

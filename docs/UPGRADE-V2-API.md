@@ -1,3 +1,5 @@
+> Latest1.18.0/schema14/152route: DICTIONARY-ONLINE.md fixes lookup and adds online translation; other CLARITY-02 FE work remains pending.
+
 > Mới nhất: contract1.17.0/schema14/151 route, LEARNING-CONSISTENCY-ANTI.md và BE-NEXT.md. CLARITY-02 FE còn pending.
 
 > Mới nhất24/10: contract1.16.0/schema14/149 route; đọc BE-NEXT.md và LEARNING-CLARITY-ANTI.md. Báo cáo chốt cũ chưa bao phủ lỗi SRS/UX mới.

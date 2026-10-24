@@ -1,3 +1,5 @@
+> Mới nhất: contract1.18.0/schema14/152route. DICT-01 đã nối trực tiếp BE + utility/modal Tra từ, đọc DICTIONARY-ONLINE.md. Không revert về tìm LIKE. CLARITY-02 bên dưới vẫn là việc FE cần hoàn tất.
+
 # CLARITY-02 — Học kết hợp và trải nghiệm thống nhất
 
 **Contract1.17.0 / schema14 /151 route.** Đọc [LEARNING-CONSISTENCY-ANTI.md](LEARNING-CONSISTENCY-ANTI.md). Yêu cầu người dùng mới thay thế phần P1 còn thiếu rõ của CLARITY-01: đồng bộ runner Học kết hợp, tiến độ tất cả bộ, synonym click đọc+chi tiết từng mục, ví dụ/dịch gọn, sidebar/breadcrumb/back giữ nguồn.

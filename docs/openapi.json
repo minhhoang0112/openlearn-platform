@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "OpenQuiz Independent Backend",
-    "version": "1.17.0",
+    "version": "1.18.0",
     "description": "Route inventory. See docs/UPGRADE-V2-STATUS.md for implemented V2 routes and docs/ANTI-BE-HANDOFF.md for existing functionality."
   },
   "servers": [
@@ -3938,6 +3938,64 @@
           }
         ],
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/dictionary/translate": {
+      "post": {
+        "summary": "Translate entered word/phrase/short sentence EN↔VI: exact local entries first, then MyMemory with bounded private cache; never substitutes a similar word or calls Gemini",
+        "operationId": "post_dictionary_translate",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
