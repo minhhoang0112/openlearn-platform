@@ -1,5 +1,6 @@
 import { fail,text,integer,enumeration,list,boolean,pagination } from './validation.mjs';
 import { transaction } from './database.mjs';
+import { preparedWordExample } from './content/prepared-word-examples.mjs';
 const now = () => new Date().toISOString();
 const langs = ['en','vi','zh','ko','ja','fr','de','es','ru','ar','th','it','pt'];
 
@@ -18,14 +19,21 @@ export function contentService(db) {
     return row;
   }
   function words(setId,user) {
-    return db.prepare(`SELECT w.*,COALESCE(n.example,w.example) example,COALESCE(n.translation,'') example_translation,COALESCE(n.synonyms,w.synonyms) synonyms,COALESCE(n.origin,'library') example_source,COALESCE(p.status,'new') status,COALESCE(p.starred,0) starred,p.due_at FROM words w LEFT JOIN word_progress p ON w.id=p.word_id AND p.user_id=? LEFT JOIN word_notes n ON n.word_id=w.id AND n.user_id=? WHERE w.set_id=? ORDER BY w.position,w.id`).all(user?.id ?? -1,user?.id ?? -1,setId).map(w=>({...w,starred:!!w.starred}));
+    const languages=db.prepare('SELECT learning_language,native_language FROM study_sets WHERE id=?').get(setId);
+    return db.prepare(`SELECT w.*,COALESCE(n.example,w.example) example,COALESCE(n.translation,'') example_translation,COALESCE(n.synonyms,w.synonyms) synonyms,COALESCE(n.origin,'library') example_source,COALESCE(p.status,'new') status,COALESCE(p.starred,0) starred,p.due_at,p.last_reviewed_at FROM words w LEFT JOIN word_progress p ON w.id=p.word_id AND p.user_id=? LEFT JOIN word_notes n ON n.word_id=w.id AND n.user_id=? WHERE w.set_id=? ORDER BY w.position,w.id`).all(user?.id ?? -1,user?.id ?? -1,setId).map(w=>{const value={...w,starred:!!w.starred};return languages?.learning_language==='en'&&languages?.native_language==='vi'?preparedWordExample(value):value;});
   }
   function card(row,user,kind='set') {
     const saved = !!user && !!db.prepare('SELECT 1 FROM bookmarks WHERE user_id=? AND kind=? AND resource_id=?').get(user.id,kind,row.id);
     const count = kind === 'set' ? db.prepare('SELECT COUNT(*) n FROM words WHERE set_id=?').get(row.id).n : db.prepare(`SELECT COUNT(*) n FROM path_sets ps JOIN study_sets s ON s.id=ps.set_id WHERE ps.path_id=? AND (s.visibility='public' OR s.owner_id=?)`).get(row.id,user?.id??-1).n;
     const author = row.owner_id ? db.prepare('SELECT id,name FROM users WHERE id=?').get(row.owner_id) : {id:null,name:'Reference content'};
     const learned = kind === 'set' && user ? db.prepare(`SELECT COUNT(*) n FROM word_progress p JOIN words w ON p.word_id=w.id WHERE w.set_id=? AND p.user_id=? AND p.status='mastered'`).get(row.id,user.id).n : 0;
-    return { ...row,saved,author,[kind==='set'?'word_count':'set_count']:count,...(kind==='set'?{mastered_count:learned}:{}) };
+    let progress;
+    if(kind==='set'){
+      const tracked=user?db.prepare("SELECT COUNT(*) tracked,SUM(p.last_reviewed_at IS NOT NULL) reviewed,SUM(p.status='learning') learning,SUM(p.due_at<=?) due FROM word_progress p JOIN words w ON w.id=p.word_id WHERE p.user_id=? AND w.set_id=?").get(now(),user.id,row.id):{};
+      const session=user?db.prepare('SELECT id,mode,completed_at,updated_at FROM study_sessions WHERE user_id=? AND set_id=? ORDER BY updated_at DESC,rowid DESC LIMIT 1').get(user.id,row.id):null;
+      progress={total_words:count,reviewed_words:tracked.reviewed??0,learning_words:tracked.learning??0,mastered_words:learned,due_words:tracked.due??0,state:count===0?'empty':learned===count?'mastered':session||tracked.reviewed>0?'in_progress':'not_started',last_session:session??null};
+    }
+    return { ...row,saved,author,[kind==='set'?'word_count':'set_count']:count,...(kind==='set'?{mastered_count:learned,progress}:{}) };
   }
   function validateWord(input) {
     if (!input || typeof input !== 'object') fail(400,'VALIDATION_ERROR','Each word must be an object.');

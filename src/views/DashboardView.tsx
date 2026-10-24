@@ -2,25 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "../context/RouterContext";
 import { useAuth } from "../context/AuthContext";
 import { api, DashboardData, SetCard, PathCard, TodayPlan } from "../api/client";
+import { normalizeSetProgress } from "../utils/setProgress";
+import { withNavigationContext } from "../utils/navigationContext";
 import {
   Search,
   ArrowRight,
   ChevronRight,
-  BookOpen,
   Sparkles,
   ShieldCheck,
   User,
-  Clock,
-  Flame,
-  Globe,
-  Bell,
-  CheckCircle2,
-  Share2,
-  ExternalLink,
-  Laptop,
   Repeat,
   BookX,
-  TrendingUp,
+  ExternalLink,
 } from "lucide-react";
 
 export const DashboardView: React.FC = () => {
@@ -36,20 +29,32 @@ export const DashboardView: React.FC = () => {
     "english" | "other"
   >("english");
   const [dashData, setDashData] = useState<DashboardData | null>(null);
+  const [fallbackSets, setFallbackSets] = useState<SetCard[]>([]);
   const [todayPlan, setTodayPlan] = useState<TodayPlan | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    api
-      .dashboard()
-      .then((d) => {
-        if (mounted) setDashData(d);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+    const loadDash = () => {
+      api
+        .dashboard()
+        .then((d) => {
+          if (mounted) setDashData(d);
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (mounted) setLoading(false);
+        });
+
+      api
+        .getSets()
+        .then((res) => {
+          if (mounted) setFallbackSets((res.items || []).slice(0, 3));
+        })
+        .catch(() => {});
+    };
+
+    loadDash();
 
     api
       .getTodayPlan()
@@ -58,8 +63,12 @@ export const DashboardView: React.FC = () => {
       })
       .catch(() => {});
 
+    const onSrsUpdated = () => loadDash();
+    window.addEventListener("openquiz:srs-updated", onSrsUpdated);
+
     return () => {
       mounted = false;
+      window.removeEventListener("openquiz:srs-updated", onSrsUpdated);
     };
   }, []);
 
@@ -90,7 +99,12 @@ export const DashboardView: React.FC = () => {
   };
 
   const activePath = dashData?.studying_paths?.[0];
-  const userSets = dashData?.studying_sets || [];
+  const userSets =
+    dashData?.studying_sets && dashData.studying_sets.length > 0
+      ? dashData.studying_sets
+      : dashData?.recent && dashData.recent.length > 0
+        ? dashData.recent
+        : fallbackSets;
 
   return (
     <div className="max-w-5xl mx-auto space-y-7 pb-24">
@@ -122,6 +136,29 @@ export const DashboardView: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {/* 1.5. Clear 1-line path choice: Học theo kế hoạch vs Tự chọn bài luyện */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs shadow-2xs">
+        <span className="text-slate-600 dark:text-slate-300 font-medium">
+          Chọn cách học hôm nay: <strong className="text-slate-900 dark:text-white">Học theo kế hoạch</strong> (bài học &amp; ôn tập trong ngày) hoặc <strong className="text-slate-900 dark:text-white">Tự chọn bài luyện</strong> theo bộ từ bên dưới.
+        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => navigate("/today")}
+            className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 font-bold transition"
+          >
+            Học theo kế hoạch →
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/practice")}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold transition"
+          >
+            Tự chọn bài luyện
+          </button>
+        </div>
+      </div>
 
       {/* Search Results Display */}
       {(searchLoading || searchResults || searchError) && (
@@ -162,25 +199,37 @@ export const DashboardView: React.FC = () => {
                   <p className="text-xs text-slate-400 italic">Không có bộ từ phù hợp.</p>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    {searchResults.sets.map((s) => (
-                      <div
-                        key={s.id}
-                        onClick={() => navigate(`/study-set/${s.id}`)}
-                        className="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-800 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer space-y-2 group shadow-2xs"
-                      >
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
-                          {s.word_count} từ
-                        </span>
-                        <h5 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-indigo-600 transition line-clamp-1">
-                          {s.title}
-                        </h5>
-                        {s.description && (
-                          <p className="text-[11px] text-slate-400 line-clamp-2">
-                            {s.description}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                    {searchResults.sets.map((s) => {
+                      const prog = normalizeSetProgress(s);
+                      return (
+                        <div
+                          key={s.id}
+                          onClick={() =>
+                            navigate(
+                              withNavigationContext(`/study-set/${s.id}`, {
+                                source: "home",
+                                from: "/",
+                                setTitle: s.title,
+                              }),
+                            )
+                          }
+                          className="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-800 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer space-y-2 group shadow-2xs"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+                              {prog.totalWords} từ
+                            </span>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${prog.stateBadgeClass}`}>
+                              {prog.stateLabel}
+                            </span>
+                          </div>
+                          <h5 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-indigo-600 transition line-clamp-1">
+                            {s.title}
+                          </h5>
+                          <p className="text-[11px] text-slate-400">{prog.summaryText}</p>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -197,7 +246,16 @@ export const DashboardView: React.FC = () => {
                     {searchResults.paths.map((p) => (
                       <div
                         key={p.id}
-                        onClick={() => navigate(`/learning-path/${p.id}`)}
+                        onClick={() =>
+                          navigate(
+                            withNavigationContext(`/learning-path/${p.id}`, {
+                              source: "home",
+                              from: "/",
+                              pathId: p.id,
+                              pathTitle: p.title,
+                            }),
+                          )
+                        }
                         className="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-800 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer space-y-2 group shadow-2xs"
                       >
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
@@ -343,9 +401,15 @@ export const DashboardView: React.FC = () => {
         <div
           onClick={() =>
             navigate(
-              activePath
-                ? `/learning-path/${activePath.id}`
-                : "/learning-path/20269",
+              withNavigationContext(
+                activePath ? `/learning-path/${activePath.id}` : "/learning-path/20269",
+                {
+                  source: "home",
+                  from: "/",
+                  pathId: activePath?.id || 20269,
+                  pathTitle: activePath?.title || "Lộ trình A1-A2 tiếng Anh",
+                },
+              ),
             )
           }
           className="group relative overflow-hidden p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-6"
@@ -396,75 +460,84 @@ export const DashboardView: React.FC = () => {
           </button>
         </div>
 
-        {userSets.length > 0 ? (
+        {userSets.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             {userSets.slice(0, 3).map((s) => {
-              const mastered = s.mastered_count || 0;
-              const total = Math.max(1, s.word_count || 1);
-              const pct = Math.round((mastered / total) * 100);
+              const prog = normalizeSetProgress(s);
+              const viewUrl = withNavigationContext(`/study-set/${s.id}`, {
+                source: "home",
+                from: "/",
+                setTitle: s.title,
+              });
+              const primaryUrl = withNavigationContext(
+                prog.state === "empty" ? `/study-set/${s.id}` : `/study/${s.id}`,
+                {
+                  source: "home",
+                  from: "/",
+                  setTitle: s.title,
+                },
+              );
               return (
                 <div
                   key={s.id}
-                  onClick={() => navigate(`/study-set/${s.id}`)}
-                  className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer space-y-3"
+                  data-testid={`dashboard-set-card-${s.id}`}
+                  onClick={() => navigate(viewUrl)}
+                  className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex flex-col justify-between gap-3"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                      {s.title}
-                    </span>
-                    <span className="text-[11px] font-semibold text-slate-400">
-                      {s.word_count} từ
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        {s.title}
+                      </span>
+                      <span
+                        data-testid={`set-state-badge-${s.id}`}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${prog.stateBadgeClass}`}
+                      >
+                        {prog.stateLabel}
+                      </span>
+                    </div>
                     <div
-                      className="h-full bg-indigo-600 rounded-full transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
+                      data-testid={`set-progress-text-${s.id}`}
+                      className="text-[11px] font-medium text-slate-500 dark:text-slate-400"
+                    >
+                      {prog.totalWords} từ • {prog.summaryText}
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-                    <span>
-                      Đã nhớ {mastered}/{s.word_count} từ
-                    </span>
-                    <span className="font-bold text-indigo-600">{pct}%</span>
+
+                  <div className="space-y-2.5">
+                    <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          prog.state === "mastered" ? "bg-emerald-500" : "bg-indigo-600"
+                        }`}
+                        style={{ width: `${prog.percentReviewed}%` }}
+                      />
+                    </div>
+                    <div
+                      className="flex items-center justify-end gap-2 pt-0.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        data-testid={`set-view-cta-${s.id}`}
+                        onClick={() => navigate(viewUrl)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition"
+                      >
+                        Xem bộ
+                      </button>
+                      <button
+                        type="button"
+                        data-testid={`set-primary-cta-${s.id}`}
+                        onClick={() => navigate(primaryUrl)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 text-[11px] font-bold transition"
+                      >
+                        {prog.primaryCtaLabel} →
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
             })}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            {/* Starter reference sets when learner has not started reviewing yet */}
-            {[
-              { id: 163, title: "Tuyển dụng & việc làm", words: 12 },
-              { id: 10164, title: "Lương thưởng & tài chính", words: 12 },
-              { id: 10165, title: "Kinh doanh & thị trường", words: 12 },
-            ].map((s) => (
-              <div
-                key={s.id}
-                onClick={() => navigate(`/study-set/${s.id}`)}
-                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                    {s.title}
-                  </span>
-                  <span className="text-[11px] font-semibold text-slate-400">
-                    {s.words} từ
-                  </span>
-                </div>
-                <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-slate-300 dark:bg-slate-700 rounded-full"
-                    style={{ width: "0%" }}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-                  <span>Chưa bắt đầu</span>
-                  <span className="font-bold text-indigo-600">Học ngay →</span>
-                </div>
-              </div>
-            ))}
           </div>
         )}
       </div>
@@ -548,7 +621,16 @@ export const DashboardView: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div
-              onClick={() => navigate("/learning-path/20269")}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/learning-path/20269", {
+                    source: "home",
+                    from: "/",
+                    pathId: 20269,
+                    pathTitle: "Lộ trình A1-A2 tiếng Anh",
+                  }),
+                )
+              }
               className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-4"
             >
               <div className="space-y-2">
@@ -572,7 +654,16 @@ export const DashboardView: React.FC = () => {
             </div>
 
             <div
-              onClick={() => navigate("/learning-path/102453")}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/learning-path/102453", {
+                    source: "home",
+                    from: "/",
+                    pathId: 102453,
+                    pathTitle: "Lộ trình làm chủ Chunking",
+                  }),
+                )
+              }
               className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-4"
             >
               <div className="space-y-2">
@@ -615,7 +706,16 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <div
-            onClick={() => navigate("/learning-path/14")}
+            onClick={() =>
+              navigate(
+                withNavigationContext("/learning-path/14", {
+                  source: "home",
+                  from: "/",
+                  pathId: 14,
+                  pathTitle: "600 Essential words for the TOEIC Exam",
+                }),
+              )
+            }
             className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-4"
           >
             <div className="space-y-2">
@@ -658,7 +758,16 @@ export const DashboardView: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div
-              onClick={() => navigate("/learning-path/20274")}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/learning-path/20274", {
+                    source: "home",
+                    from: "/",
+                    pathId: 20274,
+                    pathTitle: "English for Technical Work",
+                  }),
+                )
+              }
               className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-4"
             >
               <div className="space-y-2">
@@ -682,7 +791,16 @@ export const DashboardView: React.FC = () => {
             </div>
 
             <div
-              onClick={() => navigate("/learning-path/20276")}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/learning-path/20276", {
+                    source: "home",
+                    from: "/",
+                    pathId: 20276,
+                    pathTitle: "English for Business",
+                  }),
+                )
+              }
               className="group p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 transition cursor-pointer flex items-center justify-between gap-4"
             >
               <div className="space-y-2">

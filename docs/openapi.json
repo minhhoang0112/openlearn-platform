@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "OpenQuiz Independent Backend",
-    "version": "1.15.0",
+    "version": "1.17.0",
     "description": "Route inventory. See docs/UPGRADE-V2-STATUS.md for implemented V2 routes and docs/ANTI-BE-HANDOFF.md for existing functionality."
   },
   "servers": [
@@ -3072,7 +3072,7 @@
     },
     "/api/v1/words/{id}/learning-details": {
       "post": {
-        "summary": "Ensure a personal example, Vietnamese translation and synonyms; cached reads do not consume AI limits",
+        "summary": "Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits",
         "operationId": "post_words__id_learning_details",
         "security": [
           {
@@ -3868,6 +3868,76 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/srs/practice": {
+      "get": {
+        "summary": "Read-only per-set SRS practice scopes for all learning modes; real counts, selected IDs and explicit scheduling effects",
+        "operationId": "get_srs_practice",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/dictionary/entry": {
+      "get": {
+        "summary": "Exact English word/phrase details for synonym popovers, with local Vietnamese senses and examples; no AI",
+        "operationId": "get_dictionary_entry",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
@@ -4805,6 +4875,72 @@
           },
           {
             "name": "step_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/exercise-attempts/{id}/translation": {
+      "post": {
+        "summary": "Read cached Vietnamese reading translation or explicitly request AI once; never grade or replace learner answers",
+        "operationId": "post_exercise_attempts__id_translation",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {

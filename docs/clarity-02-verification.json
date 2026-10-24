@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-24",
+  "contract_version": "1.17.0",
+  "criteria": {
+    "g1_set_progress_and_ctas": {
+      "passed": true,
+      "set1": {
+        "badge": "Chưa học",
+        "progress": "4 từ • 0/4 từ đã luyện · 0 đã nhớ",
+        "cta": "Học bộ"
+      },
+      "set2": {
+        "badge": "Đang học",
+        "progress": "2 từ • 1/2 từ đã luyện · 0 đã nhớ",
+        "cta": "Tiếp tục"
+      }
+    },
+    "g2_and_g3_comprehensive_lesson": {
+      "passed": true,
+      "lesson_1_words": 5,
+      "lesson_2_words": 1,
+      "resumed_after_reload": true,
+      "restarted_cleanly": true,
+      "scoped_word_ids": [
+        8370,
+        8371,
+        8372,
+        8373,
+        8374
+      ]
+    },
+    "g4_synonyms_and_popover": {
+      "passed": true,
+      "synonym_buttons": [
+        "submit",
+        "register",
+        "job seeker"
+      ],
+      "spoken_texts": [
+        "submit"
+      ],
+      "layout_shift_px": 0,
+      "dictionary_entry_called": true,
+      "user_b_isolated": true
+    },
+    "g5_contextual_navigation_and_breadcrumbs": {
+      "passed": true
+    },
+    "g6_translations_and_grammar_fallback": {
+      "passed": true
+    }
+  },
+  "page_errors": []
+}

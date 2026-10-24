@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-24",
+  "database": "isolated in-memory",
+  "ai_calls": 0,
+  "findings": [
+    "Fresh account has zero due words; current FE still requests unrelated sets.",
+    "Study mode tabs must be wired to actual exercises; screenshots and source show old flashcard-only presentation.",
+    "Sidebar has Today but lacks an explicit Home entry."
+  ],
+  "page_errors": [],
+  "actual_srs_summary": {
+    "due": 0,
+    "learning": 0,
+    "mastered": 0,
+    "tracked": 0,
+    "memory_levels": [
+      {
+        "level": 0,
+        "label": "Chưa nhớ",
+        "count": 0
+      },
+      {
+        "level": 1,
+        "label": "Cần học",
+        "count": 0
+      },
+      {
+        "level": 2,
+        "label": "Hay quên",
+        "count": 0
+      },
+      {
+        "level": 3,
+        "label": "Nhớ tạm",
+        "count": 0
+      },
+      {
+        "level": 4,
+        "label": "Nhớ sâu",
+        "count": 0
+      }
+    ],
+    "forecast": [
+      {
+        "date": "2026-10-24",
+        "count": 0
+      },
+      {
+        "date": "2026-10-25",
+        "count": 0
+      },
+      {
+        "date": "2026-10-26",
+        "count": 0
+      },
+      {
+        "date": "2026-10-27",
+        "count": 0
+      },
+      {
+        "date": "2026-10-28",
+        "count": 0
+      },
+      {
+        "date": "2026-10-29",
+        "count": 0
+      },
+      {
+        "date": "2026-10-30",
+        "count": 0
+      },
+      {
+        "date": "2026-10-31",
+        "count": 0
+      },
+      {
+        "date": "2026-11-01",
+        "count": 0
+      },
+      {
+        "date": "2026-11-02",
+        "count": 0
+      },
+      {
+        "date": "2026-11-03",
+        "count": 0
+      },
+      {
+        "date": "2026-11-04",
+        "count": 0
+      },
+      {
+        "date": "2026-11-05",
+        "count": 0
+      },
+      {
+        "date": "2026-11-06",
+        "count": 0
+      }
+    ]
+  },
+  "actual_queue_total": 0,
+  "requests_sets_when_no_due": true,
+  "overview_text": "OpenLearn\nAI PLATFORM\nHôm nay\nLộ trình của tôi\nThư viện\nLuyện tập\nÔn tập\nSổ lỗi\nTiến độ\n>\nTra từ\nCÔNG CỤ\nTạo bộ thẻ\nTạo lộ trình\nMỞ RỘNG\nLớp học\nCÀI ĐẶT\nCài đặt học\nCài đặt AI\nA\nAudit learner\nTài khoản học tập\nÔn tập hôm nay:\n0\nTiếng Anh\nTạo bộ thẻ\nA\nAudit learner\n\naudit@test.invalid\n\nLặp lại ngắt quãng\nTừ đến hạn: 0\nThuần thục: 0\nDự báo ôn tập 7 ngày tới\nTh7\nCN\nTh2\nTh3\nTh4\nTh5\nTh6\nLặp lại ngắt quãng\nOpenQuiz Premium OpenLearn Premium\nĐã mở khoá toàn bộ\n\nMở khoá giới hạn cao hơn và các tính năng nâng cao (Học không giới hạn, không phát sinh chi phí).\n\nNâng cấp Premium\nCài đặt tài khoản\n\nCập nhật thông tin cá nhân của bạn.\n\nVai trò\nSinh viên\nHọc sinh\nNgười đi làm\nGiáo viên\nNgôn ngữ đang học\nEnglish (1)\n✕\nChuẩn bị thi chứng chỉ\nIELTS\nTOEIC\nTOEFL\nKhông\nNgôn ngữ mẹ đẻ\nVietnamese\nEnglish\nGiọng đọc tiếng Anh\nDolia (US-Female)\nMarcus (US-Male)\nIvy (UK-Female)\nOliver (UK-Male)\nÂm thanh học tập\nBật\nTắt\nGiao diện\n🖥️ Theo hệ thống\nSáng\nTối\nGiao diện mới (menu dọc)\nBật\nTắt\nLưu thay đổi\nTÀI KHOẢN\nĐăng xuất\nXoá tài khoản\n>\nTra từ",
+  "review_word_when_due_empty": "It was great talking to you",
+  "write_mode_input_counts": {
+    "before": 2,
+    "after": 2
+  },
+  "sidebar_has_home": 0
+}

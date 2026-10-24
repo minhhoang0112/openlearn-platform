@@ -1,11 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Loader2, Mic, Settings, Star, Volume2, RotateCcw, CheckCircle2, AlertCircle } from 'lucide-react';
-import { api, ApiError, ApiWord, GradedAnswer, StudySession, UserProfile, StudyOptionsResponse } from '../api/client';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Loader2, Mic, Settings, Star, Volume2, RotateCcw, CheckCircle2, AlertCircle, Repeat } from 'lucide-react';
+import { api, ApiError, ApiWord, GradedAnswer, StudySession, StudyMode, UserProfile, StudyOptionsResponse } from '../api/client';
 import { useRouter } from '../context/RouterContext';
 import { useAuth } from '../context/AuthContext';
 import { playAudio, recognizeSpeech, speechRecognitionAvailable } from '../utils/audio';
 import { WordLearningDetails } from './WordLearningDetails';
+import { LearningBreadcrumb } from './LearningBreadcrumb';
+import { forwardNavigationContext } from '../utils/navigationContext';
 import { defaultStudyPreferences, StudyPreferences, StudyPreferencesDialog } from './StudyPreferences';
+import { parsePracticeLaunchQuery, buildScopedSessionStorageKey } from '../utils/practiceLaunch';
 
 type RichSession = StudySession & {
   completed_words?: number;
@@ -25,6 +28,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
 
   const [session, setSession] = useState<RichSession | null>(null);
   const [words, setWords] = useState<ApiWord[]>([]);
+  const [setTitle, setSetTitle] = useState<string>('');
   const [studyCounts, setStudyCounts] = useState<{ total: number; starred: number; unmastered: number }>({
     total: 0,
     starred: 0,
@@ -46,8 +50,25 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   const recognitionCleanup = useRef<(() => void) | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const mode = dictation ? 'dictation' : 'learn';
-  const storageKey = `oq-study:${user?.id}:${mode}:${setId}:${path.includes('due=1') ? 'due' : 'all'}`;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
+  const mode: StudyMode = dictation
+    ? 'dictation'
+    : launchQuery.studyMode === 'write'
+      ? 'write'
+      : launchQuery.studyMode === 'quiz'
+        ? 'quiz'
+        : 'learn';
+  const isDueScope = launchQuery.reviewScope === 'due' || path.includes('due=1');
+  const storageKey = useMemo(
+    () =>
+      buildScopedSessionStorageKey('oq-study', user?.id, mode, setId, {
+        reviewScope: launchQuery.reviewScope || (path.includes('due=1') ? 'due' : null),
+        wordIds: launchQuery.wordIds,
+        studyMode: launchQuery.studyMode,
+        direction: launchQuery.direction,
+      }),
+    [user?.id, mode, setId, launchQuery, path],
+  );
   const currentWord = words.find((w) => w.id === session?.question?.word_id);
 
   const handleError = (e: unknown) => {
@@ -57,6 +78,23 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
     }
   };
 
+  const buildStartPayload = useCallback(
+    (preferences: StudyPreferences): Record<string, unknown> => ({
+      ...preferences,
+      required_correct: mode === 'learn' ? 2 : 1,
+      max_attempts: 3,
+      ...(launchQuery.direction ? { direction: launchQuery.direction } : {}),
+      ...(launchQuery.studyMode === 'quiz'
+        ? { question_types: ['quiz'] }
+        : launchQuery.studyMode === 'write'
+          ? { question_types: ['write'] }
+          : {}),
+      ...(launchQuery.wordIds.length > 0 ? { word_ids: launchQuery.wordIds } : {}),
+      ...(isDueScope ? { due_only: true } : {}),
+    }),
+    [mode, launchQuery, isDueScope],
+  );
+
   const create = async (preferences: StudyPreferences) => {
     setBusy(true);
     setError('');
@@ -64,12 +102,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
     setSession(null);
     setOptionId(undefined);
     try {
-      const next = await api.startStudy(setId, mode, {
-        ...preferences,
-        required_correct: mode === 'learn' ? 2 : 1,
-        max_attempts: 3,
-        ...(path.includes('due=1') ? { due_only: true } : {}),
-      });
+      const next = await api.startStudy(setId, mode, buildStartPayload(preferences));
       setSession(next as RichSession);
       setResult(null);
       setAnswer('');
@@ -100,6 +133,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
       .then(async ([profile, set, opts]) => {
         if (!active) return;
         setWords(set.words);
+        setSetTitle(set.title || '');
         if (opts?.counts) {
           setStudyCounts(opts.counts);
         }
@@ -117,12 +151,25 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
         if (dictation && savedStudy[mode] === undefined) {
           preference.auto_audio = true;
         }
+        if (launchQuery.direction) {
+          preference.direction = launchQuery.direction as any;
+        }
+        if (launchQuery.studyMode === 'quiz') {
+          preference.question_types = ['quiz'] as any;
+        } else if (launchQuery.studyMode === 'write') {
+          preference.question_types = ['write'] as any;
+        }
 
         const id = sessionStorage.getItem(storageKey);
         if (id) {
           try {
             const resumed = await api.resumeStudy(id);
-            if (active && resumed.set_id === setId && resumed.mode === mode && resumed.status === 'active') {
+            const resumedWordIds = Array.isArray(resumed.settings?.word_ids) ? resumed.settings.word_ids : [];
+            const sameScope =
+              launchQuery.wordIds.length === 0
+                ? resumedWordIds.length === 0
+                : JSON.stringify(resumedWordIds) === JSON.stringify(launchQuery.wordIds);
+            if (active && resumed.set_id === setId && resumed.mode === mode && resumed.status === 'active' && sameScope) {
               setSession(resumed as RichSession);
               setSettings({ ...preference, ...resumed.settings } as StudyPreferences);
               return;
@@ -134,12 +181,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
 
         if (!active) return;
         setSettings(preference);
-        const next = await api.startStudy(setId, mode, {
-          ...preference,
-          required_correct: mode === 'learn' ? 2 : 1,
-          max_attempts: 3,
-          ...(path.includes('due=1') ? { due_only: true } : {}),
-        });
+        const next = await api.startStudy(setId, mode, buildStartPayload(preference));
         if (active) {
           setSession(next as RichSession);
           sessionStorage.setItem(storageKey, next.id);
@@ -156,7 +198,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
       active = false;
       recognitionCleanup.current?.();
     };
-  }, [setId, mode, user?.id, path.includes('due=1')]);
+  }, [setId, mode, user?.id, storageKey, buildStartPayload]);
 
   const listen = useCallback(() => {
     const text = session?.question?.speech_text || currentWord?.term;
@@ -352,25 +394,43 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-20">
       {/* 1. Header bar */}
-      <header className="flex justify-between items-center">
-        <button
-          type="button"
-          onClick={() => navigate(`/study-set/${setId}`)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition p-2 -ml-2 rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Quay lại bộ từ</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setSettingsOpen(true)}
-          className="flex items-center gap-2 px-3.5 py-2 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
-        >
-          <Settings className="w-4 h-4 text-slate-500" />
-          <span>Cài đặt</span>
-        </button>
-      </header>
+      <LearningBreadcrumb
+        currentLabel={
+          dictation
+            ? 'Nghe chép chính tả'
+            : launchQuery.studyMode === 'write'
+            ? 'Luyện viết từ'
+            : launchQuery.studyMode === 'quiz'
+            ? 'Trắc nghiệm từ vựng'
+            : launchQuery.direction === 'both'
+            ? 'Học hai chiều'
+            : 'Học từ vựng'
+        }
+        setId={setId}
+        setTitle={setTitle || undefined}
+        rightSlot={
+          <div className="flex items-center gap-2">
+            {(launchQuery.reviewScope || launchQuery.wordIds.length > 0) && (
+              <button
+                type="button"
+                onClick={() => navigate('/repetition-study')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 transition"
+              >
+                <Repeat className="w-3.5 h-3.5" />
+                <span>Quay về ôn tập ({launchQuery.wordIds.length || session?.total_words || session?.total || 0} từ)</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-2 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+            >
+              <Settings className="w-4 h-4 text-slate-500" />
+              <span>Cài đặt</span>
+            </button>
+          </div>
+        }
+      />
 
       {/* Progress Bar & Counters matching Image 1 */}
       {session && (
@@ -456,7 +516,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigate(`/study-set/${setId}`)}
+                  onClick={() => navigate(forwardNavigationContext(`/study-set/${setId}`, path))}
                   className="px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-50 transition"
                 >
                   Quay lại bộ từ

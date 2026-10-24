@@ -4,6 +4,9 @@ Set-Location -LiteralPath $projectRoot
 $handoffPaths = @(
     'docs/BE-NEXT.md',
     'docs/BE-WORKLOG.md',
+    'docs/LEARNING-CLARITY-ANTI.md',
+    'docs/LEARNING-CONSISTENCY-ANTI.md',
+    'docs/learning-clarity-browser-audit.json',
     'docs/RELEASE-CLOSEOUT.md',
     'docs/release-browser-validation.json',
     'docs/UPGRADE-V2-MATERIALS.md',

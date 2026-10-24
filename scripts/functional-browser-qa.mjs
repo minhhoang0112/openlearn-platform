@@ -64,6 +64,9 @@ try{
   report.checks.push('grammar remove/reorder/check/translation/next are server-backed');
 
   await page.goto(origin+'/reading/'+set.id);
+  const createReadingBtn=page.getByRole('button',{name:/Tạo bài đọc hiểu bằng AI/i});
+  await createReadingBtn.waitFor();
+  await createReadingBtn.click();
   await page.getByRole('heading',{name:/Ngân hàng từ/}).waitFor();
   const readingId=app.db.prepare("SELECT a.id FROM exercise_attempts a JOIN generated_content g ON g.id=a.content_id WHERE g.kind='reading' LIMIT 1").get().id;
   const reading=await api('GET','/exercise-attempts/'+readingId+'/questions');assert.ok(reading.questions.length>=5);

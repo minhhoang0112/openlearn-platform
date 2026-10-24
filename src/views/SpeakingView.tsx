@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { api, ApiWord } from '../api/client';
 import { useRouter } from '../context/RouterContext';
 import { useAuth } from '../context/AuthContext';
 import { playAudio, recognizeSpeech, speechRecognitionAvailable } from '../utils/audio';
 import { PronunciationPractice } from '../components/PronunciationPractice';
+import { LearningBreadcrumb } from '../components/LearningBreadcrumb';
 import { useControlAudio } from '../utils/useControlAudio';
+import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
 import { 
   ArrowLeft, 
   Volume2, 
@@ -18,15 +20,18 @@ import {
   History as HistoryIcon,
   Bot,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Repeat
 } from 'lucide-react';
 
 export function SpeakingView() {
   const { params, path, navigate } = useRouter();
   const { capabilities } = useAuth();
   const setId = Number(params.id) || 163;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
 
   const [words, setWords] = useState<ApiWord[]>([]);
+  const [setTitle, setSetTitle] = useState('');
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [question, setQuestion] = useState('');
@@ -47,7 +52,15 @@ export function SpeakingView() {
     api
       .getSet(setId)
       .then((s) => {
-        if (active) setWords(s.words || []);
+        if (!active) return;
+        setSetTitle(s.title || '');
+        const allWords = s.words || [];
+        if (launchQuery.wordIds.length > 0) {
+          const allowed = new Set(launchQuery.wordIds.slice(0, 20));
+          setWords(allWords.filter((w) => allowed.has(w.id)));
+        } else {
+          setWords(allWords);
+        }
       })
       .catch((e) => {
         if (active) setError(e.message);
@@ -56,7 +69,7 @@ export function SpeakingView() {
       active = false;
       recognitionCleanup.current?.();
     };
-  }, [setId]);
+  }, [setId, launchQuery]);
 
   const word = words[index];
 
@@ -183,33 +196,45 @@ export function SpeakingView() {
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-20">
       {/* 1. Header Toolbar */}
-      <header className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate('/study-set/' + setId)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition p-2 -ml-2 rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Quay lại bộ từ</span>
-        </button>
+      <LearningBreadcrumb
+        currentLabel="Luyện nói AI"
+        setId={setId}
+        setTitle={setTitle || undefined}
+        rightSlot={
+          <div className="flex items-center gap-3">
+            {words.length > 0 && (
+              <span className="text-xs font-bold text-slate-500">
+                Từ {index + 1} / {words.length}
+              </span>
+            )}
 
-        <div className="flex items-center gap-3">
-          {words.length > 0 && (
-            <span className="text-xs font-bold text-slate-500">
-              Từ {index + 1} / {words.length}
-            </span>
-          )}
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(!historyOpen)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 transition"
+            >
+              <HistoryIcon className="w-3.5 h-3.5 text-slate-500" />
+              <span>Lịch sử ({history.length})</span>
+            </button>
+          </div>
+        }
+      />
 
+      {(launchQuery.reviewScope || launchQuery.wordIds.length > 0) && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3 flex-wrap text-xs">
+          <span className="font-bold text-amber-800 dark:text-amber-300">
+            Luyện vận dụng từ đến hạn — không thay lượt ôn nhớ
+          </span>
           <button
             type="button"
-            onClick={() => setHistoryOpen(!historyOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 transition"
+            onClick={() => navigate('/repetition-study')}
+            className="px-3 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold inline-flex items-center gap-1.5 transition"
           >
-            <HistoryIcon className="w-3.5 h-3.5 text-slate-500" />
-            <span>Lịch sử ({history.length})</span>
+            <Repeat className="w-3.5 h-3.5" />
+            <span>Quay về ôn tập</span>
           </button>
         </div>
-      </header>
+      )}
 
       {/* History Panel */}
       {historyOpen && (

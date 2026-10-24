@@ -25,7 +25,7 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
     try { const result=JSON.parse(body);if(!result||typeof result!=='object'||Array.isArray(result))throw new Error();return result; } catch { fail(502,'AI_INVALID_RESPONSE','AI provider must return a JSON object.'); }
   }
   const pendingDetails=new Map();
-  async function ensureLearningDetails(wordId,user,limited=()=>{}){
+  async function ensureLearningDetails(wordId,user,limited=()=>{},allowAi=true){
       const c={params:{id:wordId},user,limited};
       const id=integer(c.params.id,'word_id'),row=db.prepare('SELECT * FROM words WHERE id=?').get(id);
       if(!row)fail(404,'NOT_FOUND','Word not found.');
@@ -33,6 +33,7 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       const read=()=>content.words(set.id,c.user).find(w=>w.id===id);
       const word=read();
       if(word.example.trim()&&word.example_translation?.trim())return word;
+      if(!allowAi)return {...word,details_available:!!word.example.trim(),translation_available:!!word.example_translation?.trim(),ai_requested:false};
       const requestKey=c.user.id+':'+id;
       if(pendingDetails.has(requestKey))return pendingDetails.get(requestKey);
       c.limited(`ai:${c.user.id}`,20,60000);
@@ -54,7 +55,10 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       try{return await work;}finally{pendingDetails.delete(requestKey);}
   }
   function registerRoutes(route) {
-    route('POST','/words/:id/learning-details',async c=>ensureLearningDetails(c.params.id,c.user,(...args)=>c.limited(...args)),{summary:'Ensure a personal example, Vietnamese translation and synonyms; cached reads do not consume AI limits'});
+    route('POST','/words/:id/learning-details',async c=>{
+      const allowAi=c.body.allow_ai===undefined?true:boolean(c.body.allow_ai,'allow_ai');
+      return ensureLearningDetails(c.params.id,c.user,(...args)=>c.limited(...args),allowAi);
+    },{summary:'Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits'});
     route('GET','/settings/ai',c=>{
       const settings=userConfig(c.user),selected=selectedProvider(c.user);
       return {provider:settings?.provider||direct?.name||'gemini',model:settings?.model||model||'gemini-3.8-flash',configured:isConfigured(c.user),key_configured:selected?.name==='ollama'?false:!!(settings?.api_key||geminiKey),configuration_source:settings?'account':direct?'environment':'gateway',supported_providers:['gemini','ollama'],subscription_required:false};
@@ -125,6 +129,7 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       const settings={language:enumeration(raw.language,'language',['en'],'en'),exam:enumeration(raw.exam,'exam',['none','toeic'],'none'),topic:text(raw.topic,'topic',{min:0,max:500,fallback:''})};
       for(const key of ['no_vocab_hints','starred_only','unmastered_only','ordered'])settings[key]=raw[key]===undefined?false:boolean(raw[key],key);
       let words=content.words(set.id,c.user);if(settings.starred_only)words=words.filter(w=>w.starred);if(settings.unmastered_only)words=words.filter(w=>w.status!=='mastered');
+      if(raw.word_ids!==undefined){const ids=list(raw.word_ids,'word_ids',100).map(id=>integer(id,'word_id'));if(!ids.length||new Set(ids).size!==ids.length||ids.some(id=>!content.words(set.id,c.user).some(w=>w.id===id)))fail(400,'INVALID_WORDS','Chọn từ thuộc bộ hội thoại.');words=words.filter(w=>ids.includes(w.id));}
       if(!words.length)fail(400,'NO_WORDS','Không có từ phù hợp bộ lọc. Hãy đổi bộ lọc.');
       if(!settings.ordered)words=words.map(w=>({w,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(v=>v.w);
       settings.word_ids=words.map(w=>w.id);const id=randomUUID(),title=text(c.body.title,'title',{max:200,fallback:settings.topic||set.title});

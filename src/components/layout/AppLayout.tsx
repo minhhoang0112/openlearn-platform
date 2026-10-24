@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Home,
+  Calendar,
   GraduationCap,
   FolderHeart,
   Users,
@@ -28,6 +29,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api, SetCard, PathCard } from '../../api/client';
 import { DictionaryModal } from '../DictionaryModal';
 import { FeedbackModal } from '../FeedbackModal';
+import { resolveActiveSidebarRoute, withNavigationContext } from '../../utils/navigationContext';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -39,10 +41,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dictOpen, setDictOpen] = useState(false);
+  const [dictQuery, setDictQuery] = useState('');
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(() => {
     const saved = localStorage.getItem('oq_sidebar_expanded');
-    return saved !== null ? saved === 'true' : true; // Default expanded matching Image 4
+    return saved !== null ? saved === 'true' : true;
   });
 
   const toggleSidebar = () => {
@@ -68,7 +71,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   useEffect(() => {
     // Fetch summary for due badge
     api.getSrsSummary()
-      .then(res => setDueCount(res.due_count))
+      .then(res => setDueCount(res.due ?? 0))
       .catch(() => {});
 
     api.getMistakes({ limit: 1 })
@@ -80,11 +83,22 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   useEffect(() => {
     const handleSrsUpdate = () => {
       api.getSrsSummary()
-        .then(res => setDueCount(res.due_count))
+        .then(res => setDueCount(res.due ?? 0))
         .catch(() => {});
     };
     window.addEventListener('openquiz:srs-updated', handleSrsUpdate);
     return () => window.removeEventListener('openquiz:srs-updated', handleSrsUpdate);
+  }, []);
+
+  // Listen to openquiz:open-dictionary custom event from synonym popovers
+  useEffect(() => {
+    const handleOpenDict = (e: Event) => {
+      const custom = e as CustomEvent<{ query?: string }>;
+      setDictQuery(custom.detail?.query || '');
+      setDictOpen(true);
+    };
+    window.addEventListener('openquiz:open-dictionary', handleOpenDict);
+    return () => window.removeEventListener('openquiz:open-dictionary', handleOpenDict);
   }, []);
 
   // Handle click outside search dropdown
@@ -118,12 +132,19 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   };
 
+  const activeSidebarRoute = resolveActiveSidebarRoute(path);
+
+  const isRouteActive = (route: string) => {
+    return activeSidebarRoute === route;
+  };
+
   const navItems = [
-    { label: 'Hôm nay', route: '/today', icon: Home },
+    { label: 'Trang chủ', route: '/', icon: Home },
+    { label: 'Học hôm nay', route: '/today', icon: Calendar },
     { label: 'Lộ trình của tôi', route: '/my-program', icon: GraduationCap },
-    { label: 'Thư viện', route: '/my-created', icon: FolderHeart },
+    { label: 'Thư viện của tôi', route: '/my-created', icon: FolderHeart },
     { label: 'Luyện tập', route: '/practice', icon: Layers },
-    { label: 'Ôn tập', route: '/repetition-study', icon: Repeat, badge: dueCount > 0 ? dueCount : undefined },
+    { label: 'Ôn đến hạn', route: '/repetition-study', icon: Repeat, badge: dueCount > 0 ? dueCount : undefined },
     { label: 'Sổ lỗi', route: '/mistakes', icon: BookX, badge: mistakesDueCount > 0 ? mistakesDueCount : undefined },
     { label: 'Tiến độ', route: '/progress', icon: TrendingUp },
   ];
@@ -133,7 +154,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   ];
 
   const toolItems = [
-    { label: 'Tra từ', action: () => setDictOpen(true), icon: Search },
+    { label: 'Tra từ', action: () => { setDictQuery(''); setDictOpen(true); }, icon: Search },
     { label: 'Tạo bộ thẻ', action: () => navigate('/create-flashcard'), icon: PlusCircle },
     { label: 'Tạo lộ trình', action: () => navigate('/create-learning-path'), icon: Compass },
   ];
@@ -151,12 +172,31 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           <img src="/logo.svg" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
           <span className="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">OpenLearn</span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => navigate('/')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              isRouteActive('/') ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+          >
+            Trang chủ
+          </button>
+          <button
+            onClick={() => navigate('/today')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${
+              isRouteActive('/today') ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+          >
+            Học hôm nay
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Mở menu điều hướng"
+            className="p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer (Only visible on mobile when open) */}
@@ -181,14 +221,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Menu chính</div>
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive =
-                    (item.route === '/today' && (path === '/today' || path === '/')) ||
-                    (item.route === '/my-program' && (path.startsWith('/my-program') || path.startsWith('/courses'))) ||
-                    (item.route !== '/today' && item.route !== '/my-program' && (path === item.route || path.startsWith(item.route)));
+                  const isActive = isRouteActive(item.route);
                   return (
                     <button
                       key={item.route}
                       onClick={() => { navigate(item.route); setMobileMenuOpen(false); }}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
                         isActive ? 'bg-slate-900 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
@@ -230,7 +268,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Mở rộng</div>
                 {secondaryItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = path === item.route || path.startsWith(item.route);
+                  const isActive = isRouteActive(item.route);
                   return (
                     <button
                       key={item.route}
@@ -250,7 +288,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Cài đặt</div>
                 {settingItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = path === item.route || path.startsWith(item.route);
+                  const isActive = isRouteActive(item.route);
                   return (
                     <button
                       key={item.route}
@@ -286,10 +324,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </div>
       )}
 
-      {/* Desktop Sidebar (Collapsible & Expandable, Matching Image 2 & Image 4 100%) */}
+      {/* Desktop Sidebar (Collapsible & Expandable) */}
       <aside
         className={`hidden md:flex flex-col justify-between h-screen sticky top-0 bg-white dark:bg-slate-900 border-r border-slate-200/90 dark:border-slate-800 transition-all duration-300 z-40 ${
-          sidebarExpanded ? 'w-64 min-w-[256px] p-4' : 'w-[72px] min-w-[72px] py-4 items-center'
+          sidebarExpanded ? 'w-64 min-w-[256px] p-4' : 'w-20 min-w-[80px] py-4 items-center'
         }`}
       >
         {/* Top Section */}
@@ -336,10 +374,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           <div className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive =
-                (item.route === '/today' && (path === '/today' || path === '/')) ||
-                (item.route === '/my-program' && (path.startsWith('/my-program') || path.startsWith('/courses'))) ||
-                (item.route !== '/today' && item.route !== '/my-program' && (path === item.route || path.startsWith(item.route)));
+              const isActive = isRouteActive(item.route);
 
               if (!sidebarExpanded) {
                 return (
@@ -347,15 +382,20 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     key={item.route}
                     onClick={() => navigate(item.route)}
                     title={item.label}
-                    className={`w-11 h-11 rounded-2xl flex items-center justify-center relative transition-all ${
+                    aria-label={item.label}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`w-16 py-2 px-1 rounded-2xl flex flex-col items-center justify-center gap-1 relative transition-all ${
                       isActive
                         ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                        : 'text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <Icon className="w-5 h-5 stroke-[2]" />
+                    <Icon className="w-4 h-4 stroke-[2]" />
+                    <span className="text-[9px] font-bold leading-tight text-center truncate w-full">
+                      {item.label}
+                    </span>
                     {item.badge !== undefined && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center">
+                      <span className="absolute -top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
@@ -367,6 +407,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <button
                   key={item.route}
                   onClick={() => navigate(item.route)}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
                     isActive
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
@@ -620,7 +661,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                             <div
                               key={s.id}
                               onClick={() => {
-                                navigate(`/study-set/${s.id}`);
+                                navigate(withNavigationContext(`/study-set/${s.id}`, { source: 'home', from: path, setTitle: s.title }));
                                 setShowSearchDropdown(false);
                                 setSearchQuery('');
                               }}
@@ -647,7 +688,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                             <div
                               key={p.id}
                               onClick={() => {
-                                navigate(`/learning-path/${p.id}`);
+                                navigate(withNavigationContext(`/learning-path/${p.id}`, { source: 'home', from: path, pathId: p.id, pathTitle: p.title }));
                                 setShowSearchDropdown(false);
                                 setSearchQuery('');
                               }}
@@ -711,7 +752,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       {/* Floating Dictionary Button (Matching OpenQuiz screenshots 100%) */}
       <button
-        onClick={() => setDictOpen(true)}
+        onClick={() => { setDictQuery(''); setDictOpen(true); }}
         title="Mở từ điển tra từ nhanh"
         className="fixed bottom-6 right-6 z-40 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 px-4 py-2.5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center gap-2 font-bold text-xs md:text-sm group scale-100 hover:scale-105 active:scale-95"
       >
@@ -720,7 +761,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </button>
 
       {/* Global Modals */}
-      <DictionaryModal isOpen={dictOpen} onClose={() => setDictOpen(false)} />
+      <DictionaryModal isOpen={dictOpen} onClose={() => { setDictOpen(false); setDictQuery(''); }} initialQuery={dictQuery} />
       <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );

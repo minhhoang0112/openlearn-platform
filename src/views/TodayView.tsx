@@ -434,7 +434,25 @@ export const TodayView: React.FC = () => {
       </div>
 
       {/* Secondary Options Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+        <div
+          onClick={() => navigate('/')}
+          className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 cursor-pointer transition-all flex items-center justify-between group"
+        >
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+              Tự chọn bộ từ
+            </span>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+              Trang chủ &amp; Kho từ vựng
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Duyệt danh mục bộ từ, lộ trình chuyên ngành và khóa học.
+            </p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 group-hover:text-indigo-600 transition-all" />
+        </div>
+
         <div
           onClick={() => navigate('/my-program')}
           className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 cursor-pointer transition-all flex items-center justify-between group"

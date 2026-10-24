@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from '../context/RouterContext';
 import { playAudio, recognizeSpeech, speechRecognitionAvailable } from '../utils/audio';
 import { useControlAudio } from '../utils/useControlAudio';
+import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
+import { LearningBreadcrumb } from '../components/LearningBreadcrumb';
 import { 
   ArrowLeft, 
   Volume2, 
@@ -18,7 +20,8 @@ import {
   User,
   Trash2,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Repeat
 } from 'lucide-react';
 
 type Message = { id: number; role: string; content: string };
@@ -28,6 +31,7 @@ export function ConversationView() {
   const { params, path, navigate } = useRouter();
   const { capabilities } = useAuth();
   const setId = Number(params.id) || 163;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
 
   const [thread, setThread] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -104,7 +108,13 @@ export function ConversationView() {
       if (!id) {
         const r = await api.request<{ id: string }>('POST', '/conversations', {
           set_id: setId,
-          settings: { language: 'en', exam, topic, ...filters },
+          settings: {
+            language: 'en',
+            exam,
+            topic,
+            ...filters,
+            ...(launchQuery.wordIds.length > 0 ? { word_ids: launchQuery.wordIds.slice(0, 100) } : {}),
+          },
         });
         id = r.id;
         setThread(id);
@@ -191,43 +201,54 @@ export function ConversationView() {
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-20">
       {/* 1. Header Navigation */}
-      <header className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate('/study-set/' + setId)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition p-2 -ml-2 rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Quay lại bộ từ</span>
-        </button>
+      <LearningBreadcrumb
+        currentLabel="Hội thoại AI"
+        setId={setId}
+        rightSlot={
+          <div className="flex items-center gap-2">
+            {thread && (
+              <button
+                type="button"
+                onClick={() => {
+                  setThread(null);
+                  setMessages([]);
+                  setHint(null);
+                  setInput('');
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 transition"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Hội thoại mới</span>
+              </button>
+            )}
 
-        <div className="flex items-center gap-2">
-          {thread && (
             <button
               type="button"
-              onClick={() => {
-                setThread(null);
-                setMessages([]);
-                setHint(null);
-                setInput('');
-              }}
+              onClick={() => setHistoryOpen(!historyOpen)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 transition"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Hội thoại mới</span>
+              <HistoryIcon className="w-3.5 h-3.5 text-slate-500" />
+              <span>Lịch sử ({saved.length})</span>
             </button>
-          )}
+          </div>
+        }
+      />
 
+      {(launchQuery.reviewScope || launchQuery.wordIds.length > 0) && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3 flex-wrap text-xs">
+          <span className="font-bold text-amber-800 dark:text-amber-300">
+            Luyện vận dụng từ đến hạn — không thay lượt ôn nhớ ({launchQuery.wordIds.slice(0, 100).length} từ mục tiêu)
+          </span>
           <button
             type="button"
-            onClick={() => setHistoryOpen(!historyOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs hover:bg-slate-50 transition"
+            onClick={() => navigate('/repetition-study')}
+            className="px-3 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold inline-flex items-center gap-1.5 transition"
           >
-            <HistoryIcon className="w-3.5 h-3.5 text-slate-500" />
-            <span>Lịch sử ({saved.length})</span>
+            <Repeat className="w-3.5 h-3.5" />
+            <span>Quay về ôn tập</span>
           </button>
         </div>
-      </header>
+      )}
 
       {/* History Modal */}
       {historyOpen && (

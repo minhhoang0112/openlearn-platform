@@ -63,7 +63,7 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/classes/:id/assignments/:assignment_id/submit | Required | Submit a completed, server-graded study session |
 | GET | /api/v1/classes/:id/assignments/:assignment_id/results | Required | Teacher-only real assignment results |
 | POST | /api/v1/feedback | Required | Store a bug report or suggestion locally |
-| POST | /api/v1/words/:id/learning-details | Required | Ensure a personal example, Vietnamese translation and synonyms; cached reads do not consume AI limits |
+| POST | /api/v1/words/:id/learning-details | Required | Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits |
 | GET | /api/v1/settings/ai | Required | Own AI settings without exposing API keys |
 | PUT | /api/v1/settings/ai | Required | Save personal Gemini key or local Ollama model on the backend |
 | POST | /api/v1/settings/ai/test | Required | Test the current user provider with a real request |
@@ -78,6 +78,8 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/conversations/:id/messages | Required | Generate and atomically persist learner message and AI reply; failures preserve history |
 | POST | /api/v1/conversations/:id/hint | Required | Get a contextual response hint without inserting fake conversation messages |
 | POST | /api/v1/conversations/:id/messages/:message_id/translation | Required | Translate and cache an owned message in Vietnamese |
+| GET | /api/v1/srs/practice | Required | Read-only per-set SRS practice scopes for all learning modes; real counts, selected IDs and explicit scheduling effects |
+| GET | /api/v1/dictionary/entry | Required | Exact English word/phrase details for synonym popovers, with local Vietnamese senses and examples; no AI |
 | GET | /api/v1/sets/:id/lessons | Required | Observed comprehensive plan: five words per lesson, five named steps |
 | GET | /api/v1/sets/:id/lessons/:lesson_index | Required | Lesson words, step progress, and provider availability |
 | POST | /api/v1/sets/:id/lessons/:lesson_index/steps/:step_index/start | Required | Start a lesson step with a validated five-word subset |
@@ -95,6 +97,7 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | GET | /api/v1/course-learning-sessions/:id | Required | Resume exact course step and feedback without answer keys |
 | PUT | /api/v1/course-learning-sessions/:id/draft | Required | Persist a private course quiz draft before grading |
 | POST | /api/v1/course-learning-sessions/:id/steps/:step_id/complete | Required | Complete the current course step; speech checks transcript only, final quiz grades on server atomically |
+| POST | /api/v1/exercise-attempts/:id/translation | Required | Read cached Vietnamese reading translation or explicitly request AI once; never grade or replace learner answers |
 | GET | /api/v1/exercise-attempts/:id/questions | Required | Reading full-page safe questions and saved selections; only graded feedback reveals answers |
 | PUT | /api/v1/exercise-attempts/:id/drafts | Required | Persist or clear reading full-page selections without grading |
 | POST | /api/v1/exercise-attempts/:id/submit | Required | Atomically grade all reading gaps and comprehension answers; preserve previous grades and replay safely |

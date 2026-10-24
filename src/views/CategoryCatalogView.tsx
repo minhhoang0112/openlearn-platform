@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useRouter } from '../context/RouterContext';
+import { withNavigationContext } from '../utils/navigationContext';
 import {
   ArrowLeft,
   ShieldCheck,
   User,
-  ChevronRight,
-  BookOpen,
-  Sparkles
 } from 'lucide-react';
 
 interface CatalogCardItem {
@@ -26,17 +24,14 @@ interface CatalogGroup {
 }
 
 export const CategoryCatalogView: React.FC = () => {
-  const { path, params, navigate, goBack } = useRouter();
+  const { path, navigate, goBack } = useRouter();
 
-  // Determine category from path or param
-  // /category/nen-tang, /category/toeic, /category/cong-viec
   let categoryKey = 'nen-tang';
   if (path.includes('toeic')) categoryKey = 'toeic';
   if (path.includes('cong-viec') || path.includes('career')) categoryKey = 'cong-viec';
 
   const [levelFilter, setLevelFilter] = useState<'all' | 'basic' | 'intermediate' | 'advanced'>('all');
 
-  // Exact data mapping corresponding 100% to OpenQuiz real screenshots
   const catalogData: Record<string, { title: string; groups: CatalogGroup[] }> = {
     'nen-tang': {
       title: 'Nền tảng',
@@ -304,7 +299,6 @@ export const CategoryCatalogView: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
-      {/* 1. Header Bar: Back Arrow, Category Title, Filter Pills */}
       <div className="space-y-5">
         <div className="flex items-center gap-3.5">
           <button
@@ -318,7 +312,6 @@ export const CategoryCatalogView: React.FC = () => {
           </h1>
         </div>
 
-        {/* Filter Pills matching the screenshot exactly */}
         <div className="flex items-center gap-2">
           {[
             { id: 'all', label: 'Tất cả' },
@@ -344,7 +337,6 @@ export const CategoryCatalogView: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Sub-categories and 2-column cards layout */}
       <div className="space-y-9">
         {currentCategory.groups.map((grp, gIdx) => {
           const visibleItems = grp.items.filter((item) => {
@@ -356,21 +348,27 @@ export const CategoryCatalogView: React.FC = () => {
 
           return (
             <div key={gIdx} className="space-y-3.5">
-              {/* Group Heading */}
               <h2 className="text-sm md:text-base font-bold text-slate-900 dark:text-white tracking-tight">
                 {grp.groupTitle}
               </h2>
 
-              {/* 2-Column Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {visibleItems.map((item) => {
                   return (
                     <div
-                      key={item.id}
-                      onClick={() => navigate(`/learning-path/${item.id}`)}
+                      key={`${item.id}-${item.nativeLang}`}
+                      onClick={() =>
+                        navigate(
+                          withNavigationContext(`/learning-path/${item.id}`, {
+                            source: 'category',
+                            from: path,
+                            pathId: item.id,
+                            pathTitle: item.title,
+                          })
+                        )
+                      }
                       className="group bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-sm transition cursor-pointer flex flex-col justify-between min-h-[140px]"
                     >
-                      {/* Top: Title & Verified Shield */}
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-sm md:text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition leading-snug">
                           {item.title}
@@ -382,14 +380,12 @@ export const CategoryCatalogView: React.FC = () => {
                         )}
                       </div>
 
-                      {/* Middle: Flags pair */}
                       <div className="flex items-center gap-2 py-3 text-sm">
                         <span>🇬🇧</span>
                         <span className="w-8 h-px bg-slate-300 dark:bg-slate-700 inline-block" />
                         <span>{item.nativeLang === 'vi' ? '🇻🇳' : '🇬🇧'}</span>
                       </div>
 
-                      {/* Bottom Tags: Count & Author */}
                       <div className="flex items-center gap-2 pt-1 text-[11px]">
                         <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">
                           {item.setsCount} Bộ thẻ

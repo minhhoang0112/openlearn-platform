@@ -1,8 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { api } from '../api/client';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { api, ApiError } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { useAuth } from '../context/AuthContext';
 import { useControlAudio } from '../utils/useControlAudio';
 import { playAudio } from '../utils/audio';
+import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
+import { forwardNavigationContext } from '../utils/navigationContext';
+import { LearningBreadcrumb } from './LearningBreadcrumb';
 import { 
   ArrowLeft, 
   Volume2, 
@@ -15,7 +19,8 @@ import {
   Sparkles,
   Loader2,
   X,
-  BookOpen
+  BookOpen,
+  Repeat
 } from 'lucide-react';
 
 type Feedback = {
@@ -62,25 +67,30 @@ type History = {
 };
 
 export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading' }) {
-  const { params, navigate } = useRouter();
+  const { params, path, navigate } = useRouter();
+  const { capabilities } = useAuth();
   const setId = Number(params.id) || 163;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
 
+  const [setTitle, setSetTitle] = useState<string>('');
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [history, setHistory] = useState<History[]>([]);
   const [selected, setSelected] = useState<string[] | string>(kind === 'grammar_order' ? [] : '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [missingWordIds, setMissingWordIds] = useState<number[]>([]);
+  const [missingCode, setMissingCode] = useState<string>('');
   const [definition, setDefinition] = useState(false);
   const [translation, setTranslation] = useState(false);
 
-  // Settings
+  // Settings — Default question_types to ['order'] so sets with English examples start immediately without requiring translations
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [starred, setStarred] = useState(false);
   const [unmastered, setUnmastered] = useState(false);
   const [ordered, setOrdered] = useState(false);
   const [difficulty, setDifficulty] = useState('medium');
-  const [types, setTypes] = useState<string[]>(['order', 'fill', 'translate']);
+  const [types, setTypes] = useState<string[]>(['order']);
 
   const saving = useRef<Promise<unknown>>(Promise.resolve());
 
@@ -89,6 +99,8 @@ export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading'
     setSelected(value.draft || (kind === 'grammar_order' ? [] : ''));
     setDefinition(false);
     setTranslation(false);
+    setMissingWordIds([]);
+    setMissingCode('');
   };
 
   const refreshHistory = () =>
@@ -99,9 +111,17 @@ export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading'
   useEffect(() => {
     setAttempt(null);
     setError('');
+    setMissingWordIds([]);
+    setMissingCode('');
+    api
+      .getSet(setId)
+      .then((s) => {
+        if (s?.title) setSetTitle(s.title);
+      })
+      .catch(() => {});
     void refreshHistory().catch((e) => setError(e.message));
-    void start(true);
-  }, [setId, kind]);
+    void start(launchQuery.wordIds.length === 0, false);
+  }, [setId, kind, launchQuery]);
 
   const operation = async (fn: () => Promise<void>) => {
     setBusy(true);
@@ -110,24 +130,35 @@ export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading'
       await saving.current;
       await fn();
     } catch (e) {
+      if (e instanceof ApiError && (e.error.code === 'EXAMPLES_REQUIRED' || e.error.code === 'TRANSLATIONS_REQUIRED')) {
+        setMissingCode(e.error.code);
+        setMissingWordIds((e.error.details as { word_ids?: number[] })?.word_ids || []);
+      }
       setError((e as Error).message);
     } finally {
       setBusy(false);
     }
   };
 
-  const start = (resume = false) =>
+  const start = (resume = false, allowAi = false, overrideTypes?: string[]) =>
     operation(async () => {
+      if (allowAi && !capabilities?.ai.configured) {
+        navigate('/settings/ai?returnTo=' + encodeURIComponent(path));
+        return;
+      }
+      const activeQuestionTypes = overrideTypes || types;
       apply(
         await api.request<Attempt>('POST', '/exercise-attempts', {
           set_id: setId,
           kind,
-          resume,
+          resume: launchQuery.wordIds.length > 0 ? false : resume,
+          allow_ai: allowAi,
           difficulty,
-          question_types: types,
+          question_types: activeQuestionTypes,
           starred_only: starred,
           unmastered_only: unmastered,
           original_order: ordered,
+          ...(launchQuery.wordIds.length > 0 ? { word_ids: launchQuery.wordIds.slice(0, 30) } : {}),
         })
       );
       await refreshHistory();
@@ -211,62 +242,76 @@ export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading'
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-20">
-      {/* 1. Header Toolbar matching source-grammar-order.png */}
-      <header className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate(`/study-set/${setId}`)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition p-2 -ml-2 rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Quay lại bộ từ</span>
-        </button>
+      {/* 1. Header Toolbar with Breadcrumb & Deterministic Back */}
+      <LearningBreadcrumb
+        currentLabel="Ngữ pháp"
+        setId={setId}
+        setTitle={setTitle}
+        rightSlot={
+          <>
+            {attempt && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() =>
+                  void operation(async () => {
+                    apply(
+                      await api.request<Attempt>('PUT', `/exercise-attempts/${attempt.id}`, {
+                        saved: !attempt.saved,
+                      }),
+                    );
+                    await refreshHistory();
+                  })
+                }
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl border text-xs font-bold transition shadow-2xs ${
+                  attempt.saved
+                    ? 'border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
+                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                <Star
+                  className={`w-3.5 h-3.5 ${attempt.saved ? 'fill-amber-400 text-amber-500' : ''}`}
+                />
+                <span>{attempt.saved ? 'Đã lưu' : 'Lưu bài'}</span>
+              </button>
+            )}
 
-        <div className="flex items-center gap-2">
-          {attempt && (
             <button
               type="button"
-              disabled={busy}
-              onClick={() =>
-                void operation(async () => {
-                  apply(
-                    await api.request<Attempt>('PUT', `/exercise-attempts/${attempt.id}`, {
-                      saved: !attempt.saved,
-                    })
-                  );
-                  await refreshHistory();
-                })
-              }
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl border text-xs font-bold transition shadow-2xs ${
-                attempt.saved
-                  ? 'border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
-              }`}
+              onClick={() => setHistoryOpen(!historyOpen)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
             >
-              <Star className={`w-3.5 h-3.5 ${attempt.saved ? 'fill-amber-400 text-amber-500' : ''}`} />
-              <span>{attempt.saved ? 'Đã lưu' : 'Lưu bài'}</span>
+              <HistoryIcon className="w-4 h-4 text-slate-500" />
+              <span>Lịch sử ({history.length})</span>
             </button>
-          )}
 
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(!settingsOpen)}
+              className="p-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+              aria-label="Cài đặt"
+            >
+              <Settings className="w-4 h-4 text-slate-500" />
+            </button>
+          </>
+        }
+      />
+
+      {(launchQuery.reviewScope || launchQuery.wordIds.length > 0) && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3 flex-wrap text-xs">
+          <span className="font-bold text-amber-800 dark:text-amber-300">
+            Luyện vận dụng từ đến hạn — không thay lượt ôn nhớ
+          </span>
           <button
             type="button"
-            onClick={() => setHistoryOpen(!historyOpen)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+            onClick={() => navigate('/repetition-study')}
+            className="px-3 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold inline-flex items-center gap-1.5 transition"
           >
-            <HistoryIcon className="w-4 h-4 text-slate-500" />
-            <span>Lịch sử ({history.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSettingsOpen(!settingsOpen)}
-            className="p-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
-            aria-label="Cài đặt"
-          >
-            <Settings className="w-4 h-4 text-slate-500" />
+            <Repeat className="w-3.5 h-3.5" />
+            <span>Quay về ôn tập</span>
           </button>
         </div>
-      </header>
+      )}
 
       {/* Settings Modal matching source-grammar-settings.png */}
       {settingsOpen && (
@@ -450,15 +495,89 @@ export function PersistentExercise({ kind }: { kind: 'grammar_order' | 'reading'
       )}
 
       {error && (
-        <div role="alert" className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center justify-between">
-          <span>{error}</span>
-          <button
-            type="button"
-            onClick={() => void start(false)}
-            className="underline font-bold text-rose-900"
-          >
-            Tạo bài mới
-          </button>
+        <div
+          role="alert"
+          data-testid="grammar-error-banner"
+          className="p-5 rounded-3xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-xs font-medium space-y-3"
+        >
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <span className="font-bold">
+              {missingCode === 'EXAMPLES_REQUIRED'
+                ? `Còn ${missingWordIds.length || 'một số'} từ chưa có câu ví dụ tiếng Anh cho bài sắp xếp/điền từ.`
+                : missingCode === 'TRANSLATIONS_REQUIRED'
+                  ? `Còn ${missingWordIds.length || 'một số'} câu ví dụ chưa có bản dịch tiếng Việt cho câu hỏi Dịch câu.`
+                  : error}
+            </span>
+          </div>
+
+          {missingCode === 'TRANSLATIONS_REQUIRED' ? (
+            <div className="flex items-center gap-2.5 flex-wrap pt-1">
+              <button
+                type="button"
+                disabled={busy}
+                data-testid="grammar-fallback-order"
+                onClick={() => {
+                  setTypes(['order']);
+                  void start(false, false, ['order']);
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition shadow-2xs"
+              >
+                Chuyển về Sắp xếp câu (Dùng câu tiếng Anh có sẵn)
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(forwardNavigationContext(`/study-set/${setId}`, path))}
+                className="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-700 text-rose-900 dark:text-rose-200 font-bold hover:bg-rose-100/50 transition"
+              >
+                Tự bổ sung bản dịch
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                data-testid="grammar-ai-translations"
+                onClick={() => void start(false, true, types)}
+                className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold inline-flex items-center gap-1.5 transition disabled:opacity-50"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  {capabilities?.ai.configured
+                    ? 'Bổ sung bản dịch bằng AI'
+                    : 'Kết nối AI để bổ sung bản dịch'}
+                </span>
+              </button>
+            </div>
+          ) : missingCode === 'EXAMPLES_REQUIRED' ? (
+            <div className="flex items-center gap-2.5 flex-wrap pt-1">
+              <button
+                type="button"
+                onClick={() => navigate(forwardNavigationContext(`/study-set/${setId}`, path))}
+                className="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-rose-300 text-rose-900 font-bold hover:bg-rose-100/50 transition"
+              >
+                Mở bộ từ để tự thêm ví dụ
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void start(false, true, types)}
+                className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold inline-flex items-center gap-1.5 transition disabled:opacity-50"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  {capabilities?.ai.configured
+                    ? 'Nhờ AI bổ sung ví dụ rồi bắt đầu'
+                    : 'Kết nối AI để bổ sung ví dụ'}
+                </span>
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void start(false, false)}
+              className="underline font-bold text-rose-900"
+            >
+              Thử lại (không dùng AI)
+            </button>
+          )}
         </div>
       )}
 

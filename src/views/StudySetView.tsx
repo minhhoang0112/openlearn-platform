@@ -4,6 +4,9 @@ import { api, ApiWord, SetCard, MemoryStatus } from '../api/client';
 import { playAudio } from '../utils/audio';
 import {WordExample} from '../components/WordExample';
 import {WordLearningDetails} from '../components/WordLearningDetails';
+import {LearningBreadcrumb} from '../components/LearningBreadcrumb';
+import {forwardNavigationContext} from '../utils/navigationContext';
+import {normalizeSetProgress} from '../utils/setProgress';
 import {useControlAudio} from '../utils/useControlAudio';
 import {useAuth} from '../context/AuthContext';
 import {
@@ -233,36 +236,56 @@ export const StudySetView: React.FC = () => {
     finally{setEnriching(false);}
   };
 
+  const setProgress = normalizeSetProgress(set);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
-      {/* 1. Header Bar matching Image 3 100% */}
-      <div className="flex items-center justify-between pb-1">
-        <button
-          onClick={() => goBack()}
-          className="flex items-center gap-2 text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
-        >
-          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-          <span>Quay lại</span>
-        </button>
+      {/* 1. Header Bar & Breadcrumb */}
+      <LearningBreadcrumb
+        currentLabel={set.title}
+        setId={setId}
+        setTitle={set.title}
+        rightSlot={
+          <button
+            onClick={() => navigate('/repetition-study')}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition shadow-2xs"
+          >
+            <Bookmark className="w-3.5 h-3.5 text-slate-500" />
+            <span>Lặp lại ngắt quãng</span>
+          </button>
+        }
+      />
 
-        <button
-          onClick={() => navigate('/repetition-study')}
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition shadow-2xs"
-        >
-          <Bookmark className="w-3.5 h-3.5 text-slate-500" />
-          <span>Lặp lại ngắt quãng</span>
-        </button>
-      </div>
-
-      {/* Title & Action Icons matching Image 3 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {set.title}
-          </h1>
-          <span title="Bộ từ công khai" className="text-slate-400">
-            <Globe className="w-4 h-4 text-slate-400 inline" />
-          </span>
+      {/* Title, Progress Badge & Action Icons */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {set.title}
+            </h1>
+            <span title="Bộ từ công khai" className="text-slate-400">
+              <Globe className="w-4 h-4 text-slate-400 inline" />
+            </span>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap text-xs">
+            <span className="font-bold text-slate-600 dark:text-slate-300">{setProgress.totalWords} từ</span>
+            <span>•</span>
+            <span
+              data-testid={`set-state-badge-${set.id}`}
+              className={`px-2 py-0.5 rounded-md font-bold text-[11px] ${
+                setProgress.state === 'mastered'
+                  ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                  : setProgress.state === 'in_progress'
+                  ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'
+                  : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+              }`}
+            >
+              {setProgress.stateLabel}
+            </span>
+            <span data-testid={`set-progress-text-${set.id}`} className="text-slate-500 dark:text-slate-400 font-medium">
+              {setProgress.summaryText}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-1 text-slate-400">
@@ -289,7 +312,7 @@ export const StudySetView: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Row 1, Col 1: Kết hợp (Đề xuất) */}
         <button
-          onClick={() => navigate(`/comprehensive/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/comprehensive/${setId}`, path, { setTitle: set.title }))}
           className="relative flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-indigo-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -306,7 +329,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 1, Col 2: Speaking */}
         <button
-          onClick={() => navigate(`/ai-study/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/ai-study/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-rose-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
@@ -319,7 +342,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 1, Col 3: Hội thoại */}
         <button
-          onClick={() => navigate(`/conversation/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/conversation/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-emerald-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
@@ -332,7 +355,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 2, Col 1: Ngữ pháp */}
         <button
-          onClick={() => navigate(`/grammar/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/grammar/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-amber-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
@@ -345,7 +368,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 2, Col 2: Đọc hiểu */}
         <button
-          onClick={() => navigate(`/reading/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/reading/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-blue-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
@@ -358,7 +381,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 2, Col 3: Học */}
         <button
-          onClick={() => navigate(`/study/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/study/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-violet-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 flex items-center justify-center font-bold">
@@ -371,7 +394,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 3, Col 1: Test/Game */}
         <button
-          onClick={() => navigate(`/exam/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/exam/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-teal-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
@@ -384,7 +407,7 @@ export const StudySetView: React.FC = () => {
 
         {/* Row 3, Col 2: Nghe Chép */}
         <button
-          onClick={() => navigate(`/dictation/${setId}`)}
+          onClick={() => navigate(forwardNavigationContext(`/dictation/${setId}`, path, { setTitle: set.title }))}
           className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl hover:border-indigo-400 hover:shadow-xs transition group"
         >
           <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
@@ -444,8 +467,8 @@ export const StudySetView: React.FC = () => {
                   <div className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-3">
                     {currentWord.definition}
                   </div>
-                  <div className="max-w-lg mx-auto">
-                    <WordLearningDetails key={currentWord.id} word={currentWord} auto onChange={updated=>setSet(previous=>previous?{...previous,words:previous.words.map(w=>w.id===updated.id?updated:w)}:previous)}/>
+                  <div className="max-w-lg mx-auto" onClick={(e) => e.stopPropagation()}>
+                    <WordLearningDetails key={currentWord.id} word={currentWord} auto variant="flashcard" onChange={updated=>setSet(previous=>previous?{...previous,words:previous.words.map(w=>w.id===updated.id?updated:w)}:previous)}/>
                   </div>
                 </>
               )}
@@ -457,7 +480,7 @@ export const StudySetView: React.FC = () => {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/ai-study/${setId}`);
+                  navigate(forwardNavigationContext(`/ai-study/${setId}`, path, { setTitle: set.title }));
                 }}
                 title="Luyện nói AI"
                 className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
@@ -595,7 +618,7 @@ export const StudySetView: React.FC = () => {
                         {w.term}
                       </div>
                       <div className="text-xs text-slate-400 font-medium truncate mt-0.5">
-                        {w.part_of_speech || 'noun'} - {w.phonetic || ''} {w.synonyms ? `- ${w.synonyms}` : ''}
+                        {w.part_of_speech || 'noun'} - {w.phonetic || ''}
                       </div>
                     </div>
                   </div>

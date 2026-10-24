@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-24",
+  "criteria": {
+    "criterion_1_fresh_srs": {
+      "passed": true,
+      "called_sets_fallback": false,
+      "has_fake_305": false,
+      "has_fake_premium": false,
+      "has_fake_save_settings": false
+    },
+    "criterion_5_navigation_and_practice": {
+      "passed": true,
+      "sidebar_home_count": 1,
+      "sidebar_today_count": 1
+    },
+    "criterion_6_and_7_examples_and_synonyms": {
+      "passed": true,
+      "ai_calls_on_flip_and_toggle": 0
+    },
+    "criterion_2_and_4_srs_queue_and_rating": {
+      "passed": true
+    },
+    "criterion_3_scoped_mode_launches": {
+      "passed": true,
+      "study_session_payload": {
+        "set_id": 297222,
+        "mode": "write",
+        "settings": {
+          "direction": "term_to_definition",
+          "answer_mode": "meaning",
+          "starred_only": false,
+          "unmastered_only": false,
+          "shuffle": false,
+          "adaptive": false,
+          "required_correct": 1,
+          "max_attempts": 3,
+          "auto_audio": false,
+          "audio_rate": 0.9,
+          "voice_uri": "",
+          "dictation_content": "word",
+          "question_types": [
+            "write"
+          ],
+          "accept_synonyms": false,
+          "auto_advance_on_correct": false,
+          "word_ids": [
+            8364
+          ],
+          "due_only": true
+        }
+      },
+      "reading_post_on_mount": 0
+    }
+  },
+  "page_errors": []
+}

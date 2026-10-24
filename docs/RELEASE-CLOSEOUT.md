@@ -1,5 +1,7 @@
 # Chốt tạm bản cá nhân — 21/10/2026
 
+> 24/10/2026: đã mở lại CLARITY-01 vì phát hiện lỗi SRS và điều hướng chưa nằm trong nghiệm thu này. Xem BE-NEXT.md / LEARNING-CLARITY-ANTI.md; không dùng kết luận lịch sử bên dưới để xác nhận FE hiện tại đã hoàn tất.
+
 Phạm vi: bản local, contract1.15.0/schema14/148 route. Dừng thêm tính năng; chỉ nhận lỗi cản trở học hoặc mất dữ liệu. Chưa phải chứng nhận sẵn sàng bán/phục vụ công khai.
 
 ## Lỗi đã sửa khi nghiệm thu

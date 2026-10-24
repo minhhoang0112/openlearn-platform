@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '../context/RouterContext';
 import { api, SetCard, PathCard } from '../api/client';
+import { normalizeSetProgress } from '../utils/setProgress';
+import { withNavigationContext } from '../utils/navigationContext';
 import {
   FolderHeart,
   PlusCircle,
-  BookOpen,
-  Compass,
-  ChevronRight,
   ArrowRight,
-  Loader2
+  Loader2,
+  Repeat,
 } from 'lucide-react';
 
 export const MyCreatedView: React.FC = () => {
@@ -19,22 +19,27 @@ export const MyCreatedView: React.FC = () => {
   const [paths, setPaths] = useState<PathCard[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-
-    Promise.allSettled([
+  const loadLibrary = useCallback(async (showSpinner = false) => {
+    if (showSpinner) setLoading(true);
+    const [sRes, pRes] = await Promise.allSettled([
       api.getSets(tab === 'my_sets' ? 'mine' : 'saved'),
-      api.getPaths('saved')
-    ]).then(([sRes, pRes]) => {
-      if (!mounted) return;
-      if (sRes.status === 'fulfilled') setSets(sRes.value.items || []);
-      if (pRes.status === 'fulfilled') setPaths(pRes.value.items || []);
-      setLoading(false);
-    });
-
-    return () => { mounted = false; };
+      api.getPaths('saved'),
+    ]);
+    if (sRes.status === 'fulfilled') setSets(sRes.value.items || []);
+    if (pRes.status === 'fulfilled') setPaths(pRes.value.items || []);
+    if (showSpinner) setLoading(false);
   }, [tab]);
+
+  useEffect(() => {
+    void loadLibrary(true);
+    const onSrsUpdated = () => {
+      void loadLibrary(false);
+    };
+    window.addEventListener('openquiz:srs-updated', onSrsUpdated);
+    return () => {
+      window.removeEventListener('openquiz:srs-updated', onSrsUpdated);
+    };
+  }, [loadLibrary]);
 
   if (loading) {
     return (
@@ -47,6 +52,103 @@ export const MyCreatedView: React.FC = () => {
 
   const savedSets = sets.filter((s) => s.saved);
   const savedPaths = paths.filter((p) => p.saved);
+
+  const renderSetCard = (set: SetCard) => {
+    const prog = normalizeSetProgress(set);
+    const studySetUrl = withNavigationContext(`/study-set/${set.id}`, {
+      source: 'library',
+      from: '/my-created',
+      setTitle: set.title,
+    });
+    const primaryUrl = withNavigationContext(
+      prog.state === 'empty' ? `/study-set/${set.id}` : `/study/${set.id}`,
+      {
+        source: 'library',
+        from: '/my-created',
+        setTitle: set.title,
+      },
+    );
+
+    return (
+      <div
+        key={set.id}
+        data-testid={`library-set-card-${set.id}`}
+        onClick={() => navigate(studySetUrl)}
+        className="group p-6 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xs hover:border-indigo-500 hover:shadow-md transition cursor-pointer flex flex-col justify-between gap-4"
+      >
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <span className="px-2.5 py-1 text-xs font-extrabold rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50">
+              {set.tag || 'Từ vựng'}
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                data-testid={`set-state-badge-${set.id}`}
+                className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${prog.stateBadgeClass}`}
+              >
+                {prog.stateLabel}
+              </span>
+              {prog.dueWords > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-[10px] font-bold inline-flex items-center gap-1">
+                  <Repeat className="w-2.5 h-2.5" />
+                  <span>Cần ôn {prog.dueWords} từ</span>
+                </span>
+              )}
+            </div>
+          </div>
+
+          <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition">
+            {set.title}
+          </h3>
+
+          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+            {set.description || 'Bộ từ vựng tiếng Anh cá nhân.'}
+          </p>
+
+          <div
+            data-testid={`set-progress-text-${set.id}`}
+            className="text-xs font-semibold text-slate-500 dark:text-slate-400 pt-1"
+          >
+            {prog.totalWords} từ • {prog.summaryText}
+          </div>
+        </div>
+
+        <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${
+                prog.state === 'mastered' ? 'bg-emerald-500' : 'bg-indigo-600'
+              }`}
+              style={{ width: `${prog.percentReviewed}%` }}
+            />
+          </div>
+
+          <div
+            className="flex items-center justify-end gap-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              data-testid={`set-view-cta-${set.id}`}
+              onClick={() => navigate(studySetUrl)}
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition"
+            >
+              Xem bộ
+            </button>
+            <button
+              type="button"
+              data-testid={`set-primary-cta-${set.id}`}
+              onClick={() => navigate(primaryUrl)}
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition"
+            >
+              <span>{prog.primaryCtaLabel}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-16">
@@ -114,40 +216,10 @@ export const MyCreatedView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {sets.length === 0 ? (
             <div className="col-span-full py-16 text-center text-xs text-slate-400">
-              Bạn chưa có bộ thẻ nào. Nhấp vào "Tạo bộ thẻ mới" để bắt đầu!
+              Bạn chưa có bộ thẻ nào. Nhấp vào &ldquo;Tạo bộ thẻ mới&rdquo; để bắt đầu!
             </div>
           ) : (
-            sets.map((set) => (
-              <div
-                key={set.id}
-                onClick={() => navigate(`/study-set/${set.id}`)}
-                className="group p-6 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xs hover:border-indigo-500 hover:shadow-md transition cursor-pointer flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="px-2.5 py-1 text-xs font-extrabold rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50">
-                      {set.tag || 'TOEIC'}
-                    </span>
-                    <span className="text-xs text-slate-400 font-medium">
-                      {set.word_count} từ
-                    </span>
-                  </div>
-
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition mb-1">
-                    {set.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                    {set.description || 'Bộ từ vựng tiếng Anh cá nhân.'}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
-                  <span className="text-slate-400">Học ngay</span>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-500" />
-                </div>
-              </div>
-            ))
+            sets.map(renderSetCard)
           )}
         </div>
       )}
@@ -159,23 +231,7 @@ export const MyCreatedView: React.FC = () => {
               Bạn chưa đánh dấu lưu bộ thẻ nào.
             </div>
           ) : (
-            savedSets.map((set) => (
-              <div
-                key={set.id}
-                onClick={() => navigate(`/study-set/${set.id}`)}
-                className="group p-6 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xs hover:border-amber-500 transition cursor-pointer flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-amber-500 mb-1">
-                    {set.title}
-                  </h3>
-                  <p className="text-xs text-slate-500">{set.word_count} từ</p>
-                </div>
-                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-amber-600 font-bold">
-                  Đã lưu vào danh mục
-                </div>
-              </div>
-            ))
+            savedSets.map(renderSetCard)
           )}
         </div>
       )}
@@ -187,17 +243,26 @@ export const MyCreatedView: React.FC = () => {
               Bạn chưa lưu lộ trình học nào.
             </div>
           ) : (
-            savedPaths.map((path) => (
+            savedPaths.map((p) => (
               <div
-                key={path.id}
-                onClick={() => navigate(`/learning-path/${path.id}`)}
+                key={p.id}
+                onClick={() =>
+                  navigate(
+                    withNavigationContext(`/learning-path/${p.id}`, {
+                      source: 'library',
+                      from: '/my-created',
+                      pathId: p.id,
+                      pathTitle: p.title,
+                    }),
+                  )
+                }
                 className="group p-6 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-xs hover:border-indigo-500 transition cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 mb-1">
-                    {path.title}
+                    {p.title}
                   </h3>
-                  <p className="text-xs text-slate-500">{path.set_count} bộ thẻ</p>
+                  <p className="text-xs text-slate-500">{p.set_count} bộ thẻ</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-indigo-600 font-bold">
                   Xem lộ trình →
@@ -210,4 +275,3 @@ export const MyCreatedView: React.FC = () => {
     </div>
   );
 };
-

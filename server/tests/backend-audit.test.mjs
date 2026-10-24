@@ -27,7 +27,7 @@ async function fixture(t,ai){
 
 test('cached flashcard details stay usable beyond AI request limits; duplicate translations call AI once and delete cleanly',async t=>{
   const {app,api,calls}=await fixture(t);
-  const set=(await api('POST','/sets',{title:'My family',words:[{term:'mother',definition:'mẹ'}]})).data;
+  const set=(await api('POST','/sets',{title:'My family',words:[{term:'mother',definition:'mẹ',example:'My mother is at home.'}]})).data;
   const word=(await api('GET','/sets/'+set.id)).data.words[0];
   for(let i=0;i<30;i++)assert.equal((await api('POST','/words/'+word.id+'/learning-details',{})).status,200);
   assert.equal(calls.examples,1,'saved cards must not spend one AI slot on every revisit');

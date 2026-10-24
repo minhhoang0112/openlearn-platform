@@ -10,13 +10,169 @@ export interface ApiWord {
   id: number; set_id: number; term: string; definition: string; part_of_speech: string;
   phonetic: string; example: string; synonyms: string; image_url: string; position: number;
   status: MemoryStatus; starred: boolean; due_at: string | null;
-  example_translation?: string; example_source?: string;
+  last_reviewed_at?: string | null; repetitions?: number; interval_days?: number; ease?: number;
+  set_title?: string;
+  example_translation?: string; example_source?: string; translation_source?: string;
+  details_available?: boolean; translation_available?: boolean; ai_requested?: boolean;
+}
+
+export interface WordProgressResponse {
+  user_id: number;
+  word_id: number;
+  status: MemoryStatus;
+  starred: number | boolean;
+  repetitions: number;
+  interval_days: number;
+  ease: number;
+  due_at: string | null;
+  last_reviewed_at: string | null;
+}
+
+export interface SrsPracticeGroup {
+  set_id: number;
+  title: string;
+  learning_language: string;
+  native_language: string;
+  content_status: string;
+  word_count: number;
+  word_ids: number[];
+  selection_truncated: boolean;
+  examples_available: number;
+  examples_missing: number[];
+  practice_route: string;
+  available: boolean;
+}
+
+export interface SrsPracticeMode {
+  id: string;
+  requires_ai: boolean;
+  srs_effect: 'updates_word_progress' | 'none';
+  selection: string;
+  max_words: number;
+}
+
+export interface SrsPracticeResponse {
+  scope: 'due' | 'all' | 'mastered';
+  as_of: string;
+  items: SrsPracticeGroup[];
+  total_groups: number;
+  total_words: number;
+  limit: number;
+  offset: number;
+  selection_limit: number;
+  subscription_required: boolean;
+  modes: SrsPracticeMode[];
+  notes: string[];
+}
+
+export type SetProgressState = 'empty' | 'not_started' | 'in_progress' | 'mastered';
+
+export interface SetProgress {
+  total_words: number;
+  reviewed_words: number;
+  learning_words: number;
+  mastered_words: number;
+  due_words: number;
+  state: SetProgressState;
+  last_session: {
+    id: string;
+    mode: string;
+    completed_at: string | null;
+    updated_at: string;
+  } | null;
 }
 
 export interface SetCard {
   id: number; title: string; description: string; learning_language: string; native_language: string;
   visibility: 'private' | 'public'; tag: string; source: string; content_status: string;
   word_count: number; mastered_count: number; saved: boolean; author: { id: number | null; name: string };
+  progress?: SetProgress;
+}
+
+export interface LessonOverviewItem {
+  index: number;
+  word_ids: number[];
+  terms: string[];
+  word_count: number;
+  reviewed_words: number;
+  mastered_words: number;
+  completed_steps: number;
+  total_steps: number;
+  state: 'not_started' | 'in_progress' | 'completed';
+  completed: boolean;
+}
+
+export interface LessonOverviewResponse {
+  set_id: number;
+  words_per_lesson: number;
+  total_words: number;
+  step_names: string[];
+  lessons: LessonOverviewItem[];
+}
+
+export interface LessonStepMeta {
+  index: number;
+  name: string;
+  completed: boolean;
+  completed_at: string | null;
+  available: boolean;
+  requires_ai: boolean;
+  ai_configured: boolean;
+  srs_effect: 'updates_word_progress' | 'none';
+}
+
+export interface LessonDetailResponse {
+  set_id: number;
+  lesson_index: number;
+  word_count: number;
+  words: ApiWord[];
+  reviewed_words: number;
+  mastered_words: number;
+  missing_example_ids: number[];
+  missing_translation_ids: number[];
+  steps: LessonStepMeta[];
+  completed_steps: number;
+  completed: boolean;
+}
+
+export interface LessonStepStartResponse {
+  set_id?: number;
+  lesson_index: number;
+  step_index: number;
+  word_ids?: number[];
+  terms?: string[];
+  requires_ai: boolean;
+  srs_effect: 'updates_word_progress' | 'none';
+  session?: StudySession;
+  action?: 'speaking' | 'conversation';
+}
+
+export interface DictionaryEntryItem {
+  definition: string;
+  part_of_speech: string;
+  phonetic: string;
+  example: string;
+  example_translation: string;
+  source: 'library' | 'prepared';
+  word_id: number | null;
+  set_id: number | null;
+}
+
+export interface DictionaryEntryResponse {
+  term: string;
+  found: boolean;
+  entries: DictionaryEntryItem[];
+  speech_text: string;
+  ai_required: boolean;
+  scope: string;
+}
+
+export interface ReadingTranslationResponse {
+  attempt_id: string;
+  translation: string | null;
+  cached: boolean;
+  ai_requested: boolean;
+  status?: 'missing';
 }
 
 export interface PathCard {
@@ -1000,6 +1156,9 @@ export class OpenQuizApi {
     const data = await this.request<{items: ApiWord[]; source: string}>('GET', `/dictionary?q=${encodeURIComponent(q)}`);
     return {words: data.items, source: data.source};
   }
+  getDictionaryEntry(q: string) {
+    return this.request<DictionaryEntryResponse>('GET', `/dictionary/entry?q=${encodeURIComponent(q)}`);
+  }
 
   // Sets & Words
   getSets(filter?: string) { return this.request<{ items: SetCard[] }>('GET', `/sets?limit=100&learning_language=en${filter ? `&filter=${encodeURIComponent(filter)}` : ''}`); }
@@ -1010,8 +1169,11 @@ export class OpenQuizApi {
   importSet(data: { title: string; description?: string; words: Partial<ApiWord>[] }) {
     return this.request<SetCard>('POST', '/sets/import', data);
   }
-  wordProgress(id: number, progress: { status?: MemoryStatus; starred?: boolean; quality?: number }) {
-    return this.request('PATCH', `/words/${id}/progress`, progress);
+  wordProgress(id: number, progress: { status?: MemoryStatus; starred?: boolean; quality?: number; expected_last_reviewed_at?: string | null }) {
+    return this.request<WordProgressResponse>('PATCH', `/words/${id}/progress`, progress);
+  }
+  getWordLearningDetails(wordId: number, allowAi = false) {
+    return this.request<ApiWord>('POST', `/words/${wordId}/learning-details`, { allow_ai: allowAi });
   }
   getSetProgress(setId: number) {
     return this.request<{ total: number; new: number; learning: number; mastered: number; words: ApiWord[] }>('GET', `/sets/${setId}/progress`);
@@ -1062,29 +1224,46 @@ export class OpenQuizApi {
 
   // SRS
   async getSrsSummary() {
-    const data = await this.request<{due: number; tracked: number; learning: number; mastered: number; forecast: {date:string;count:number}[]}>('GET', '/srs/summary');
+    const data = await this.request<{due: number; tracked: number; learning: number; mastered: number; memory_levels?: {new: number; learning: number; mastered: number}; forecast: {date:string;count:number}[]}>('GET', '/srs/summary');
     return {...data,due_count:data.due,total_reviewed:data.tracked};
   }
-  getSrsQueue(options: { set_id?: number; path_id?: number; limit?: number } = {}) {
+  getSrsQueue(options: { set_id?: number; path_id?: number; limit?: number; offset?: number } = {}) {
     const params = new URLSearchParams();
     if (options.set_id) params.set('set_id', String(options.set_id));
     if (options.path_id) params.set('path_id', String(options.path_id));
-    if (options.limit) params.set('limit', String(options.limit));
-    return this.request<{ items: ApiWord[] }>('GET', `/srs/queue?${params.toString()}`);
+    if (options.limit !== undefined) params.set('limit', String(options.limit));
+    if (options.offset !== undefined) params.set('offset', String(options.offset));
+    return this.request<{ items: ApiWord[]; total: number; limit: number; offset: number }>('GET', `/srs/queue?${params.toString()}`);
+  }
+  getMyWords(options: { q?: string; status?: MemoryStatus; learning_language?: string; limit?: number; offset?: number } = {}) {
+    const params = new URLSearchParams();
+    if (options.q) params.set('q', options.q);
+    if (options.status) params.set('status', options.status);
+    if (options.learning_language) params.set('learning_language', options.learning_language);
+    if (options.limit !== undefined) params.set('limit', String(options.limit));
+    if (options.offset !== undefined) params.set('offset', String(options.offset));
+    return this.request<{ items: ApiWord[]; total: number; limit: number; offset: number }>('GET', `/me/words?${params.toString()}`);
+  }
+  getSrsPractice(options: { scope?: 'due' | 'all' | 'mastered'; limit?: number; offset?: number } = {}) {
+    const params = new URLSearchParams();
+    if (options.scope) params.set('scope', options.scope);
+    if (options.limit !== undefined) params.set('limit', String(options.limit));
+    if (options.offset !== undefined) params.set('offset', String(options.offset));
+    return this.request<SrsPracticeResponse>('GET', `/srs/practice?${params.toString()}`);
   }
 
   // Comprehensive 5-word 5-step mode
   getLessons(setId: number) {
-    return this.request<{ set_id: number; words_per_lesson: number; step_names: string[]; lessons: { index: number; word_ids: number[]; terms: string[]; completed_steps: number; completed: boolean }[] }>('GET', `/sets/${setId}/lessons`);
+    return this.request<LessonOverviewResponse>('GET', `/sets/${setId}/lessons`);
   }
   getLesson(setId: number, lessonIndex: number) {
-    return this.request<{ set_id: number; lesson_index: number; words: ApiWord[]; steps: { index: number; name: string; completed: boolean; available: boolean }[]; completed: boolean }>('GET', `/sets/${setId}/lessons/${lessonIndex}`);
+    return this.request<LessonDetailResponse>('GET', `/sets/${setId}/lessons/${lessonIndex}`);
   }
-  startLessonStep(setId: number, lessonIndex: number, stepIndex: number) {
-    return this.request<{ lesson_index: number; step_index: number; session?: StudySession; action?: string }>('POST', `/sets/${setId}/lessons/${lessonIndex}/steps/${stepIndex}/start`, {});
+  startLessonStep(setId: number, lessonIndex: number, stepIndex: number, resume = true) {
+    return this.request<LessonStepStartResponse>('POST', `/sets/${setId}/lessons/${lessonIndex}/steps/${stepIndex}/start`, { resume });
   }
   completeLessonStep(setId: number, lessonIndex: number, stepIndex: number, evidence: Record<string, unknown>) {
-    return this.request('POST', `/sets/${setId}/lessons/${lessonIndex}/steps/${stepIndex}/complete`, evidence);
+    return this.request<LessonDetailResponse>('POST', `/sets/${setId}/lessons/${lessonIndex}/steps/${stepIndex}/complete`, evidence);
   }
 
   // Study Options
@@ -1101,6 +1280,9 @@ export class OpenQuizApi {
   }
   submitReading(attemptId: string, answers: { question_id: string; answer?: string; skip?: boolean }[]) {
     return this.request<ReadingFullPageResponse & { results: { question_id: string; correct: boolean; answer: string; expected: string; translation: string; explanation: string; skipped: boolean }[]; replayed: boolean }>('POST', `/exercise-attempts/${encodeURIComponent(attemptId)}/submit`, { answers });
+  }
+  getReadingTranslation(attemptId: string, allowAi = false) {
+    return this.request<ReadingTranslationResponse>('POST', `/exercise-attempts/${encodeURIComponent(attemptId)}/translation`, { allow_ai: allowAi });
   }
 
   // Courses

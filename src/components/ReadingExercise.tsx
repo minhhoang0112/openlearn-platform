@@ -1,8 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '../context/RouterContext';
-import { api, ReadingFullPageQuestion, ReadingFullPageResponse } from '../api/client';
+import { useAuth } from '../context/AuthContext';
+import { api, ApiError, ReadingFullPageQuestion, ReadingFullPageResponse } from '../api/client';
 import { playAudio } from '../utils/audio';
 import { useControlAudio } from '../utils/useControlAudio';
+import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
+import { LearningBreadcrumb } from './LearningBreadcrumb';
 import { 
   ArrowLeft, 
   Volume2, 
@@ -13,7 +16,8 @@ import {
   History as HistoryIcon,
   Settings,
   Languages,
-  Sparkles
+  Sparkles,
+  Repeat
 } from 'lucide-react';
 
 interface AttemptHistory {
@@ -27,9 +31,12 @@ interface AttemptHistory {
 }
 
 export function ReadingExercise() {
-  const { params, navigate } = useRouter();
+  const { params, path, navigate } = useRouter();
+  const { capabilities } = useAuth();
   const setId = Number(params.id) || 163;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
 
+  const [setTitle, setSetTitle] = useState<string>('');
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const [passage, setPassage] = useState<string>('');
   const [questions, setQuestions] = useState<ReadingFullPageQuestion[]>([]);
@@ -37,6 +44,13 @@ export function ReadingExercise() {
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+
+  // Passage translation state (POST /exercise-attempts/:id/translation)
+  const [passageTranslation, setPassageTranslation] = useState<string | null>(null);
+  const [showPassageTranslation, setShowPassageTranslation] = useState<boolean>(false);
+  const [missingPassageTranslationPrompt, setMissingPassageTranslationPrompt] = useState<boolean>(false);
+  const [translatingPassage, setTranslatingPassage] = useState<boolean>(false);
+  const [passageTranslationError, setPassageTranslationError] = useState<string>('');
 
   // Selections state: map question_id -> option_id (e.g. 'bank:0' or '1')
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -55,17 +69,23 @@ export function ReadingExercise() {
   const savingRef = useRef<Promise<unknown>>(Promise.resolve());
   const draftTimerRef = useRef<number | null>(null);
 
-  const loadHistory = async () => {
+  const loadHistory = async (): Promise<AttemptHistory[]> => {
     try {
       const res = await api.request<{ items: AttemptHistory[] }>('GET', `/exercise-attempts?kind=reading&set_id=${setId}`);
-      setHistory(res.items || []);
+      const items = res.items || [];
+      setHistory(items);
+      return items;
     } catch {
-      // Quiet fail for history
+      return [];
     }
   };
 
-  // Initialize or resume attempt
-  const initAttempt = async (resume = true) => {
+  // Explicit user-triggered AI reading generation
+  const initAttempt = async (resume = false) => {
+    if (!resume && !capabilities?.ai.configured) {
+      navigate('/settings/ai?returnTo=' + encodeURIComponent(path));
+      return;
+    }
     setLoading(true);
     setError('');
     setShowExplanation({});
@@ -73,8 +93,9 @@ export function ReadingExercise() {
       const attemptRes = await api.request<{ id: string }>('POST', '/exercise-attempts', {
         set_id: setId,
         kind: 'reading',
-        resume,
+        resume: launchQuery.wordIds.length > 0 ? false : resume,
         difficulty,
+        ...(launchQuery.wordIds.length > 0 ? { word_ids: launchQuery.wordIds.slice(0, 30) } : {}),
       });
 
       setAttemptId(attemptRes.id);
@@ -88,10 +109,20 @@ export function ReadingExercise() {
   };
 
   const fetchQuestions = async (id: string) => {
-    const res = await api.getReadingQuestions(id);
+    const [res, transRes] = await Promise.all([
+      api.getReadingQuestions(id),
+      api.getReadingTranslation(id, false).catch(() => null),
+    ]);
     setPassage(res.passage);
     setCompleted(res.completed);
     setQuestions(res.questions);
+
+    // Populate cached passage translation without calling AI (allow_ai: false)
+    const cachedTranslation = transRes?.translation?.trim() ? transRes.translation : null;
+    setPassageTranslation(cachedTranslation);
+    setShowPassageTranslation(false);
+    setMissingPassageTranslationPrompt(false);
+    setPassageTranslationError('');
 
     // Populate initial drafts
     const initial: Record<string, string> = {};
@@ -108,12 +139,95 @@ export function ReadingExercise() {
     }
   };
 
+  const handleTogglePassageTranslation = () => {
+    if (!attemptId) return;
+    if (showPassageTranslation) {
+      setShowPassageTranslation(false);
+      return;
+    }
+    if (passageTranslation) {
+      setShowPassageTranslation(true);
+      setMissingPassageTranslationPrompt(false);
+      setPassageTranslationError('');
+    } else {
+      // Do NOT call AI implicitly when clicking toggle
+      setMissingPassageTranslationPrompt((prev) => !prev);
+      setPassageTranslationError('');
+    }
+  };
+
+  const handleGeneratePassageTranslation = async () => {
+    if (!attemptId || translatingPassage) return;
+    if (!capabilities?.ai.configured) {
+      navigate('/settings/ai?returnTo=' + encodeURIComponent(path));
+      return;
+    }
+    setTranslatingPassage(true);
+    setPassageTranslationError('');
+    try {
+      const res = await api.getReadingTranslation(attemptId, true);
+      if (res.translation) {
+        setPassageTranslation(res.translation);
+        setShowPassageTranslation(true);
+        setMissingPassageTranslationPrompt(false);
+      }
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 429) {
+        setPassageTranslationError(
+          'AI đang tạm giới hạn số lượt gọi (429). Bài đọc và câu trả lời của bạn vẫn được giữ nguyên; hãy thử dịch lại sau ít phút.',
+        );
+      } else {
+        setPassageTranslationError(
+          (e as Error).message || 'Không thể dịch bài đọc bằng AI lúc này.',
+        );
+      }
+    } finally {
+      setTranslatingPassage(false);
+    }
+  };
+
+  // On mount: load existing history without calling AI automatically
   useEffect(() => {
-    initAttempt(true);
+    let active = true;
+    setLoading(true);
+    setError('');
+    setAttemptId(null);
+    setPassage('');
+    setQuestions([]);
+    setPassageTranslation(null);
+    setShowPassageTranslation(false);
+    setMissingPassageTranslationPrompt(false);
+    setPassageTranslationError('');
+
+    api
+      .getSet(setId)
+      .then((s) => {
+        if (active && s?.title) setSetTitle(s.title);
+      })
+      .catch(() => {});
+
+    loadHistory()
+      .then(async (items) => {
+        if (!active) return;
+        // If not scoped to specific word_ids and an existing attempt exists, resume it without AI call
+        if (launchQuery.wordIds.length === 0 && items.length > 0) {
+          const latest = items.find((i) => !i.completed) || items[0];
+          setAttemptId(latest.id);
+          await fetchQuestions(latest.id);
+        }
+      })
+      .catch((err: any) => {
+        if (active) setError(err?.message || 'Không thể tải lịch sử bài đọc.');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
     return () => {
+      active = false;
       if (draftTimerRef.current) window.clearTimeout(draftTimerRef.current);
     };
-  }, [setId]);
+  }, [setId, launchQuery]);
 
   // Audio speech via Ctrl key
   useControlAudio(() => {
@@ -245,59 +359,88 @@ export function ReadingExercise() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
-      {/* 1. Header Toolbar matching source-reading.png */}
-      <header className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate(`/study-set/${setId}`)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition p-2 -ml-2 rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Quay lại bộ từ</span>
-        </button>
+      {/* 1. Header Toolbar with Breadcrumb & Deterministic Back */}
+      <LearningBreadcrumb
+        currentLabel="Đọc hiểu"
+        setId={setId}
+        setTitle={setTitle}
+        rightSlot={
+          <>
+            {attemptId && passage && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => playAudio(passage, 'en-US', audioSpeed)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+                  title="Nghe toàn bộ bài đọc (Ctrl)"
+                >
+                  <Volume2 className="w-4 h-4 text-indigo-600" />
+                  <span>Nghe bài đọc</span>
+                </button>
 
-        <div className="flex items-center gap-2">
-          {/* Audio listen for whole passage */}
+                <button
+                  type="button"
+                  data-testid="toggle-reading-translation"
+                  aria-pressed={showPassageTranslation}
+                  onClick={handleTogglePassageTranslation}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-2xl border text-xs font-bold shadow-2xs transition ${
+                    showPassageTranslation
+                      ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <Languages className="w-4 h-4 text-indigo-600" />
+                  <span>{showPassageTranslation ? 'Ẩn bản dịch' : 'Bản dịch bài đọc'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setAudioSpeed(audioSpeed === 0.9 ? 0.8 : audioSpeed === 0.8 ? 1.0 : 0.9)
+                  }
+                  className="px-2.5 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-2xs"
+                >
+                  {audioSpeed}×
+                </button>
+              </>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setHistoryOpen(!historyOpen)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+            >
+              <HistoryIcon className="w-4 h-4 text-slate-500" />
+              <span>Lịch sử ({history.length})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(!settingsOpen)}
+              className="p-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
+              aria-label="Cài đặt"
+            >
+              <Settings className="w-4 h-4 text-slate-500" />
+            </button>
+          </>
+        }
+      />
+
+      {(launchQuery.reviewScope || launchQuery.wordIds.length > 0) && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3 flex-wrap text-xs">
+          <span className="font-bold text-amber-800 dark:text-amber-300">
+            Luyện vận dụng từ đến hạn — không thay lượt ôn nhớ
+          </span>
           <button
             type="button"
-            onClick={() => playAudio(passage, 'en-US', audioSpeed)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
-            title="Nghe toàn bộ bài đọc (Ctrl)"
+            onClick={() => navigate('/repetition-study')}
+            className="px-3 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold inline-flex items-center gap-1.5 transition"
           >
-            <Volume2 className="w-4 h-4 text-indigo-600" />
-            <span>Nghe bài đọc</span>
-          </button>
-
-          {/* Speed Toggle */}
-          <button
-            type="button"
-            onClick={() => setAudioSpeed(audioSpeed === 0.9 ? 0.8 : audioSpeed === 0.8 ? 1.0 : 0.9)}
-            className="px-2.5 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-2xs"
-          >
-            {audioSpeed}×
-          </button>
-
-          {/* History */}
-          <button
-            type="button"
-            onClick={() => setHistoryOpen(!historyOpen)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
-          >
-            <HistoryIcon className="w-4 h-4 text-slate-500" />
-            <span>Lịch sử ({history.length})</span>
-          </button>
-
-          {/* Settings */}
-          <button
-            type="button"
-            onClick={() => setSettingsOpen(!settingsOpen)}
-            className="p-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 shadow-2xs hover:bg-slate-50 transition"
-            aria-label="Cài đặt"
-          >
-            <Settings className="w-4 h-4 text-slate-500" />
+            <Repeat className="w-3.5 h-3.5" />
+            <span>Quay về ôn tập</span>
           </button>
         </div>
-      </header>
+      )}
 
       {/* Settings Panel */}
       {settingsOpen && (
@@ -404,8 +547,57 @@ export function ReadingExercise() {
       {loading ? (
         <div className="flex flex-col items-center justify-center p-20 gap-3 text-slate-500 text-xs font-semibold">
           <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-          <span>Đang tạo đoạn văn bản và ngân hàng câu hỏi...</span>
+          <span>Đang chuẩn bị dữ liệu bài đọc hiểu...</span>
         </div>
+      ) : !attemptId ? (
+        <section className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-8 text-center space-y-5 shadow-sm">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center">
+            <Sparkles className="w-7 h-7" />
+          </div>
+          <div className="space-y-1.5 max-w-md mx-auto">
+            <h1 className="text-lg font-black text-slate-900 dark:text-white">
+              Tạo bài đọc hiểu &amp; điền từ bằng AI
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              AI sẽ biên soạn một đoạn văn tiếng Anh ngắn kèm câu hỏi điền từ và đọc hiểu cho{' '}
+              {launchQuery.wordIds.length > 0
+                ? `${launchQuery.wordIds.slice(0, 30).length} từ mục tiêu đã chọn`
+                : 'các từ vựng trong bộ thẻ này'}
+              .
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            {(['easy', 'medium', 'hard'] as const).map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                onClick={() => setDifficulty(lvl)}
+                className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold transition ${
+                  difficulty === lvl
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                {lvl === 'easy' ? 'Dễ (A1-A2)' : lvl === 'medium' ? 'Vừa (A2-B1)' : 'Khó (B2-C1)'}
+              </button>
+            ))}
+          </div>
+          <div className="pt-1">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void initAttempt(false)}
+              className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-black shadow-sm transition inline-flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>
+                {capabilities?.ai.configured
+                  ? 'Tạo bài đọc hiểu bằng AI'
+                  : 'Kết nối AI để tạo bài đọc hiểu'}
+              </span>
+            </button>
+          </div>
+        </section>
       ) : (
         <>
           {/* 2. Main Passage Card matching source-reading.png */}
@@ -425,6 +617,91 @@ export function ReadingExercise() {
             <div className="text-sm md:text-base leading-relaxed md:leading-loose font-serif text-slate-800 dark:text-slate-200 whitespace-pre-wrap select-text">
               {renderPassageWithGaps()}
             </div>
+
+            {/* Passage Translation Section (Cached or Explicit AI Request) */}
+            {showPassageTranslation && passageTranslation && (
+              <div
+                data-testid="reading-passage-translation"
+                className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800 space-y-1.5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+                    Bản dịch tiếng Việt (Đã lưu)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassageTranslation(false)}
+                    className="text-[11px] font-bold text-slate-500 hover:text-slate-800"
+                  >
+                    Ẩn bản dịch
+                  </button>
+                </div>
+                <p className="text-xs md:text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                  {passageTranslation}
+                </p>
+              </div>
+            )}
+
+            {missingPassageTranslationPrompt && !passageTranslation && (
+              <div
+                data-testid="reading-translation-missing-prompt"
+                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3 text-xs"
+              >
+                <p className="text-slate-700 dark:text-slate-200 font-semibold">
+                  Bài đọc này chưa có bản dịch tiếng Việt lưu sẵn. Bạn có muốn nhờ AI dịch toàn bộ bài đọc không? (Bản dịch sẽ được lưu lại cho các lần xem sau).
+                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    disabled={translatingPassage}
+                    data-testid="generate-reading-translation"
+                    onClick={() => void handleGeneratePassageTranslation()}
+                    className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold inline-flex items-center gap-1.5 transition"
+                  >
+                    {translatingPassage ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Đang dịch bài đọc...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>
+                          {capabilities?.ai.configured
+                            ? 'Nhờ AI dịch bài đọc'
+                            : 'Kết nối AI để dịch bài đọc'}
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMissingPassageTranslationPrompt(false)}
+                    className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold"
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {passageTranslationError && (
+              <div
+                role="alert"
+                data-testid="reading-translation-error"
+                className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center justify-between gap-2"
+              >
+                <span>{passageTranslationError}</span>
+                <button
+                  type="button"
+                  disabled={translatingPassage}
+                  onClick={() => void handleGeneratePassageTranslation()}
+                  className="underline font-bold shrink-0"
+                >
+                  Thử lại
+                </button>
+              </div>
+            )}
           </section>
 
           {/* 3. Word Bank (Ngân hàng từ) matching source-reading.png */}

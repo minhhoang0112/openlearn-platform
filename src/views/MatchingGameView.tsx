@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from '../context/RouterContext';
 import { api, StudySession } from '../api/client';
+import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
+import { LearningBreadcrumb } from '../components/LearningBreadcrumb';
+import { forwardNavigationContext } from '../utils/navigationContext';
 import confetti from 'canvas-confetti';
 import {
   ArrowLeft,
@@ -20,8 +23,9 @@ interface TilePair {
 }
 
 export const MatchingGameView: React.FC = () => {
-  const { params, navigate, goBack } = useRouter();
+  const { params, path, navigate, goBack } = useRouter();
   const setId = Number(params.id) || 163;
+  const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
 
   const [session, setSession] = useState<StudySession | null>(null);
   const [tiles, setTiles] = useState<TilePair[]>([]);
@@ -46,7 +50,10 @@ export const MatchingGameView: React.FC = () => {
     clearInterval(timerRef.current);
 
     try {
-      const s = await api.startStudy(setId, 'match');
+      const s = await api.startStudy(setId, 'match', {
+        ...(launchQuery.wordIds.length > 0 ? { word_ids: launchQuery.wordIds } : {}),
+        ...(launchQuery.reviewScope === 'due' ? { due_only: true } : {}),
+      });
       setSession(s);
 
       const pRes = await api.getMatchPairs(s.id);
@@ -75,7 +82,7 @@ export const MatchingGameView: React.FC = () => {
   useEffect(() => {
     initGame();
     return () => clearInterval(timerRef.current);
-  }, [setId]);
+  }, [setId, launchQuery]);
 
   const handleTileClick = async (tile: TilePair) => {
     if (submittingRef.current || matchedIds.has(tile.id) || isGameOver || mismatchedIds.size > 0) return;
@@ -162,15 +169,10 @@ export const MatchingGameView: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16">
+      <LearningBreadcrumb currentLabel="Ghép thẻ" setId={setId} />
       {/* Top Header */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(`/study-set/${setId}`)}
-            className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
           <div>
             <h1 className="text-lg font-bold text-slate-900 dark:text-white">Ghép từ (Matching Game)</h1>
             <p className="text-xs text-slate-400">Chọn 1 từ tiếng Anh và 1 nghĩa tương ứng để ghép cặp</p>
@@ -220,7 +222,7 @@ export const MatchingGameView: React.FC = () => {
               <span>Chơi lại ván mới</span>
             </button>
             <button
-              onClick={() => navigate(`/study-set/${setId}`)}
+              onClick={() => navigate(forwardNavigationContext(`/study-set/${setId}`, path))}
               className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition"
             >
               Quay về bộ từ

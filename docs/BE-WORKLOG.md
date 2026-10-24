@@ -28,3 +28,17 @@ File này ghi chi tiết công việc BE, tách khỏi STATUS để giảm xung 
 - Tái hiện và sửa lỗi thật: submit đọc hiểu không trả questions làm trắng trang; reload completed reading tự tạo attempt/gọi AI mới. Shared readingView cho GET/submit/replay; resume reading giữ phiên hoàn thành khi không yêu cầu bài mới. Có regression tests và UI submit/reload. Ngữ pháp giữ quy tắc resume cũ.
 - Runtime3000/4000 trả200; backup server/data/release-1.15-1792601016537.sqlite. Không sửa src/ hoặc STATUS, không gọi live AI.
 - Đóng hạng mục FE-MATERIAL-03, dừng tính năng mới theo yêu cầu tiết kiệm quota; đọc RELEASE-CLOSEOUT.md. AI thật, audio/micro vật lý và học dài ngày chưa được đảm bảo từ test tự động.
+
+## 24/10/2026 — CLARITY-01: tái kiểm logic học
+
+- Mở lại theo phản hồi người dùng: report chốt trước là kỹ thuật, không đủ xác nhận SRS/UX mới. Chrome DB riêng xác nhận due0 nhưng FE fallback bộ lạ; mode Viết chỉ đổi state, không bài tập mới; không có Trang chủ trong sidebar. Ảnh/report learning-clarity-browser-audit.json. Không sửa src/.
+- BE contract1.16/schema14/149 route: GET /srs/practice phân nhómscope due/all/mastered, chọnIDs cho chế độ thật; conversations kiểm settings.word_ids. SRS queue overlay word_notes/prepared+total+star/last_reviewed. PATCHquality có expected_last_reviewed_at và409 REVIEW_CHANGED; scheduler timestamp tăng đơn điệu.
+-25 ví dụ chuẩn bị sẵn, exact Vietnamese sense guard, không đè câu/note cũ. Chi tiết thẻ allow_ai:false không gọi model; ngữ pháp allow_ai:false dùng ví dụ lưu sẵn, trả lỗi rõ thiếu nội dung. Legacy behavior vẫn giữ để tương thích, FE phải tắt auto AI theo hợp đồng. Không xoay key, không live AI, không đổi env/model/schema.
+-97 test toàn BE qua, build qua. Tests fixture cache/grammar cố ý có câu riêng để tiếp tục kiểm provider/dedup sau khi có prepared fallback. Ba nhóm regression mới ở learning-clarity.test.mjs. Bàn giao cụ thể LEARNING-CLARITY-ANTI.md.
+
+## 24/10/2026 — CLARITY-02: đồng bộ học kết hợp, tiến độ, nghĩa và dịch
+
+- Phản hồi ảnh user: comprehensive dùng renderer riêng tối giản, scope AI toàn set, cardpath gán studying bài1, synonym chỉ split semicolon, controls ví dụ trùng, sidebar/back không context. Không sửa src/.
+- BE1.17/schema14/151 route: comprehensive word/step counts rõ, resume phiên khớp, restart chủ động, evidence whole terms tránh brandish=brand. SetCard.progress thống nhất counts/state/lastsession. Dictionary exact-entry local/prepared20 mục, bảo vệ note riêng. Readingtranslation explicit defaultfalse/cache+dedup, giữ drafts/grades vàowner.
+- Ngân hàng ví dụ tăng25→41, chỉ đúng sense/câu; ví dụAI thiếu dịch có exact known sentence được overlay bản dịch chuẩn bị sẵn, không sửa raw note/source.
+-102 full BE test đạt trước mở rộng16 mục;16 regression liên quan chạy lại đạt sau đó. Build qua, không gọi live AI hoặc đổi .env/schema. FE pending hợp đồng LEARNING-CONSISTENCY-ANTI.md.

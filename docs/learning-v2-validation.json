@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-21",
-  "contract": "1.15.0",
+  "date": "2026-10-24",
+  "contract": "1.17.0",
   "schema": 14,
-  "routes": 148,
+  "routes": 151,
   "backend": {
     "command": "node --test --test-isolation=none --test-reporter=dot --test-timeout=15000 server/tests/*.test.mjs",
-    "passed": 94,
+    "passed": 102,
     "failed": 0,
-    "contract_tested": "1.15.0",
+    "contract_tested": "1.17.0",
     "current_contract_full_suite_rerun": true,
-    "note": "Final closeout after reading submit/resume fixes;94 full BE tests passed, no live AI."
+    "note": "Full102 passed before prepared bank expansion25→41; final16 related regressions passed afterwards; no live AI."
   },
   "pilot": {
     "programs": 2,
@@ -28,8 +28,10 @@
     "health_http": 200,
     "schema": 14
   },
-  "frontend_integration": "Final build passed;7 browser suites passed after test-selector updates and reading BE fixes. See release-browser-validation.json.",
+  "frontend_integration": "Build passed. CLARITY-02 user screenshots/source show remaining comprehension/navigation/synonym layout issues; FE pending, not release approved.",
   "remaining": [
+    "CLARITY-02 shared comprehensive runner, uniform set progress, individual synonym speech/detail, translation layout and contextual navigation",
+    "CLARITY-01 FE corrections for SRS scope/modes/fake save, navigation, practice discovery and explicit-only AI details",
     "Human text/audio learning review; CONTENT-07 UI accepted by Anti with targeted Codex Chrome verification",
     "Physical microphone and audio quality checks; fake microphone verification for LessonRunView still pending",
     "Human audio quality review",
@@ -38,9 +40,15 @@
     "Real-provider quota recovery and human pronunciation-feedback checks"
   ],
   "latest_targeted_validation": {
-    "file": "server/tests/exercises.test.mjs",
-    "included_in_current_full_suite": true,
-    "note": "Added submit/replay questions contract and completed-reading resume regressions."
+    "files": [
+      "learning-clarity",
+      "learning-consistency",
+      "learning-details",
+      "backend-audit",
+      "exercises"
+    ],
+    "passed": 16,
+    "failed": 0
   },
   "browser_validation": {
     "report": "v2-browser-integration.json",
@@ -129,5 +137,13 @@
     "contract": "UPGRADE-V2-SUBTITLES.md"
   },
   "release_closeout": "RELEASE-CLOSEOUT.md",
-  "feature_development_stopped": true
+  "feature_development_stopped": false,
+  "learning_clarity": {
+    "handoff": "LEARNING-CONSISTENCY-ANTI.md",
+    "browser_report": "learning-clarity-browser-audit.json",
+    "prepared_examples": 41,
+    "frontend_pending": true,
+    "no_live_ai": true,
+    "prepared_dictionary_entries": 20
+  }
 }

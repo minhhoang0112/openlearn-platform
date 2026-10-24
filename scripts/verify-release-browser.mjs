@@ -2,6 +2,7 @@
 import {spawnSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 const scripts=[
+  'verify-clarity-01.mjs',
   'verify-v2-material-subtitles-fe.mjs',
   'verify-v2-material-cues-fe.mjs',
   'v2-browser-integration.mjs',

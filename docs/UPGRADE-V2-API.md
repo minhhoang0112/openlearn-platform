@@ -1,3 +1,7 @@
+> Mới nhất: contract1.17.0/schema14/151 route, LEARNING-CONSISTENCY-ANTI.md và BE-NEXT.md. CLARITY-02 FE còn pending.
+
+> Mới nhất24/10: contract1.16.0/schema14/149 route; đọc BE-NEXT.md và LEARNING-CLARITY-ANTI.md. Báo cáo chốt cũ chưa bao phủ lỗi SRS/UX mới.
+
 > Mới nhất: contract1.15.0 / schema14 /148 route. Đọc BE-NEXT.md và UPGRADE-V2-SUBTITLES.md cho MATERIAL-03. Thông báo bên dưới là lịch sử.
 
 > Mới nhất: contract1.14.0 / schema14 / 146 route. Đọc BE-NEXT.md và UPGRADE-V2-MATERIAL-CUES.md cho MATERIAL-02; các thông báo dưới đây là lịch sử.

@@ -13,7 +13,7 @@ test('private grammar/reading: stable repeated tokens, hidden keys, drafts, serv
   const base=`http://127.0.0.1:${app.server.address().port}/api/v1`;
   function client(){let cookie='';return async(method,path,body)=>{const response=await fetch(base+path,{method,headers:{Cookie:cookie,'Content-Type':'application/json','X-Requested-With':'OpenQuiz'},...(body===undefined?{}:{body:JSON.stringify(body)})});if(response.headers.get('set-cookie'))cookie=response.headers.get('set-cookie').split(';')[0];return {status:response.status,...await response.json()};};}
   const a=client(),b=client();await a('POST','/auth/register',{email:'exercise-a@test.invalid',password:'exercise password',name:'Alice'});await b('POST','/auth/register',{email:'exercise-b@test.invalid',password:'exercise password',name:'Bob'});
-  const set=(await a('POST','/sets',{title:'Sentence practice',words:[{term:'book',definition:'sách'}]})).data;
+  const set=(await a('POST','/sets',{title:'Sentence practice',words:[{term:'book',definition:'sách',example:'The book is on the book shelf.'}]})).data;
   let started=await a('POST','/exercise-attempts',{set_id:set.id,kind:'grammar_order',original_order:true});assert.equal(started.status,201);
   const id=started.data.id,question=started.data.question,root=`/exercise-attempts/${id}`;
   assert.equal(question.type,'order');assert.equal(question.tokens.filter(t=>t.text==='book').length,2);assert.equal(new Set(question.tokens.map(t=>t.id)).size,question.tokens.length);
