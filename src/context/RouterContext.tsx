@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface RouterContextType {
   path: string;
@@ -8,23 +8,30 @@ interface RouterContextType {
 }
 
 const RouterContext = createContext<RouterContextType>({
-  path: '/',
+  path: "/",
   navigate: () => {},
   goBack: () => {},
-  params: {}
+  params: {},
 });
 
-function matchRoute(pattern: string, path: string): Record<string, string> | null {
-  const patternParts = pattern.split('/').filter(Boolean);
-  const pathParts = path.split('?')[0].split('/').filter(Boolean);
+function matchRoute(
+  pattern: string,
+  path: string,
+): Record<string, string> | null {
+  const patternParts = pattern.split("/").filter(Boolean);
+  const pathParts = path.split("?")[0].split("/").filter(Boolean);
 
   if (patternParts.length !== pathParts.length) return null;
 
   const params: Record<string, string> = {};
   for (let i = 0; i < patternParts.length; i++) {
-    if (patternParts[i].startsWith(':')) {
+    if (patternParts[i].startsWith(":")) {
       const paramName = patternParts[i].slice(1);
-      try { params[paramName] = decodeURIComponent(pathParts[i]); } catch { return null; }
+      try {
+        params[paramName] = decodeURIComponent(pathParts[i]);
+      } catch {
+        return null;
+      }
     } else if (patternParts[i] !== pathParts[i]) {
       return null;
     }
@@ -32,23 +39,27 @@ function matchRoute(pattern: string, path: string): Record<string, string> | nul
   return params;
 }
 
-export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [path, setPath] = useState<string>(() => window.location.pathname + window.location.search);
+export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [path, setPath] = useState<string>(
+    () => window.location.pathname + window.location.search,
+  );
 
   useEffect(() => {
     const onPop = () => {
       setPath(window.location.pathname + window.location.search);
     };
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   const navigate = (to: string, options?: { replace?: boolean }) => {
     if (to !== path) {
       if (options?.replace) {
-        window.history.replaceState({}, '', to);
+        window.history.replaceState({}, "", to);
       } else {
-        window.history.pushState({}, '', to);
+        window.history.pushState({}, "", to);
       }
       setPath(to);
       window.scrollTo(0, 0);
@@ -59,26 +70,26 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     }
   };
 
   // Extract current matched route parameters
   const routes = [
-    '/category/:slug',
-    '/study-set/:id',
-    '/learning-path/:id',
-    '/study/:id',
-    '/exam/:id',
-    '/game/match/:id',
-    '/dictation/:id',
-    '/comprehensive/:id',
-    '/ai-study/:id',
-    '/conversation/:id',
-    '/grammar/:id',
-    '/reading/:id',
-    '/courses/:courseId/lesson/:id',
-    '/class/:id'
+    "/category/:slug",
+    "/study-set/:id",
+    "/learning-path/:id",
+    "/study/:id",
+    "/exam/:id",
+    "/game/match/:id",
+    "/dictation/:id",
+    "/comprehensive/:id",
+    "/ai-study/:id",
+    "/conversation/:id",
+    "/grammar/:id",
+    "/reading/:id",
+    "/courses/:courseId/lesson/:id",
+    "/class/:id",
   ];
 
   let currentParams: Record<string, string> = {};
@@ -91,11 +102,12 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }
 
   return (
-    <RouterContext.Provider value={{ path, navigate, goBack, params: currentParams }}>
+    <RouterContext.Provider
+      value={{ path, navigate, goBack, params: currentParams }}
+    >
       {children}
     </RouterContext.Provider>
   );
 };
 
 export const useRouter = () => useContext(RouterContext);
-

@@ -10,7 +10,7 @@ import {
   Loader2,
   CheckCircle2,
 } from "lucide-react";
-import { sanitizeInternalPath } from "../utils/navigationContext";
+import { postAuthDestination } from "../utils/postAuthNavigation";
 
 export const AuthView: React.FC = () => {
   const { login, register } = useAuth();
@@ -28,23 +28,13 @@ export const AuthView: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    const target = postAuthDestination(window.location.pathname + window.location.search);
     try {
       if (mode === "login") {
         await login(email, password);
       } else {
         await register(email, password, name);
       }
-      const initialPath = window.location.pathname + window.location.search;
-      const searchParams = new URLSearchParams(window.location.search);
-      const returnTo = searchParams.get("returnTo") || searchParams.get("from");
-      const target = returnTo
-        ? sanitizeInternalPath(returnTo, "/today")
-        : initialPath &&
-            initialPath !== "/" &&
-            initialPath !== "/login" &&
-            initialPath !== "/auth"
-          ? sanitizeInternalPath(initialPath, "/today")
-          : "/today";
       navigate(target, { replace: true });
     } catch (err: any) {
       setError(
@@ -193,23 +183,9 @@ export const AuthView: React.FC = () => {
               onClick={async () => {
                 setLoading(true);
                 setError(null);
+                const target = postAuthDestination(window.location.pathname + window.location.search);
                 try {
                   await login("user@example.com", "1234567890");
-                  const initialPath =
-                    window.location.pathname + window.location.search;
-                  const searchParams = new URLSearchParams(
-                    window.location.search,
-                  );
-                  const returnTo =
-                    searchParams.get("returnTo") || searchParams.get("from");
-                  const target = returnTo
-                    ? sanitizeInternalPath(returnTo, "/today")
-                    : initialPath &&
-                        initialPath !== "/" &&
-                        initialPath !== "/login" &&
-                        initialPath !== "/auth"
-                      ? sanitizeInternalPath(initialPath, "/today")
-                      : "/today";
                   navigate(target, { replace: true });
                 } catch (err: any) {
                   setError(err?.message || "Lỗi đăng nhập nhanh");

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "../context/RouterContext";
 import { useAuth } from "../context/AuthContext";
-import { api, DashboardData, SetCard, PathCard, TodayPlan } from "../api/client";
+import {
+  api,
+  DashboardData,
+  SetCard,
+  PathCard,
+  TodayPlan,
+} from "../api/client";
 import { normalizeSetProgress } from "../utils/setProgress";
 import { withNavigationContext } from "../utils/navigationContext";
 import {
@@ -25,7 +31,10 @@ export const DashboardView: React.FC = () => {
   const searchQuery = new URLSearchParams(path.split('?')[1] || '').get('q')?.trim() || '';
 
   const [searchVal, setSearchVal] = useState("");
-  const [searchResults, setSearchResults] = useState<{ sets: SetCard[]; paths: PathCard[] } | null>(null);
+  const [searchResults, setSearchResults] = useState<{
+    sets: SetCard[];
+    paths: PathCard[];
+  } | null>(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
 
@@ -41,10 +50,7 @@ export const DashboardView: React.FC = () => {
   useEffect(() => {
     let active = true;
     const query = new URLSearchParams(path.split('?')[1] || '').get('q')?.trim() || '';
-    setSearchVal(query);
-    setSearchResults(null);
-    setSearchError('');
-    setSearchLoading(!!query);
+    setSearchVal(query); setSearchResults(null); setSearchError(''); setSearchLoading(!!query);
     if (query) api.search(query)
       .then(res => { if (active) setSearchResults(res); })
       .catch(err => { if (active) setSearchError(err?.message || 'Không thể tìm kiếm.'); })
@@ -125,7 +131,7 @@ export const DashboardView: React.FC = () => {
         <div className="flex items-center justify-between">
           <button
             type="button"
-            onClick={() => navigate('/my-created')}
+            onClick={() => navigate("/my-created")}
             className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition"
           >
             {homeRoute === '/explore' && <ArrowLeft className="w-4 h-4" />}
@@ -141,7 +147,8 @@ export const DashboardView: React.FC = () => {
             Khám phá bộ từ &amp; lộ trình
           </h1>
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-            Khám phá danh mục các bộ từ vựng thực tế, lộ trình chuẩn hóa và khóa học chuyên ngành để bổ sung vào thư viện học tập của bạn.
+            Khám phá danh mục các bộ từ vựng thực tế, lộ trình chuẩn hóa và khóa
+            học chuyên ngành để bổ sung vào thư viện học tập của bạn.
           </p>
         </div>
 
@@ -177,16 +184,21 @@ export const DashboardView: React.FC = () => {
 
       {/* Search results banner if search was performed */}
       {searchLoading && (
-        <div className="p-6 text-center text-xs text-slate-400">Đang tìm kiếm...</div>
+        <div className="p-6 text-center text-xs text-slate-400">
+          Đang tìm kiếm...
+        </div>
       )}
       {searchError && (
-        <div className="p-3 bg-rose-50 text-rose-700 text-xs rounded-xl">{searchError}</div>
+        <div className="p-3 bg-rose-50 text-rose-700 text-xs rounded-xl">
+          {searchError}
+        </div>
       )}
       {searchResults && (
         <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/50 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-              Kết quả tìm kiếm cho "{searchQuery}" ({searchResults.sets.length} bộ từ, {searchResults.paths.length} lộ trình)
+              Kết quả tìm kiếm cho "{searchQuery}" ({searchResults.sets.length} bộ
+              từ, {searchResults.paths.length} lộ trình)
             </h2>
             <button
               type="button"
@@ -201,11 +213,22 @@ export const DashboardView: React.FC = () => {
               {searchResults.sets.map((s) => (
                 <div
                   key={s.id}
-                  onClick={() => navigate(withNavigationContext(`/study-set/${s.id}`, { source: 'library', from: currentExploreUrl }))}
+                  onClick={() =>
+                    navigate(
+                      withNavigationContext(`/study-set/${s.id}`, {
+                        source: "library",
+                        from: currentExploreUrl,
+                      }),
+                    )
+                  }
                   className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer hover:border-indigo-500 transition shadow-2xs"
                 >
-                  <div className="font-bold text-xs text-slate-900 dark:text-white truncate">{s.title}</div>
-                  <div className="text-[10px] text-slate-400 mt-1">{s.word_count || 0} thuật ngữ</div>
+                  <div className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                    {s.title}
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-1">
+                    {s.word_count || 0} thuật ngữ
+                  </div>
                 </div>
               ))}
             </div>
@@ -215,18 +238,32 @@ export const DashboardView: React.FC = () => {
               {searchResults.paths.map((p) => (
                 <div
                   key={p.id}
-                  onClick={() => navigate(withNavigationContext(`/learning-path/${p.id}`, { source: 'library', from: currentExploreUrl }))}
+                  onClick={() =>
+                    navigate(
+                      withNavigationContext(`/learning-path/${p.id}`, {
+                        source: "library",
+                        from: currentExploreUrl,
+                      }),
+                    )
+                  }
                   className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer hover:border-indigo-500 transition shadow-2xs"
                 >
-                  <div className="font-bold text-xs text-slate-900 dark:text-white truncate">{p.title}</div>
-                  <div className="text-[10px] text-slate-400 mt-1">{p.set_count || 0} bộ thẻ</div>
+                  <div className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                    {p.title}
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-1">
+                    {p.set_count || 0} bộ thẻ
+                  </div>
                 </div>
               ))}
             </div>
           )}
-          {searchResults.sets.length === 0 && searchResults.paths.length === 0 && (
-            <div className="text-xs text-slate-500 italic">Không tìm thấy nội dung phù hợp.</div>
-          )}
+          {searchResults.sets.length === 0 &&
+            searchResults.paths.length === 0 && (
+              <div className="text-xs text-slate-500 italic">
+                Không tìm thấy nội dung phù hợp.
+              </div>
+            )}
         </div>
       )}
 
@@ -283,21 +320,23 @@ export const DashboardView: React.FC = () => {
               <h3 className="font-extrabold text-sm md:text-base text-slate-900 dark:text-white">
                 {todayPlan.status === "rest_day"
                   ? "Hôm nay là ngày nghỉ theo lịch của bạn"
-                  : todayPlan.items.find((i) => i.kind === "lesson")?.title || "Bài học trọng tâm hôm nay"}
+                  : todayPlan.items.find((i) => i.kind === "lesson")?.title ||
+                    "Bài học trọng tâm hôm nay"}
               </h3>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
-            {todayPlan.mistake_summary && todayPlan.mistake_summary.due_count > 0 && (
-              <button
-                type="button"
-                onClick={() => navigate("/mistakes?due_only=true")}
-                className="px-3.5 py-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 text-xs font-bold transition flex items-center gap-1.5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
-              >
-                <BookX className="w-3.5 h-3.5" />
-                <span>Ôn {todayPlan.mistake_summary.due_count} câu sai</span>
-              </button>
-            )}
+            {todayPlan.mistake_summary &&
+              todayPlan.mistake_summary.due_count > 0 && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/mistakes?due_only=true")}
+                  className="px-3.5 py-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 text-xs font-bold transition flex items-center gap-1.5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
+                >
+                  <BookX className="w-3.5 h-3.5" />
+                  <span>Ôn {todayPlan.mistake_summary.due_count} câu sai</span>
+                </button>
+              )}
 
             {todayPlan.resume_route ? (
               <button
@@ -326,11 +365,18 @@ export const DashboardView: React.FC = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">
-            {activePath ? 'Lộ trình đang học' : 'Gợi ý lộ trình bắt đầu'}
+            {activePath ? "Lộ trình đang học" : "Gợi ý lộ trình bắt đầu"}
           </h2>
           <button
             type="button"
-            onClick={() => navigate(withNavigationContext("/category/nen-tang", { source: "library", from: currentExploreUrl }))}
+            onClick={() =>
+              navigate(
+                withNavigationContext("/category/nen-tang", {
+                  source: "library",
+                  from: currentExploreUrl,
+                }),
+              )
+            }
             className="text-xs text-slate-400 hover:text-slate-600 font-medium"
           >
             Xem tất cả
@@ -343,7 +389,9 @@ export const DashboardView: React.FC = () => {
           onClick={() =>
             navigate(
               withNavigationContext(
-                activePath ? `/learning-path/${activePath.id}` : "/learning-path/20269",
+                activePath
+                  ? `/learning-path/${activePath.id}`
+                  : "/learning-path/20269",
                 {
                   source: "library",
                   from: currentExploreUrl,
@@ -357,12 +405,14 @@ export const DashboardView: React.FC = () => {
         >
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
-                activePath
-                  ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
-                  : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
-              }`}>
-                {activePath ? 'Đang học' : 'Gợi ý cho bạn'}
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                  activePath
+                    ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                }`}
+              >
+                {activePath ? "Đang học" : "Gợi ý cho bạn"}
               </span>
             </div>
 
@@ -421,7 +471,9 @@ export const DashboardView: React.FC = () => {
                 setTitle: s.title,
               });
               const primaryUrl = withNavigationContext(
-                prog.state === "empty" ? `/study-set/${s.id}` : `/study/${s.id}`,
+                prog.state === "empty"
+                  ? `/study-set/${s.id}`
+                  : `/study/${s.id}`,
                 {
                   source: "library",
                   from: currentExploreUrl,
@@ -459,7 +511,9 @@ export const DashboardView: React.FC = () => {
                     <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          prog.state === "mastered" ? "bg-emerald-500" : "bg-indigo-600"
+                          prog.state === "mastered"
+                            ? "bg-emerald-500"
+                            : "bg-indigo-600"
                         }`}
                         style={{ width: `${prog.percentReviewed}%` }}
                       />
@@ -509,7 +563,14 @@ export const DashboardView: React.FC = () => {
             trực tiếp.
           </p>
           <button
-            onClick={() => navigate(withNavigationContext("/category/nen-tang", { source: "library", from: currentExploreUrl }))}
+            onClick={() =>
+              navigate(
+                withNavigationContext("/category/nen-tang", {
+                  source: "library",
+                  from: currentExploreUrl,
+                }),
+              )
+            }
             className="mt-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition"
           >
             <span>Tiếp tục</span>
@@ -563,7 +624,14 @@ export const DashboardView: React.FC = () => {
               Nền tảng
             </span>
             <button
-              onClick={() => navigate(withNavigationContext("/category/nen-tang", { source: "library", from: currentExploreUrl }))}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/category/nen-tang", {
+                    source: "library",
+                    from: currentExploreUrl,
+                  }),
+                )
+              }
               className="text-[11px] text-slate-400 hover:text-slate-600 font-semibold"
             >
               Xem tất cả
@@ -649,7 +717,14 @@ export const DashboardView: React.FC = () => {
               TOEIC
             </span>
             <button
-              onClick={() => navigate(withNavigationContext("/category/toeic", { source: "library", from: currentExploreUrl }))}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/category/toeic", {
+                    source: "library",
+                    from: currentExploreUrl,
+                  }),
+                )
+              }
               className="text-[11px] text-slate-400 hover:text-slate-600 font-semibold"
             >
               Xem tất cả
@@ -700,7 +775,14 @@ export const DashboardView: React.FC = () => {
               Công việc
             </span>
             <button
-              onClick={() => navigate(withNavigationContext("/category/cong-viec", { source: "library", from: currentExploreUrl }))}
+              onClick={() =>
+                navigate(
+                  withNavigationContext("/category/cong-viec", {
+                    source: "library",
+                    from: currentExploreUrl,
+                  }),
+                )
+              }
               className="text-[11px] text-slate-400 hover:text-slate-600 font-semibold"
             >
               Xem tất cả
@@ -817,7 +899,9 @@ export const DashboardView: React.FC = () => {
             </p>
             <button
               onClick={() =>
-                alert("OpenLearn Extension đã sẵn sàng tải từ Chrome Web Store.")
+                alert(
+                  "OpenLearn Extension đã sẵn sàng tải từ Chrome Web Store.",
+                )
               }
               className="mt-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition"
             >

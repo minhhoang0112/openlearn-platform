@@ -43,14 +43,7 @@ import { Loader2 } from "lucide-react";
 
 const AppContent: React.FC = () => {
   const { user, loading, error, refreshUser } = useAuth();
-  const { path, navigate } = useRouter();
-
-  // Redirect root path to /today for logged-in user with replace to avoid Back button loop
-  React.useEffect(() => {
-    if (user && (path === "/" || path === "")) {
-      navigate("/today", { replace: true });
-    }
-  }, [user, path, navigate]);
+  const { path } = useRouter();
 
   if (loading) {
     return (
@@ -83,8 +76,8 @@ const AppContent: React.FC = () => {
     if (/^\/listening\/practice\/[a-zA-Z0-9-]+/.test(path))
       return <ListeningPracticeView />;
     if (path.startsWith("/listening")) return <ListeningLibraryView />;
-    if (path.startsWith("/today") || path === "/" || path === "")
-      return <TodayView />;
+    if (path.startsWith("/today")) return <TodayView />;
+    if (path.split('?')[0] === '/' || path === '') return <DashboardView />;
     if (path.startsWith("/my-program")) return <MyProgramView />;
     if (path.startsWith("/mistakes")) return <MistakesView />;
     if (path.startsWith("/progress")) return <ProgressView />;

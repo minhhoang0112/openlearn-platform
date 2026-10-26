@@ -1,12 +1,12 @@
-import React from 'react';
-import { ArrowLeft, ChevronRight, FolderOpen } from 'lucide-react';
-import { useRouter } from '../context/RouterContext';
+import React from "react";
+import { ArrowLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { useRouter } from "../context/RouterContext";
 import {
   parseNavigationContext,
   sanitizeInternalPath,
   withNavigationContext,
-} from '../utils/navigationContext';
-import { parsePracticeLaunchQuery } from '../utils/practiceLaunch';
+} from "../utils/navigationContext";
+import { parsePracticeLaunchQuery } from "../utils/practiceLaunch";
 
 export interface LearningBreadcrumbProps {
   currentLabel: string;
@@ -22,68 +22,72 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
   rightSlot,
 }) => {
   const { path, navigate } = useRouter();
-  const currentPathname = path.split('?')[0];
+  const currentPathname = path.split("?")[0];
   const ctx = parseNavigationContext(path);
   const launch = parsePracticeLaunchQuery(path);
 
-  const resolvedSetTitle = setTitle?.trim() || ctx.setTitle || (setId ? `Bộ từ #${setId}` : null);
-  const isOnStudySetPage = currentPathname.startsWith('/study-set/');
+  const resolvedSetTitle =
+    setTitle?.trim() || ctx.setTitle || (setId ? `Bộ từ #${setId}` : null);
+  const isOnStudySetPage = currentPathname.startsWith("/study-set/");
 
   // Determine root origin
-  let rootLabel = 'Thư viện';
-  let rootRoute = '/my-created';
-  let backButtonLabel = isOnStudySetPage ? 'Về Thư viện' : 'Quay lại bộ từ';
+  let rootLabel = "Thư viện";
+  let rootRoute = "/my-created";
+  let backButtonLabel = isOnStudySetPage ? "Về Thư viện" : "Quay lại bộ từ";
   let backButtonRoute = isOnStudySetPage
-    ? '/my-created'
+    ? "/my-created"
     : setId
       ? withNavigationContext(`/study-set/${setId}`, ctx)
-      : '/my-created';
+      : "/my-created";
 
   const isFromPractice =
-    ctx.source === 'practice' || (ctx.from !== null && ctx.from.startsWith('/practice'));
+    ctx.source === "practice" ||
+    (ctx.from !== null && ctx.from.startsWith("/practice"));
   const isFromSrs =
-    ctx.source === 'srs' ||
-    (ctx.from !== null && ctx.from.startsWith('/repetition-study')) ||
+    ctx.source === "srs" ||
+    (ctx.from !== null && ctx.from.startsWith("/repetition-study")) ||
     (!ctx.source && launch.reviewScope !== null);
   const isFromPath =
-    ctx.source === 'path' ||
+    ctx.source === "path" ||
     ctx.pathId !== null ||
-    (ctx.from !== null && ctx.from.startsWith('/learning-path/'));
+    (ctx.from !== null && ctx.from.startsWith("/learning-path/"));
   const isFromExplore =
-    ctx.source === 'explore' ||
-    (ctx.from !== null && ctx.from.startsWith('/explore'));
+    ctx.source === "explore" ||
+    (ctx.from !== null && ctx.from.startsWith("/explore"));
   const isFromHome =
-    ctx.source === 'home' ||
+    ctx.source === "home" ||
     ctx.from?.split('?')[0] === '/';
   const isFromToday =
-    ctx.source === 'today' ||
-    (ctx.from !== null && ctx.from.startsWith('/today'));
+    ctx.source === "today" ||
+    (ctx.from !== null && ctx.from.startsWith("/today"));
   const isFromProgram =
-    ctx.source === 'program' || (ctx.from !== null && ctx.from.startsWith('/my-program'));
+    ctx.source === "program" ||
+    (ctx.from !== null && ctx.from.startsWith("/my-program"));
 
   const defaultPracticeRoute = (() => {
     const params = new URLSearchParams();
-    if (ctx.practiceMode) params.set('mode', ctx.practiceMode);
-    if (ctx.practiceCat) params.set('cat', ctx.practiceCat);
+    if (ctx.practiceMode) params.set("mode", ctx.practiceMode);
+    if (ctx.practiceCat) params.set("cat", ctx.practiceCat);
     const qs = params.toString();
-    return qs ? `/practice?${qs}` : '/practice';
+    return qs ? `/practice?${qs}` : "/practice";
   })();
 
   if (isFromPractice) {
-    rootLabel = 'Luyện tập';
+    rootLabel = "Luyện tập";
     rootRoute = sanitizeInternalPath(ctx.from, defaultPracticeRoute);
-    backButtonLabel = rootRoute.startsWith('/practice/')
-      ? 'Trở về chọn bộ từ' : 'Về Luyện tập';
+    backButtonLabel = rootRoute.startsWith("/practice/")
+      ? "Trở về chọn bộ từ"
+      : "Về Luyện tập";
     backButtonRoute = rootRoute;
   } else if (isFromSrs) {
-    rootLabel = 'Ôn đến hạn';
-    rootRoute = sanitizeInternalPath(ctx.from, '/repetition-study');
-    backButtonLabel = 'Về Ôn đến hạn';
+    rootLabel = "Ôn đến hạn";
+    rootRoute = sanitizeInternalPath(ctx.from, "/repetition-study");
+    backButtonLabel = "Về Ôn đến hạn";
     backButtonRoute = rootRoute;
   } else if (isFromExplore) {
-    rootLabel = 'Trang chủ';
-    rootRoute = sanitizeInternalPath(ctx.from, '/explore');
-    backButtonLabel = isOnStudySetPage ? 'Về Trang chủ' : 'Về bộ từ';
+    rootLabel = "Trang chủ";
+    rootRoute = sanitizeInternalPath(ctx.from, "/explore");
+    backButtonLabel = isOnStudySetPage ? "Về Trang chủ" : "Về bộ từ";
     backButtonRoute = isOnStudySetPage
       ? rootRoute
       : setId
@@ -94,23 +98,23 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
       ? sanitizeInternalPath(ctx.from, '/explore')
       : ctx.pathId
       ? `/learning-path/${ctx.pathId}`
-      : sanitizeInternalPath(ctx.from, '/explore');
-    rootLabel = ctx.pathTitle || 'Lộ trình học';
+      : sanitizeInternalPath(ctx.from, "/explore");
+    rootLabel = ctx.pathTitle || "Lộ trình học";
     rootRoute = pathRoute;
     if (isOnStudySetPage) {
-      backButtonLabel = 'Về lộ trình';
+      backButtonLabel = "Về lộ trình";
       backButtonRoute = pathRoute;
     } else if (setId) {
-      backButtonLabel = 'Về bộ từ';
+      backButtonLabel = "Về bộ từ";
       backButtonRoute = withNavigationContext(`/study-set/${setId}`, {
-        source: 'path',
+        source: "path",
         from: pathRoute,
         pathId: ctx.pathId,
         pathTitle: ctx.pathTitle,
         setTitle: resolvedSetTitle,
       });
     } else {
-      backButtonLabel = 'Về lộ trình';
+      backButtonLabel = "Về lộ trình";
       backButtonRoute = pathRoute;
     }
   } else if (isFromHome || isFromToday) {
@@ -123,9 +127,9 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
         ? withNavigationContext(`/study-set/${setId}`, ctx)
         : rootRoute;
   } else if (isFromProgram) {
-    rootLabel = 'Lộ trình';
-    rootRoute = sanitizeInternalPath(ctx.from, '/my-program');
-    backButtonLabel = isOnStudySetPage ? 'Về Lộ trình' : 'Về bộ từ';
+    rootLabel = "Lộ trình";
+    rootRoute = sanitizeInternalPath(ctx.from, "/my-program");
+    backButtonLabel = isOnStudySetPage ? "Về Lộ trình" : "Về bộ từ";
     backButtonRoute = isOnStudySetPage
       ? rootRoute
       : setId
@@ -135,28 +139,28 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
     // Deeplink fallback
     if (
       !isOnStudySetPage &&
-      !currentPathname.startsWith('/comprehensive/') &&
-      (currentPathname.startsWith('/study/') ||
-        currentPathname.startsWith('/dictation/') ||
-        currentPathname.startsWith('/exam/') ||
-        currentPathname.startsWith('/game/match/') ||
-        currentPathname.startsWith('/grammar/') ||
-        currentPathname.startsWith('/reading/') ||
-        currentPathname.startsWith('/ai-study/') ||
-        currentPathname.startsWith('/conversation/'))
+      !currentPathname.startsWith("/comprehensive/") &&
+      (currentPathname.startsWith("/study/") ||
+        currentPathname.startsWith("/dictation/") ||
+        currentPathname.startsWith("/exam/") ||
+        currentPathname.startsWith("/game/match/") ||
+        currentPathname.startsWith("/grammar/") ||
+        currentPathname.startsWith("/reading/") ||
+        currentPathname.startsWith("/ai-study/") ||
+        currentPathname.startsWith("/conversation/"))
     ) {
-      rootLabel = 'Luyện tập';
-      rootRoute = '/practice';
+      rootLabel = "Luyện tập";
+      rootRoute = "/practice";
     } else {
-      rootLabel = 'Thư viện';
-      rootRoute = '/my-created';
+      rootLabel = "Thư viện";
+      rootRoute = "/my-created";
     }
-    backButtonLabel = isOnStudySetPage ? 'Về Thư viện' : 'Quay lại bộ từ';
+    backButtonLabel = isOnStudySetPage ? "Về Thư viện" : "Quay lại bộ từ";
     backButtonRoute = isOnStudySetPage
-      ? '/my-created'
+      ? "/my-created"
       : setId
         ? withNavigationContext(`/study-set/${setId}`, ctx)
-        : '/my-created';
+        : "/my-created";
   }
 
   const studySetRoute = setId
@@ -213,22 +217,25 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
             <span>{backButtonLabel}</span>
           </button>
 
-          {!isOnStudySetPage && studySetRoute && backButtonRoute !== studySetRoute && (
-            <button
-              type="button"
-              data-testid="back-to-set-button"
-              onClick={() => navigate(studySetRoute)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60"
-            >
-              <FolderOpen className="w-3.5 h-3.5" />
-              <span>Về bộ từ</span>
-            </button>
-          )}
+          {!isOnStudySetPage &&
+            studySetRoute &&
+            backButtonRoute !== studySetRoute && (
+              <button
+                type="button"
+                data-testid="back-to-set-button"
+                onClick={() => navigate(studySetRoute)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60"
+              >
+                <FolderOpen className="w-3.5 h-3.5" />
+                <span>Về bộ từ</span>
+              </button>
+            )}
         </div>
 
-        {rightSlot && <div className="flex items-center gap-2 flex-wrap">{rightSlot}</div>}
+        {rightSlot && (
+          <div className="flex items-center gap-2 flex-wrap">{rightSlot}</div>
+        )}
       </div>
     </div>
   );
 };
-
