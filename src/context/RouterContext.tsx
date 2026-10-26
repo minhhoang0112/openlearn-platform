@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface RouterContextType {
   path: string;
-  navigate: (to: string) => void;
+  navigate: (to: string, options?: { replace?: boolean }) => void;
   goBack: () => void;
   params: Record<string, string>;
 }
@@ -43,9 +43,13 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
-  const navigate = (to: string) => {
+  const navigate = (to: string, options?: { replace?: boolean }) => {
     if (to !== path) {
-      window.history.pushState({}, '', to);
+      if (options?.replace) {
+        window.history.replaceState({}, '', to);
+      } else {
+        window.history.pushState({}, '', to);
+      }
       setPath(to);
       window.scrollTo(0, 0);
     }
@@ -55,7 +59,7 @@ export const RouterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   };
 

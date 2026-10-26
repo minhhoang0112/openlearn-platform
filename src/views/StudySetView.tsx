@@ -290,16 +290,31 @@ export const StudySetView: React.FC = () => {
 
         <div className="flex items-center gap-1 text-slate-400">
           <button
+            type="button"
             onClick={handleToggleSaveSet}
+            aria-label={saved ? 'Bỏ lưu bộ thẻ' : 'Lưu bộ thẻ'}
             title={saved ? 'Bỏ lưu' : 'Lưu bộ thẻ'}
             className="p-2 hover:text-slate-900 dark:hover:text-white rounded-lg transition"
           >
             <Bookmark className={`w-4 h-4 ${saved ? 'fill-slate-900 dark:fill-white text-slate-900 dark:text-white' : ''}`} />
           </button>
-          <button title="Chia sẻ" onClick={()=>void share()} className="p-2 hover:text-slate-900 dark:hover:text-white rounded-lg transition">
+          <button
+            type="button"
+            aria-label="Chia sẻ bộ thẻ"
+            title="Chia sẻ"
+            onClick={()=>void share()}
+            className="p-2 hover:text-slate-900 dark:hover:text-white rounded-lg transition"
+          >
             <Share2 className="w-4 h-4" />
           </button>
-          <button title="Tùy chọn khác" aria-expanded={optionsOpen} onClick={()=>setOptionsOpen(v=>!v)} className="p-2 hover:text-slate-900 dark:hover:text-white rounded-lg transition">
+          <button
+            type="button"
+            aria-label="Tùy chọn khác"
+            title="Tùy chọn khác"
+            aria-expanded={optionsOpen}
+            onClick={()=>setOptionsOpen(v=>!v)}
+            className="p-2 hover:text-slate-900 dark:hover:text-white rounded-lg transition"
+          >
             <span className="font-bold text-base leading-none">⋮</span>
           </button>
         </div>
@@ -429,8 +444,18 @@ export const StudySetView: React.FC = () => {
         </div>
           <div
             data-testid="flashcard-player"
+            role="button"
+            tabIndex={0}
+            aria-label="Thẻ học từ vựng. Bấm phím cách hoặc Enter để lật mặt thẻ"
+            onKeyDown={(e) => {
+              if (e.target !== e.currentTarget) return;
+              if (e.code === 'Space' || e.key === 'Enter') {
+                e.preventDefault();
+                setIsFlipped((prev) => !prev);
+              }
+            }}
             onClick={() => setIsFlipped(!isFlipped)}
-            className="relative w-full min-h-[300px] md:min-h-[340px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-7 shadow-xs hover:shadow-md cursor-pointer transition-all flex flex-col justify-between select-none"
+            className="relative w-full min-h-[300px] md:min-h-[340px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-7 shadow-xs hover:shadow-md cursor-pointer transition-all flex flex-col justify-between select-none focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             {/* Top Bar inside card */}
             <div className="flex items-center justify-between">
@@ -440,8 +465,9 @@ export const StudySetView: React.FC = () => {
                   e.stopPropagation();
                   handleToggleShuffle();
                 }}
+                aria-label={isShuffled ? 'Đang xáo trộn thẻ, bấm để hoàn tác' : 'Xáo trộn thứ tự thẻ'}
                 title={isShuffled ? 'Đang xáo trộn thẻ' : 'Xáo trộn thứ tự thẻ'}
-                className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg transition"
+                className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <Shuffle className={`w-4 h-4 ${isShuffled ? 'text-indigo-600' : ''}`} />
               </button>
@@ -482,8 +508,9 @@ export const StudySetView: React.FC = () => {
                   e.stopPropagation();
                   navigate(forwardNavigationContext(`/ai-study/${setId}`, path, { setTitle: set.title }));
                 }}
+                aria-label="Luyện nói AI"
                 title="Luyện nói AI"
-                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <Mic className="w-4 h-4" />
               </button>
@@ -494,8 +521,9 @@ export const StudySetView: React.FC = () => {
                   e.stopPropagation();
                   setIsFlipped(!isFlipped);
                 }}
+                aria-label="Lật thẻ"
                 title="Lật thẻ"
-                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <Eye className="w-4 h-4" />
               </button>
@@ -506,8 +534,9 @@ export const StudySetView: React.FC = () => {
                   e.stopPropagation();
                   playAudio(currentWord.term);
                 }}
+                aria-label="Nghe phát âm"
                 title="Nghe phát âm"
-                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <Volume2 className="w-4 h-4" />
               </button>
@@ -559,8 +588,9 @@ export const StudySetView: React.FC = () => {
 
             <button
               onClick={handleToggleShuffle}
-              title="Xáo trộn thứ tự thẻ"
-              className={`p-2 rounded-xl border transition shadow-2xs ${
+              aria-label={isShuffled ? 'Đang xáo trộn thẻ, bấm để hoàn tác' : 'Xáo trộn thứ tự thẻ'}
+              title={isShuffled ? 'Đang xáo trộn thẻ' : 'Xáo trộn thứ tự thẻ'}
+              className={`p-2 rounded-xl border transition shadow-2xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 isShuffled
                   ? 'bg-indigo-50 border-indigo-300 text-indigo-600 dark:bg-indigo-950 dark:border-indigo-800'
                   : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50'
@@ -638,15 +668,18 @@ export const StudySetView: React.FC = () => {
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={(e) => handleToggleStar(w, e)}
-                        className="p-1.5 text-slate-400 hover:text-amber-500 rounded-lg transition"
+                        aria-label={w.starred ? `Bỏ đánh dấu sao cho từ ${w.term}` : `Đánh dấu sao cho từ ${w.term}`}
+                        title={w.starred ? 'Bỏ đánh dấu sao' : 'Đánh dấu sao'}
+                        className="p-1.5 text-slate-400 hover:text-amber-500 rounded-lg transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
                       >
                         <Star className={`w-4 h-4 ${w.starred ? 'fill-amber-500 text-amber-500' : ''}`} />
                       </button>
 
                       <button
                         onClick={() => playAudio(w.term)}
+                        aria-label={`Nghe phát âm từ ${w.term}`}
                         title="Nghe phát âm"
-                        className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg transition"
+                        className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
                       >
                         <Volume2 className="w-4 h-4" />
                       </button>

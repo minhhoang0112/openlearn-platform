@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-26",
+  "checks": [
+    {
+      "input": "/study-set/13609?source=library&from=%2Fexplore%3Fq%3Dtoeic",
+      "destination": "/study-set/13609?source=library&from=%2Fexplore%3Fq%3Dtoeic"
+    },
+    {
+      "input": "/practice/dictation?cat=%C3%94n+nh%E1%BB%9B+t%E1%BB%AB&scope=library&from=%2Fexplore",
+      "destination": "/practice/dictation?cat=%C3%94n+nh%E1%BB%9B+t%E1%BB%AB&scope=library&from=%2Fexplore"
+    },
+    {
+      "input": "/auth?returnTo=%2Fmy-program%3Fprogram%3Denglish-it-system",
+      "destination": "/my-program?program=english-it-system"
+    },
+    {
+      "input": "/?q=School",
+      "destination": "/?q=School"
+    },
+    {
+      "input": "/",
+      "destination": "/"
+    },
+    {
+      "input": "Trang chủ → Học hôm nay → logo",
+      "destination": "/"
+    },
+    {
+      "input": "Root search → bộ từ → Về Trang chủ → logo clears old results",
+      "destination": "/"
+    },
+    {
+      "input": "Trang chủ → lộ trình → bộ từ → lộ trình → Trang chủ giữ truy vấn",
+      "destination": "/?q=foundation"
+    },
+    {
+      "input": "Trang chủ không tràn ngang ở 360/390/768/1440px",
+      "destination": "/"
+    },
+    {
+      "input": "Mobile menu → Trang chủ; /explore compatibility",
+      "destination": "/"
+    }
+  ],
+  "page_errors": [],
+  "passed": true
+}

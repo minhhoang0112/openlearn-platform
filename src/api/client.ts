@@ -98,6 +98,11 @@ export interface LessonOverviewItem {
   mastered_words: number;
   completed_steps: number;
   total_steps: number;
+  completed_core_steps?: number;
+  total_core_steps?: number;
+  core_completed?: boolean;
+  all_steps_completed?: boolean;
+  completion_scope?: 'core';
   state: 'not_started' | 'in_progress' | 'completed';
   completed: boolean;
 }
@@ -116,8 +121,11 @@ export interface LessonStepMeta {
   completed: boolean;
   completed_at: string | null;
   available: boolean;
+  required?: boolean;
+  optional?: boolean;
+  blocked_reason?: string | null;
   requires_ai: boolean;
-  ai_configured: boolean;
+  ai_configured: boolean | null;
   srs_effect: 'updates_word_progress' | 'none';
 }
 
@@ -132,6 +140,11 @@ export interface LessonDetailResponse {
   missing_translation_ids: number[];
   steps: LessonStepMeta[];
   completed_steps: number;
+  completed_core_steps?: number;
+  total_core_steps?: number;
+  core_completed?: boolean;
+  all_steps_completed?: boolean;
+  completion_scope?: 'core';
   completed: boolean;
 }
 
@@ -361,9 +374,18 @@ export interface LearningProgramDetail extends LearningProgramSummary {
   }[];
 }
 
+export interface TodayItemWorkload {
+  policy: 'step_chunk_v1';
+  start_cursor: number;
+  target_cursor: number;
+  planned_steps: number;
+  total_steps: number;
+  full_lesson_estimated_minutes: number;
+}
+
 export interface TodayPlanItem {
   id: string;
-  kind: 'review' | 'lesson';
+  kind: 'review' | 'lesson' | 'mistake_review';
   route: string | null;
   estimated_minutes: number;
   status: 'ready' | 'in_progress' | 'completed';
@@ -373,6 +395,18 @@ export interface TodayPlanItem {
   content_version?: number;
   title?: string;
   session_id?: string | null;
+  reason?: 'resume_lesson' | 'next_lesson' | 'due_review';
+  completion_scope?: 'planned_steps';
+  lesson_completed?: boolean;
+  estimated_remaining_minutes?: number;
+  completed_planned_steps?: number;
+  workload?: TodayItemWorkload;
+}
+
+export interface TodayPlanDeferredItem {
+  kind: string;
+  lesson_id?: string;
+  reason: 'time_budget';
 }
 
 export interface MistakeSummary {
@@ -385,9 +419,14 @@ export interface MistakeSummary {
 
 export interface TodayPlan {
   plan_id: string;
+  plan_revision?: number;
+  planner_policy?: 'step_chunk_v1' | 'legacy';
   local_date: string;
   timezone: string;
   budget_minutes: number;
+  estimated_remaining_minutes?: number;
+  deferred?: TodayPlanDeferredItem[];
+  adjustment_policy?: 'explicit_remaining_budget';
   items: TodayPlanItem[];
   mistake_summary?: MistakeSummary;
   resume_session_id: string | null;
@@ -400,6 +439,54 @@ export interface TodayPlan {
   message: string | null;
   profile_changes_apply: string;
   created_at: string;
+}
+
+export interface StartTodayItemResponse {
+  session: LearningSession;
+  plan: TodayPlan;
+  daily_goal?: {
+    plan_id: string;
+    item_id: string;
+    target_cursor: number | null;
+  };
+}
+
+export interface SetReadinessMode {
+  id: string;
+  ready: boolean;
+  requires_ai: boolean;
+  max_words: number;
+  requires_subset: boolean;
+  missing_fields: ('example' | 'example_translation')[];
+  blocked_reason: null | 'EMPTY_SET' | 'SELECTION_LIMIT' | 'MISSING_CONTENT' | 'AI_NOT_CONFIGURED';
+}
+
+export interface SetReadiness {
+  set_id: number;
+  total_words: number;
+  examples_available: number;
+  translations_available: number;
+  missing_example_ids: number[];
+  missing_translation_ids: number[];
+  assessment_scope: 'content_and_provider_configuration';
+  modes: SetReadinessMode[];
+  limitations: string[];
+}
+
+export interface GetSetsParams {
+  filter?: string;
+  q?: string;
+  limit?: number;
+  offset?: number;
+  learning_language?: string;
+  tag?: string;
+}
+
+export interface SetsListResponse {
+  items: SetCard[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export type LearningStepType =
@@ -512,7 +599,49 @@ export interface MistakeReviewResult {
   replayed: boolean;
 }
 
-// V2 Progress & History (FE-04)
+// Cross-engine Activity (PRODUCT-REFINEMENT-ANTI)
+export interface LearningActivityItem {
+  id: string;
+  occurred_at: string;
+  kind: string;
+  title: string;
+  route: string;
+  word_id: number | null;
+}
+
+export interface LearningActivitySummary {
+  active_days: number;
+  total_activities: number;
+  distinct_words_practised: number;
+  by_kind: Record<string, number>;
+}
+
+export interface LearningActivityDaily {
+  date: string;
+  activity_count: number;
+}
+
+export interface LearningActivity {
+  scope: 'cross_engine_activity';
+  timezone: string;
+  generated_at: string;
+  window: { days: number; from_local_date: string; to_local_date: string };
+  summary: LearningActivitySummary;
+  daily_activity: LearningActivityDaily[];
+  items: LearningActivityItem[];
+  total: number;
+  limit: number;
+  offset: number;
+  limitations: string[];
+}
+
+export interface GetLearningActivityParams {
+  days?: number;
+  limit?: number;
+  offset?: number;
+}
+
+// Progress & History
 export interface LearningAiFeedbackCorrection {
   original: string;
   corrected: string;
@@ -1100,6 +1229,7 @@ export interface LearningSession {
   title: string;
   objectives: string[];
   content_version: number;
+  learning_support?: { available: boolean; title: string | null; support_version: number | null; used_before_submission: boolean };
   revision: number;
   status: 'active' | 'completed';
   cursor: number;
@@ -1116,6 +1246,21 @@ export interface LearningSession {
   created_at: string;
   updated_at: string;
   completed_at: string | null;
+}
+
+export interface LearningSupport {
+  lesson_id: string;
+  content_version: number;
+  support_version: number;
+  source: 'authored_reference';
+  title: string;
+  summary: string;
+  vocabulary: { term: string; meaning: string; word_type: string; example: string; translation: string }[];
+  grammar: { title: string; pattern: string; explanation: string; examples: { en: string; vi: string }[] }[];
+  common_errors: { incorrect: string; correct: string; reason: string }[];
+  listening_tips: string[];
+  pronunciation_tips: string[];
+  practice: { type: 'speaking' | 'writing'; instruction: string; model: string; translation: string }[];
 }
 
 export class OpenQuizApi {
@@ -1161,7 +1306,25 @@ export class OpenQuizApi {
   }
 
   // Sets & Words
-  getSets(filter?: string) { return this.request<{ items: SetCard[] }>('GET', `/sets?limit=100&learning_language=en${filter ? `&filter=${encodeURIComponent(filter)}` : ''}`); }
+  getSets(filterOrParams?: string | GetSetsParams) {
+    if (typeof filterOrParams === 'string' || filterOrParams === undefined) {
+      const filterStr = typeof filterOrParams === 'string' ? filterOrParams : undefined;
+      return this.request<SetsListResponse>('GET', `/sets?limit=100&learning_language=en${filterStr ? `&filter=${encodeURIComponent(filterStr)}` : ''}`);
+    }
+    const q = new URLSearchParams();
+    if (filterOrParams.limit !== undefined) q.set('limit', String(filterOrParams.limit));
+    if (filterOrParams.offset !== undefined) q.set('offset', String(filterOrParams.offset));
+    if (filterOrParams.filter) q.set('filter', filterOrParams.filter);
+    if (filterOrParams.q) q.set('q', filterOrParams.q);
+    if (filterOrParams.learning_language) q.set('learning_language', filterOrParams.learning_language);
+    if (filterOrParams.tag) q.set('tag', filterOrParams.tag);
+    const qs = q.toString();
+    return this.request<SetsListResponse>('GET', `/sets${qs ? `?${qs}` : ''}`);
+  }
+  getSetReadiness(setId: number, wordIds?: number[]) {
+    const qs = wordIds?.length ? `?word_ids=${encodeURIComponent(wordIds.join(','))}` : '';
+    return this.request<SetReadiness>('GET', `/sets/${encodeURIComponent(setId)}/readiness${qs}`);
+  }
   getSet(id: number) { return this.request<SetCard & { words: ApiWord[] }>('GET', `/sets/${id}`); }
   createSet(data: { title: string; description?: string; learning_language?: string; native_language?: string; visibility?: string; tag?: string; words: Partial<ApiWord>[] }) {
     return this.request<SetCard>('POST', '/sets', data);
@@ -1357,11 +1520,23 @@ export class OpenQuizApi {
   getTodayPlan() {
     return this.request<TodayPlan>('GET', '/learning/today');
   }
+  startTodayItem(itemId: string, payload: { plan_id: string; revision: number }) {
+    return this.request<StartTodayItemResponse>('POST', `/learning/today/items/${encodeURIComponent(itemId)}/start`, payload);
+  }
+  adjustTodayPlan(payload: { plan_id: string; revision: number; remaining_minutes: number }) {
+    return this.request<TodayPlan>('POST', '/learning/today/adjust', payload);
+  }
   startLearningSession(lessonId: string, resume = true) {
     return this.request<LearningSession & { replayed: boolean }>('POST', '/learning/sessions', { lesson_id: lessonId, resume });
   }
   getLearningSession(sessionId: string) {
     return this.request<LearningSession>('GET', `/learning/sessions/${encodeURIComponent(sessionId)}`);
+  }
+
+  openLearningSupport(sessionId: string, stepId: string) {
+    return this.request<{ support: LearningSupport; session: LearningSession; recorded_as_assistance: boolean }>(
+      'POST', `/learning/sessions/${encodeURIComponent(sessionId)}/support/open`, { step_id: stepId },
+    );
   }
   saveLearningDraft(sessionId: string, payload: { step_id: string; revision: number; response: any }) {
     return this.request<LearningSession>('PUT', `/learning/sessions/${encodeURIComponent(sessionId)}/draft`, payload);
@@ -1400,7 +1575,17 @@ export class OpenQuizApi {
     return this.request<MistakeReviewResult>('POST', `/learning/mistakes/${encodeURIComponent(id)}/reviews`, payload);
   }
 
-  // V2 Progress & History (FE-04)
+  // Cross-engine Activity (PRODUCT-REFINEMENT-ANTI)
+  getLearningActivity(params?: GetLearningActivityParams) {
+    const q = new URLSearchParams();
+    if (params?.days !== undefined) q.set('days', String(params.days));
+    if (params?.limit !== undefined) q.set('limit', String(params.limit));
+    if (params?.offset !== undefined) q.set('offset', String(params.offset));
+    const qs = q.toString();
+    return this.request<LearningActivity>('GET', `/learning/activity${qs ? `?${qs}` : ''}`);
+  }
+
+  // Progress & History
   getLearningProgress(days = 30) {
     return this.request<LearningProgressData>('GET', `/learning/progress?days=${encodeURIComponent(days)}`);
   }

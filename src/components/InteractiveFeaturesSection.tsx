@@ -224,7 +224,7 @@ export const InteractiveFeaturesSection: React.FC<InteractiveFeaturesSectionProp
 
             <div className="mt-4 pt-3 border-t text-[11px] text-muted-foreground flex items-center gap-1.5">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-              <span>Ghi nhớ vĩnh viễn nhờ thuật toán SRS SM-2</span>
+              <span>Ghi nhớ bền vững theo chu kỳ ngắt quãng (SRS)</span>
             </div>
           </div>
 

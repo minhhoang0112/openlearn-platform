@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-25",
+  "contract": "1.20.0",
+  "findings": [
+    {
+      "id": "catalog_search",
+      "set_title": "[B1 Level] School and Education",
+      "set_id": 13609,
+      "api_matches": 1,
+      "visible_in_selector": 1,
+      "total_accessible_sets": 180
+    },
+    {
+      "id": "daily_goal",
+      "budget": 15,
+      "planned_steps": 5,
+      "total_steps": 7,
+      "cursor": 5,
+      "plan_status": "completed",
+      "daily_finish_button": 2,
+      "current_screen": "Thoát bài học\nXong phần hôm nay\nBước 6 / 7\nLuyện viết\nGiới thiệu bản thân\nMỤC TIÊU NGÀY ĐÃ ĐẠT (5/7 BƯỚC)\nBạn đã hoàn thành phần học hôm nay!\n\nBạn có thể kết thúc phần hôm nay và quay lại kế hoạch, hoặc chọn học tiếp bài này nếu còn thời gian.\n\nXong phần hôm nay\nHọc tiếp bài này\nViết lại bằng lời của bạn\nNghe audio\n0.75x\n1x\nXem Transcript\nXem Bản dịch\n\nViết ba câu giới thiệu bản thân. Thay tên, nơi sống và vai trò cho đúng với bạn.\n\nXem câu mẫu tham khảo\nNội dung bài viết của bạn:\nTIÊU CHÍ TỰ KIỂM TRA:\nViết hoa I và đầu câu.\nCó dấu kết thúc câu.\nKhông viết I am study.\nTôi đã đối chiếu tiêu chí và tự kiểm tra nội dung của mình\nNhấn Enter để kiểm tra\nLưu & Tiếp tục"
+    }
+  ],
+  "page_errors": [],
+  "completed": true
+}

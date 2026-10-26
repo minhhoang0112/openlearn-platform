@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-25",
+  "contract": "1.21.0",
+  "schema": 14,
+  "routes": 157,
+  "backend_tests": 123,
+  "passed": true,
+  "live_ai_calls": 0,
+  "implemented": [
+    "SRS due_v1 policy",
+    "Cross-engine activity API",
+    "Direct SRS rating activity log",
+    "Sequential budget-sized daily goals",
+    "Revision-checked explicit remaining-time adjustment",
+    "Pinned daily lesson start and resume",
+    "Per-user selected-word content readiness",
+    "Three-step comprehensive core without AI dependency"
+  ],
+  "frontend_build": {
+    "passed": true,
+    "note": "Rebuilt after Anti FE M1A changes; old ListeningLibrary JSX error resolved"
+  },
+  "pending": [
+    "Learner trial and audio review for the first4 supported lessons",
+    "Expand authored support to remaining foundation lessons after the first package is reviewed"
+  ],
+  "frontend_m1a_browser": {
+    "passed": true,
+    "checks": 7,
+    "viewports": [
+      360,
+      390,
+      768,
+      1440
+    ],
+    "page_errors": 0
+  },
+  "integration_complete": false,
+  "frontend_m1b_review": {
+    "date": "2026-10-26",
+    "build_passed": true,
+    "browser_groups_passed": 6,
+    "viewports": [
+      360,
+      390,
+      768,
+      1440
+    ],
+    "page_errors": 0,
+    "additional_daily_goal_guards_passed": 4,
+    "regression_after_fixes_passed": true
+  },
+  "frontend_m2_review": {
+    "date": "2026-10-26",
+    "build_passed": true,
+    "browser_groups_passed": 6,
+    "viewports": [
+      360,
+      390,
+      768,
+      1440
+    ],
+    "page_errors": 0,
+    "daily_goal_guards_passed": 4,
+    "auth_and_explore_guards_after_fixes_passed": 5
+  },
+  "m3_support": {
+    "date": "2026-10-26",
+    "lessons": 4,
+    "vocabulary_items": 25,
+    "grammar_groups": 8,
+    "common_errors": 9,
+    "speaking_writing_models": 8,
+    "build_passed": true,
+    "browser_groups_passed": 7,
+    "viewports": [
+      360,
+      390,
+      768,
+      1440
+    ],
+    "page_errors": 0,
+    "ai_generation_requests": 0
+  }
+}

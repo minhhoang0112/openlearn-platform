@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '../context/RouterContext';
 import { api, PathCard, SetCard } from '../api/client';
 import { normalizeSetProgress } from '../utils/setProgress';
-import { parseNavigationContext, sanitizeInternalPath, withNavigationContext } from '../utils/navigationContext';
+import { getSourceLabel, parseNavigationContext, sanitizeInternalPath, withNavigationContext } from '../utils/navigationContext';
 import {
   ArrowLeft,
   Compass,
@@ -47,15 +47,11 @@ export const LearningPathView: React.FC = () => {
     };
   }, [fetchPath]);
 
-  const backRoute = navCtx.from
-    ? sanitizeInternalPath(navCtx.from, '/')
-    : navCtx.source === 'library'
-      ? '/my-created'
-      : '/';
-  const backLabel =
-    navCtx.source === 'library' || (navCtx.from && navCtx.from.startsWith('/my-created'))
-      ? 'Về Thư viện'
-      : 'Về Trang chủ';
+  const backTarget = navCtx.source || navCtx.from
+    ? getSourceLabel(navCtx.source, navCtx.from)
+    : {route: '/', backLabel: 'Về Trang chủ'};
+  const backRoute = sanitizeInternalPath(navCtx.from, backTarget.route);
+  const backLabel = backTarget.backLabel;
 
   if (loading) {
     return (
@@ -100,7 +96,7 @@ export const LearningPathView: React.FC = () => {
   const buildSetLink = (targetBase: string, s: SetCard) =>
     withNavigationContext(targetBase, {
       source: 'path',
-      from: `/learning-path/${pathId}`,
+      from: currentFullPath,
       pathId,
       pathTitle: pathData.title,
       setTitle: s.title,

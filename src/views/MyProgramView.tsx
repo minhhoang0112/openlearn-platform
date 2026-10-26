@@ -21,12 +21,16 @@ import {
   LearningLessonMetadata
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { withNavigationContext } from '../utils/navigationContext';
 
 export const MyProgramView: React.FC = () => {
-  const { navigate } = useRouter();
+  const { path, navigate } = useRouter();
+
+  const queryParams = new URLSearchParams(path.includes('?') ? path.split('?')[1] : window.location.search);
+  const initialProgram = queryParams.get('program') || 'english-foundation';
 
   const [programs, setPrograms] = useState<LearningProgramSummary[]>([]);
-  const [activeProgramId, setActiveProgramId] = useState<string>('english-foundation');
+  const [activeProgramId, setActiveProgramId] = useState<string>(initialProgram);
   const [detail, setDetail] = useState<LearningProgramDetail | null>(null);
 
   const [loadingList, setLoadingList] = useState(true);
@@ -35,6 +39,11 @@ export const MyProgramView: React.FC = () => {
 
   const [startingLessonId, setStartingLessonId] = useState<string | null>(null);
 
+  const handleSelectProgram = (programId: string) => {
+    setActiveProgramId(programId);
+    navigate(`/my-program?program=${encodeURIComponent(programId)}`);
+  };
+
   // Fetch list of programs
   useEffect(() => {
     let mounted = true;
@@ -42,9 +51,11 @@ export const MyProgramView: React.FC = () => {
     api.getLearningPrograms()
       .then((res) => {
         if (!mounted) return;
-        setPrograms(res.items || []);
-        if (res.items?.length > 0) {
-          setActiveProgramId(res.items[0].id);
+        const items = res.items || [];
+        setPrograms(items);
+        if (items.length > 0) {
+          const match = items.find((p) => p.id === initialProgram);
+          setActiveProgramId(match ? match.id : items[0].id);
         }
       })
       .catch((err) => {
@@ -85,7 +96,11 @@ export const MyProgramView: React.FC = () => {
     setStartingLessonId(lesson.id);
     try {
       const res = await api.startLearningSession(lesson.id, !forceNew);
-      navigate(`/lesson-run/${res.id}`);
+      const returnUrl = `/my-program?program=${encodeURIComponent(activeProgramId)}`;
+      navigate(withNavigationContext(`/lesson-run/${res.id}`, {
+        source: 'program',
+        from: returnUrl,
+      }));
     } catch (err) {
       setError((err as Error).message || 'Không thể mở bài học');
       setStartingLessonId(null);
@@ -96,7 +111,7 @@ export const MyProgramView: React.FC = () => {
     return (
       <div className="max-w-5xl mx-auto p-6 md:p-8 flex flex-col items-center justify-center min-h-[50vh] text-slate-400">
         <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-3" />
-        <p className="text-sm font-semibold">Đang tải danh mục chương trình học V2...</p>
+        <p className="text-sm font-semibold">Đang tải danh mục chương trình học...</p>
       </div>
     );
   }
@@ -106,9 +121,9 @@ export const MyProgramView: React.FC = () => {
       {/* Header */}
       <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-          <span>Chương trình chuẩn hoá V2</span>
+          <span>Chương trình học chuẩn hoá</span>
           <span>•</span>
-          <span>Bản thử nghiệm Pilot</span>
+          <span>Lộ trình học toàn diện</span>
         </div>
         <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           Lộ trình học tập của tôi
@@ -132,10 +147,11 @@ export const MyProgramView: React.FC = () => {
           const isSpecialist = p.kind === 'specialist';
 
           return (
-            <div
+            <button
               key={p.id}
-              onClick={() => setActiveProgramId(p.id)}
-              className={`p-5 rounded-3xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+              type="button"
+              onClick={() => handleSelectProgram(p.id)}
+              className={`p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 isSelected
                   ? 'border-indigo-600 bg-white dark:bg-slate-900 shadow-md ring-2 ring-indigo-500/20'
                   : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
@@ -181,7 +197,7 @@ export const MyProgramView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs w-full">
                 <span className="font-semibold text-slate-400">
                   {p.lesson_count} bài học mẫu
                 </span>
@@ -189,7 +205,7 @@ export const MyProgramView: React.FC = () => {
                   {isSelected ? 'Đang xem chương trình này' : 'Bấm để xem'}
                 </span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

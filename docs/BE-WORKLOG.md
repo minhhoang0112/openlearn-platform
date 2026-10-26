@@ -49,3 +49,45 @@ File này ghi chi tiết công việc BE, tách khỏi STATUS để giảm xung 
 - Nối trực tiếp utility và modal tối thiểu: nguồn/notice dịch bên ngoài, stale response guard, lưu thẻ đúng chiều. Không thay thiết kế tổng thể của Anti.
 - Thử live1từ công khai tail: HTTP200, dịch đuôi, đoạn cuối.5 nhóm test BE mới và5 Chrome mock cases qua; build qua;107 toàn BE test qua. Update fixture thiếu ví dụ sang appraise để vẫn test nhánh missing sau prepared bank đã có apply.
 - Contract1.18/schema14/152route, không migration/env/model changes. Hợp đồng DICTIONARY-ONLINE.md; CLARITY-02 FE khác vẫn pending.
+
+
+## 2026-10-25 — Product refinement, BE phần đầu
+- Scheduler due_v1: bài đúng trước hạn chỉ là luyện, giữ interval/ease/repetitions; sai đưa về học lại, retry trước hạn không phạt liên tục. Giữ dữ liệu cũ và schema14.
+- GET /learning/activity tổng hợp hoạt động lưu thực từ nhiều engine, phân trang, timezone và số từ riêng biệt; không trộn thành điểm kỹ năng V2, không tính skip/nghe playback/AI preview.
+- Contract1.19.0; phân công Anti trong PRODUCT-REFINEMENT-ANTI.md. FE/API types thuộc Anti để tránh đụng file.
+- Kiểm:111 ca toàn suite đạt trước bộ lọc skip/nguồn speaking;10 ca liên quan đạt sau cập nhật cuối. Planner và readiness chưa làm trong phần này.
+- Xác nhận cuối: toàn bộ112 ca qua,153 route/schema14; chạy test-isolation=none vì môi trường sandbox chặn process spawn của npm test mặc định.
+
+## 2026-10-25 — BE phần tiếp theo của Mốc 1
+- daily-learning-plan.mjs thay planner cũ: mục tiêu chia theo số bước thật và quỹ thời gian, giữ weekly snapshot, có ôn từ/Sổ lỗi và prerequisite. Hoàn thành mục tiêu ngày không giả hoàn thành toàn bài.
+- POST /learning/today/adjust với revision và remaining_minutes; giữ phần đã xong, draft và phiên. POST /learning/today/items/:item_id/start pin phiên/content_version và resume an toàn.
+- GET /sets/:id/readiness dùng dữ liệu prepared/notes đúng tài khoản, không gọi AI; hỗ trợ phạm vi word_ids.
+- Comprehensive completed nay dựa lõi3 bước có evidence thật; thêm core_completed/all_steps_completed/required/optional. Hai bước AI vẫn mở rộng, không tự đánh dấu hoàn thành.
+-118 ca toàn bộ BE qua;6 ca mới planner/readiness/core qua lại sau bổ sung kiểm riêng ghi chú ở bộ public. Contract1.20.0/schema14/156route. Không sửa FE đang do Anti xử lý.
+- Build FE gần nhất chưa qua: ListeningLibraryView.tsx:437 có đoạn JSX thừa; đã ghi vào BE-NEXT để Anti sửa trong phần sở hữu.
+
+## 2026-10-25 — Kiểm FE Mốc1A và chốt bàn giao1B
+- Build qua; chạy lại verify-refinement-m1.mjs đạt7 nhóm/4viewport,0page errors. Lỗi JSX cũ đã hết.
+- Audit độc lập tái hiện180bộ nhưng searchFE không thấy B1School and Education ngoài100bản đầu; GETsets?q trả1match.
+- Audit mục tiêu ngày15phút5/7bước: BEcompleted nhưng UIvẫn bước6/7,không có nút xong phần hôm nay.
+- Giao REFINEMENT-M1B-ANTI.md cho FE: nối contract1.20, readiness/core3, sửa fullcatalogsearch/q/page và lỗi activity. Chưa làm Mốc2navigation.
+
+## 2026-10-26 — Kiểm bàn giao Mốc1B và chuẩn bị Mốc2
+- Build thành công; verify-refinement-m1b.mjs đạt6nhóm/4viewport,0page errors.
+- Đọc nguồn phát hiện target_cursor từ URL được dùng trực tiếp và lỗi start kế hoạch tựfallback sang phiên thường; Codex sửa logic tại LessonRunView/TodayView, không đổi bố cục.
+- Thêm verify-daily-goal-guards-browser.mjs:4ca qua (POSTstart503khôngfallback, URLtarget0không giảcomplete, item sai có phục hồi, target thật từBE). Hồi quy1B qua lại.
+- Bàn giao REFINEMENT-M2-ANTI.md cho bước5mục điều hướng/Today/Explore;không cầnAPI mới.
+
+## 2026-10-26 — Kiểm và chốt Mốc2
+- Build qua, verify-refinement-m2 đạt6nhóm/4viewport/0pageerrors;daily-goalguards4ca qua.
+- Phát hiện Auth coi queryfrom trên deep link là đíchlogin; thêm postAuthNavigation helper, capture đích trướcawait, sửa cảlogin/registervàdemo.
+- Today shortcut còntrỏroot nayvềchínhToday; sửa/explore,semanticbutton,bỏnext_local_day UI vàcho metadata thời lượngwrapđúngmobile.
+- verify-auth-context-browser đạt5ca saucácsửacuối (deep link+from,practice context,explicitreturnTo,rootToday,TodayExploreBack).
+- Mốc3 contentplanđãviết,chưa cóAPIhoặccontentmới; không mởthêmUIfeature.
+
+## 2026-10-26 — Mốc3 đợt1: authored foundation support
+-4gói hỗ trợ đúnglesson/version/fingerprint,nằm ngoài graded content;không sửa dữ liệu cá nhân hoặc tạo versionbài mới.25từ/cụm,8nhóm ngữ pháp,9lỗi,8mẫu nói/viết và hướng dẫn nghe.
+-POST support/open annotate riêng theo bước,không tăngrevision/đổi draft/cursor;BE giữ assistance learning_support qua reload/clientbỏflags. Xem sauchấm không sửa feedbackcũ.
+-FE LessonSupportPanel đã nối runner,lazyload,giữinput,chốngrequestcũ,gấp nhóm nội dung,không gọiAI.
+-Contract1.21.0/schema14/157route;123ca BE qua;buildqua;7nhóm Chrome trên4viewport qua,0pageerrors/0POSTtạoAI.
+-Chưa mở rộng các bài còn lại;ưu tiên học thử4bài trước khi biên tập tiếp.

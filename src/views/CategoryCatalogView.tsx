@@ -302,6 +302,9 @@ export const CategoryCatalogView: React.FC = () => {
       <div className="space-y-5">
         <div className="flex items-center gap-3.5">
           <button
+            type="button"
+            data-testid="category-back-btn"
+            aria-label="Quay lại"
             onClick={() => goBack()}
             className="p-1.5 text-slate-700 dark:text-slate-300 hover:text-slate-900 rounded-lg transition"
           >

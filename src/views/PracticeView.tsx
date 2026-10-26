@@ -17,9 +17,12 @@ import {
   FileAudio,
   PenTool,
   CheckCircle2,
-  ArrowLeftRight
+  ArrowLeft,
+  ArrowLeftRight,
+  Search,
+  X
 } from 'lucide-react';
-import { api, SetCard, LearningPhraseLibrary, SrsPracticeResponse } from '../api/client';
+import { api, SetCard, LearningPhraseLibrary, SrsPracticeResponse, SetReadiness } from '../api/client';
 import { useRouter } from '../context/RouterContext';
 import { buildPracticeRoute, BuildPracticeRouteOptions } from '../utils/practiceLaunch';
 import { normalizeSetProgress } from '../utils/setProgress';
@@ -210,37 +213,121 @@ export const PracticeView: React.FC = () => {
   const { path, navigate } = useRouter();
 
   const [sets, setSets] = useState<SetCard[]>([]);
+  const [setsTotal, setSetsTotal] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [phraseLibrary, setPhraseLibrary] = useState<LearningPhraseLibrary | null>(null);
 
-  const initialQuery = new URLSearchParams(path.includes('?') ? path.slice(path.indexOf('?') + 1) : '');
-  const initialModeId = initialQuery.get('mode');
-  const initialCat = initialQuery.get('cat');
+  // The route owns the selection so refresh and browser Back restore it.
+  const query = new URLSearchParams(path.split('?')[1] || '');
+  const modeId = path.split('?')[0].split('/')[2] || query.get('mode');
+  const activeMode = SET_PRACTICE_MODES.find((mode) => mode.id === modeId) || null;
+  const isSelectorPage = Boolean(modeId);
+  const selectedCategory = query.get('cat') || 'Tất cả';
+  type SourceMode = 'library' | 'due' | 'all' | 'mastered';
+  const rawScope = query.get('scope');
+  const sourceMode: SourceMode = rawScope === 'due' || rawScope === 'all' || rawScope === 'mastered' ? rawScope : 'library';
+  const searchQuery = query.get('q') || '';
+  const currentPage = Math.max(1, parseInt(query.get('page') || '1', 10));
 
-  // Restore mode/category only when explicitly present in query params (e.g. returning from child mode)
-  const [activeMode, setActiveMode] = useState<SetPracticeMode | null>(() =>
-    initialModeId ? SET_PRACTICE_MODES.find((m) => m.id === initialModeId) || null : null
-  );
-  const [selectedCategory, setSelectedCategory] = useState<string>(() =>
-    initialCat || 'Tất cả'
-  );
+  const [searchInput, setSearchInput] = useState<string>(searchQuery);
+  const [readinessModal, setReadinessModal] = useState<{
+    set: SetCard;
+    readiness: SetReadiness;
+    blockedMode: {
+      id: string;
+      blocked_reason: string | null;
+      missing_fields: string[];
+      max_words: number;
+      requires_subset: boolean;
+    };
+  } | null>(null);
+  const [checkingReadinessId, setCheckingReadinessId] = useState<number | null>(null);
 
   useEffect(() => {
-    const q = new URLSearchParams(path.includes('?') ? path.slice(path.indexOf('?') + 1) : '');
-    const modeParam = q.get('mode');
-    const catParam = q.get('cat');
-    if (modeParam) {
-      const found = SET_PRACTICE_MODES.find((m) => m.id === modeParam);
-      if (found) setActiveMode(found);
-    }
-    if (catParam) {
-      setSelectedCategory(catParam);
-    }
-  }, [path]);
+    const handler = setTimeout(() => {
+      const currentQ = searchQuery;
+      const newQ = searchInput.trim();
+      if (newQ !== currentQ) {
+        updateSelectorQuery({ q: newQ || null, page: '1' });
+      }
+    }, 350);
+    return () => clearTimeout(handler);
+  }, [searchInput]);
 
-  // Set selection source: library sets vs SRS scope (due / all / mastered)
-  const [sourceMode, setSourceMode] = useState<'library' | 'due' | 'all' | 'mastered'>('library');
+  const handleCardClick = async (s: SetCard) => {
+    if (!activeMode) return;
+    const returnFrom = selectorRoute(activeMode.id, sourceMode, searchQuery, currentPage);
+    const targetUrl = activeMode.buildRoute(s.id, {
+      source: 'practice',
+      from: returnFrom,
+      setTitle: s.title,
+      practiceMode: activeMode.id,
+      practiceCat: selectedCategory,
+    });
+
+    setCheckingReadinessId(s.id);
+    try {
+      const readiness = await api.getSetReadiness(s.id);
+      const modeMap: Record<string, string> = {
+        study_learn: 'learn',
+        study_bidirectional: 'learn',
+        study_write: 'write',
+        study_quiz: 'quiz',
+        dictation: 'dictation',
+        match: 'match',
+        exam: 'exam',
+        grammar: 'grammar_order',
+        speaking: 'speaking',
+        conversation: 'conversation',
+        reading: 'reading',
+      };
+      const targetModeId = modeMap[activeMode.id] || activeMode.id;
+      const modeCheck = readiness.modes.find((m) => m.id === targetModeId);
+      if (modeCheck && !modeCheck.ready) {
+        setReadinessModal({
+          set: s,
+          readiness,
+          blockedMode: modeCheck,
+        });
+        return;
+      }
+    } catch {
+      // In case of error, continue normal flow
+    } finally {
+      setCheckingReadinessId(null);
+    }
+    navigate(targetUrl);
+  };
+
+  const modePickerRoute = '/practice?' + new URLSearchParams({ cat: selectedCategory });
+  const selectorRoute = (
+    id: string,
+    scope: SourceMode = sourceMode,
+    q: string = searchQuery,
+    pageNum: number = currentPage
+  ) => {
+    const p = new URLSearchParams({ cat: selectedCategory, scope });
+    if (q) p.set('q', q);
+    if (pageNum > 1) p.set('page', String(pageNum));
+    return '/practice/' + id + '?' + p.toString();
+  };
+
+  const updateSelectorQuery = (updates: Record<string, string | null>) => {
+    if (!activeMode) return;
+    const p = new URLSearchParams(path.split('?')[1] || '');
+    p.set('cat', selectedCategory);
+    p.set('scope', sourceMode);
+    Object.entries(updates).forEach(([k, v]) => {
+      if (v === null || v === '') p.delete(k);
+      else p.set(k, v);
+    });
+    navigate('/practice/' + activeMode.id + '?' + p.toString());
+  };
+
+  const setSourceMode = (scope: SourceMode) => {
+    if (activeMode) navigate(selectorRoute(activeMode.id, scope, searchQuery, 1));
+  };
   const [srsPractice, setSrsPractice] = useState<SrsPracticeResponse | null>(null);
   const [srsLoading, setSrsLoading] = useState(false);
 
@@ -259,34 +346,63 @@ export const PracticeView: React.FC = () => {
   };
 
   useEffect(() => {
-    let mounted = true;
-    api.getSets()
-      .then((res) => {
-        if (mounted) {
-          setSets(res.items || []);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        if (mounted) {
-          setError((err as Error).message || 'Không thể tải danh sách bộ từ');
-          setLoading(false);
-        }
-      });
-
     fetchPhraseLibrary();
-
     const handleSrsUpdated = () => {
       fetchPhraseLibrary();
     };
-
     window.addEventListener('openquiz:srs-updated', handleSrsUpdated);
-
     return () => {
-      mounted = false;
       window.removeEventListener('openquiz:srs-updated', handleSrsUpdated);
     };
   }, []);
+
+  // Fetch sets when in library mode: reacts to search query and pagination with debounce/cancellation
+  useEffect(() => {
+    if (sourceMode !== 'library') return;
+    let active = true;
+    setLoading(true);
+    setError(null);
+
+    const pageSize = 12;
+    const targetCount = Math.max(pageSize, currentPage * pageSize);
+
+    async function loadSets() {
+      try {
+        if (targetCount <= 100) {
+          const res = await api.getSets({
+            q: searchQuery.trim() || undefined,
+            limit: targetCount,
+            offset: 0,
+          });
+          if (!active) return;
+          setSets(res.items || []);
+          setSetsTotal(res.total ?? (res.items || []).length);
+        } else {
+          const batches = [];
+          for (let offset = 0; offset < targetCount; offset += 100) {
+            const limit = Math.min(100, targetCount - offset);
+            batches.push(api.getSets({ q: searchQuery.trim() || undefined, limit, offset }));
+          }
+          const results = await Promise.all(batches);
+          if (!active) return;
+          const combinedItems = results.flatMap((r) => r.items || []);
+          setSets(combinedItems);
+          setSetsTotal(results[0]?.total ?? combinedItems.length);
+        }
+      } catch (err) {
+        if (!active) return;
+        setError((err as Error).message || 'Không thể tải danh sách bộ từ');
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    void loadSets();
+
+    return () => {
+      active = false;
+    };
+  }, [sourceMode, searchQuery, currentPage]);
 
   useEffect(() => {
     if (sourceMode === 'library') return;
@@ -317,15 +433,17 @@ export const PracticeView: React.FC = () => {
     : SET_PRACTICE_MODES.filter((m) => m.category === selectedCategory);
 
   const handleSelectMode = (mode: SetPracticeMode) => {
-    setActiveMode(mode);
-    const el = document.getElementById('practice-set-selector');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    navigate(selectorRoute(mode.id, 'library'));
   };
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8 pb-20">
+      <button type="button" onClick={() => navigate(isSelectorPage ? modePickerRoute : '/')}
+        className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300">
+        <ArrowLeft className="w-4 h-4" />
+        {isSelectorPage ? 'Trở về chọn chế độ' : 'Trở về Trang chủ'}
+      </button>
+      {!isSelectorPage && <>
       {/* Top Banner */}
       <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
@@ -360,7 +478,7 @@ export const PracticeView: React.FC = () => {
             return (
               <div
                 key={item.id}
-                onClick={() => navigate(item.route)}
+                onClick={() => navigate(withNavigationContext(item.route, { source: 'practice', from: modePickerRoute }))}
                 className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 dark:hover:border-indigo-500 cursor-pointer transition-all shadow-xs hover:shadow-md flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
@@ -466,7 +584,7 @@ export const PracticeView: React.FC = () => {
             <button
               key={cat}
               type="button"
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => navigate('/practice?' + new URLSearchParams({ cat }))}
               className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all ${
                 selectedCategory === cat
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
@@ -487,6 +605,14 @@ export const PracticeView: React.FC = () => {
             return (
               <div
                 key={mode.id}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleSelectMode(mode);
+                  }
+                }}
                 onClick={() => handleSelectMode(mode)}
                 className={`p-5 rounded-3xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
                   isCurrent
@@ -524,7 +650,7 @@ export const PracticeView: React.FC = () => {
 
                 <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                   <span className={`text-xs font-bold ${isCurrent ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'}`}>
-                    {isCurrent ? 'Đã chọn chế độ này • Chọn bộ từ bên dưới' : `Chọn ${mode.title}`}
+                    {isCurrent ? 'Mở danh sách bộ từ' : `Chọn ${mode.title}`}
                   </span>
                   <ChevronRight className={`w-4 h-4 transition-transform ${isCurrent ? 'translate-x-1 text-indigo-600' : 'text-slate-300'}`} />
                 </div>
@@ -534,6 +660,14 @@ export const PracticeView: React.FC = () => {
         </div>
       </div>
 
+      </>}
+
+      {isSelectorPage && <>
+        <header className="space-y-2">
+          <p className="text-sm text-slate-500">Luyện tập / Chọn bộ từ</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">{activeMode?.title || 'Không tìm thấy chế độ luyện tập'}</h1>
+          <p className="text-sm text-slate-500">{activeMode?.description || 'Hãy trở về để chọn một chế độ đang có.'}</p>
+        </header>
       {/* Step 2: Choose Set or SRS Scope */}
       <div
         id="practice-set-selector"
@@ -542,10 +676,10 @@ export const PracticeView: React.FC = () => {
         {!activeMode ? (
           <div className="py-6 text-center space-y-2">
             <p className="text-sm font-extrabold text-slate-800 dark:text-slate-200">
-              Bước 2: Hãy bấm chọn một chế độ bài luyện ở mục 2 phía trên trước
+              Chế độ này không tồn tại
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-              Sau khi bạn chọn chế độ (ví dụ: Học từ kết hợp, Luyện viết, Nghe chép chính tả, Ngữ pháp hoặc Hội thoại AI), danh sách bộ từ và phạm vi Ôn đến hạn sẽ hiển thị tại đây để bạn bắt đầu.
+              Dùng nút Trở về chọn chế độ phía trên để mở danh sách chế độ luyện tập.
             </p>
           </div>
         ) : (
@@ -588,7 +722,7 @@ export const PracticeView: React.FC = () => {
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
-                  Thư viện bộ từ ({sets.length})
+                  Thư viện bộ từ ({setsTotal})
                 </button>
                 <button
                   type="button"
@@ -627,88 +761,156 @@ export const PracticeView: React.FC = () => {
             </div>
 
             {sourceMode === 'library' ? (
-              loading ? (
-                <div className="py-12 flex flex-col items-center justify-center text-slate-400">
-                  <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
-                  <p className="text-xs font-bold">Đang tải danh sách bộ từ...</p>
+              <div className="space-y-4">
+                {/* Search Bar for Sets */}
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      placeholder="Tìm kiếm bộ từ theo tên, thẻ phân loại..."
+                      className="w-full pl-10 pr-8 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/40 shadow-2xs"
+                    />
+                    {searchInput && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchInput('');
+                          updateSelectorQuery({ q: null, page: '1' });
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        aria-label="Xóa tìm kiếm bộ từ"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-400 shrink-0 font-medium">
+                    {setsTotal} bộ từ
+                  </span>
                 </div>
-              ) : error ? (
-                <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 rounded-2xl text-center text-rose-600 text-sm">
-                  {error}
-                </div>
-              ) : sets.length === 0 ? (
-                <div className="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
-                  <FolderOpen className="w-10 h-10 text-slate-400 mx-auto" />
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                    Bạn chưa có bộ từ nào để bắt đầu bài luyện tập
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    Hãy tạo bộ thẻ mới hoặc khám phá danh mục ở Trang chủ.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => navigate('/create-flashcard')}
-                    className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs rounded-xl"
-                  >
-                    Tạo bộ thẻ mới
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                  {sets.map((s) => {
-                    const prog = normalizeSetProgress(s);
-                    const returnFrom = `/practice?mode=${encodeURIComponent(activeMode.id)}&cat=${encodeURIComponent(selectedCategory)}`;
-                    return (
-                    <div
-                      key={s.id}
-                      onClick={() =>
-                        navigate(
-                          activeMode.buildRoute(s.id, {
-                            source: 'practice',
-                            from: returnFrom,
-                            setTitle: s.title,
-                            practiceMode: activeMode.id,
-                            practiceCat: selectedCategory,
-                          })
-                        )
-                      }
-                      className="group p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-2xl cursor-pointer transition-all shadow-xs hover:shadow-md flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between text-xs text-slate-400 gap-2 flex-wrap">
-                          <span className="font-semibold">{s.tag || 'Từ vựng'}</span>
-                          <div className="flex items-center gap-1.5">
-                            <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-bold text-[11px] text-slate-600 dark:text-slate-300">
-                              {prog.totalWords} từ
-                            </span>
-                            <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
-                              prog.state === 'mastered'
-                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-                                : prog.state === 'in_progress'
-                                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
-                            }`}>
-                              {prog.stateLabel}
-                            </span>
-                          </div>
-                        </div>
-                        <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-1.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
-                          {s.title}
-                        </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
-                          {prog.summaryText}
-                        </p>
-                      </div>
 
-                      <div className="mt-4 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                        <span>Bắt đầu {activeMode.title}</span>
-                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
+                {loading ? (
+                  <div className="py-12 flex flex-col items-center justify-center text-slate-400">
+                    <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
+                    <p className="text-xs font-bold">Đang tải danh sách bộ từ...</p>
+                  </div>
+                ) : error ? (
+                  <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 rounded-2xl text-center text-rose-600 text-sm">
+                    {error}
+                  </div>
+                ) : sets.length === 0 ? (
+                  searchQuery.trim() ? (
+                    <div className="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-2">
+                      <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Không tìm thấy bộ từ nào khớp với &ldquo;{searchQuery}&rdquo;
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchInput('');
+                          updateSelectorQuery({ q: null, page: '1' });
+                        }}
+                        className="text-xs text-indigo-600 hover:underline font-bold"
+                      >
+                        Xóa từ khóa tìm kiếm
+                      </button>
                     </div>
-                  );
-                  })}
-                </div>
-              )
+                  ) : (
+                    <div className="p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
+                      <FolderOpen className="w-10 h-10 text-slate-400 mx-auto" />
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        Bạn chưa có bộ từ nào để bắt đầu bài luyện tập
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        Hãy tạo bộ thẻ mới hoặc khám phá danh mục ở Trang chủ.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => navigate('/create-flashcard')}
+                        className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs rounded-xl"
+                      >
+                        Tạo bộ thẻ mới
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                      {sets.map((s) => {
+                        const prog = normalizeSetProgress(s);
+                        const isChecking = checkingReadinessId === s.id;
+
+                        return (
+                          <div
+                            key={s.id}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                void handleCardClick(s);
+                              }
+                            }}
+                            onClick={() => void handleCardClick(s)}
+                            className="group p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-2xl cursor-pointer transition-all shadow-xs hover:shadow-md flex flex-col justify-between focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          >
+                            <div>
+                              <div className="flex items-center justify-between text-xs text-slate-400 gap-2 flex-wrap">
+                                <span className="font-semibold">{s.tag || 'Từ vựng'}</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-bold text-[11px] text-slate-600 dark:text-slate-300">
+                                    {prog.totalWords} từ
+                                  </span>
+                                  <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                    prog.state === 'mastered'
+                                      ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                                      : prog.state === 'in_progress'
+                                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'
+                                      : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                                  }`}>
+                                    {prog.stateLabel}
+                                  </span>
+                                </div>
+                              </div>
+                              <h4 className="font-extrabold text-sm text-slate-900 dark:text-white mt-1.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
+                                {s.title}
+                              </h4>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                                {prog.summaryText}
+                              </p>
+                            </div>
+
+                            <div className="mt-4 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                              <span>{isChecking ? 'Đang kiểm tra...' : `Bắt đầu ${activeMode.title}`}</span>
+                              {isChecking ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Load More Button for Sets */}
+                    {sets.length < setsTotal && (
+                      <div className="pt-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => updateSelectorQuery({ page: String(currentPage + 1) })}
+                          className="px-5 py-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 shadow-2xs transition"
+                        >
+                          Tải thêm {Math.min(12, setsTotal - sets.length)} bộ từ tiếp theo (đã tải {sets.length}/{setsTotal})
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             ) : srsLoading ? (
               <div className="py-12 flex flex-col items-center justify-center text-slate-400">
                 <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
@@ -738,7 +940,7 @@ export const PracticeView: React.FC = () => {
                       key={group.set_id}
                       onClick={() => {
                         if (isUnavailable) return;
-                        const returnFrom = `/practice?mode=${encodeURIComponent(activeMode.id)}&cat=${encodeURIComponent(selectedCategory)}`;
+                        const returnFrom = selectorRoute(activeMode.id);
                         navigate(
                           activeMode.buildRoute(group.set_id, {
                             wordIds: group.word_ids,
@@ -799,6 +1001,115 @@ export const PracticeView: React.FC = () => {
           </>
         )}
       </div>
+      {readinessModal && activeMode && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl animate-fade-in">
+            <div className="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <AlertCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
+                    Chưa sẵn sàng: {activeMode.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-xs">
+                    Bộ từ: {readinessModal.set.title}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setReadinessModal(null)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg"
+                aria-label="Đóng"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+              {readinessModal.blockedMode.blocked_reason === 'MISSING_CONTENT' && (
+                <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 space-y-2">
+                  <p className="font-bold text-amber-900 dark:text-amber-200">
+                    Chế độ này cần câu ví dụ {readinessModal.blockedMode.missing_fields.includes('example_translation') ? 'và bản dịch' : ''} có sẵn.
+                  </p>
+                  <p className="text-[11px] text-amber-800 dark:text-amber-300">
+                    Bộ từ có {readinessModal.readiness.total_words} từ, nhưng hiện còn {readinessModal.readiness.missing_example_ids.length} từ chưa có câu ví dụ
+                    {readinessModal.readiness.missing_translation_ids.length > 0 && ` và ${readinessModal.readiness.missing_translation_ids.length} từ chưa có bản dịch`}.
+                  </p>
+                </div>
+              )}
+
+              {readinessModal.blockedMode.blocked_reason === 'SELECTION_LIMIT' && (
+                <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 space-y-2">
+                  <p className="font-bold text-amber-900 dark:text-amber-200">
+                    Số lượng từ vượt quá giới hạn ({readinessModal.readiness.total_words}/{readinessModal.blockedMode.max_words} từ).
+                  </p>
+                  <p className="text-[11px] text-amber-800 dark:text-amber-300">
+                    Chế độ này hoạt động hiệu quả nhất với tối đa {readinessModal.blockedMode.max_words} từ. Bạn có thể chia nhỏ bộ từ hoặc chọn chế độ Học kết hợp (tự động chia 5 từ/bài).
+                  </p>
+                </div>
+              )}
+
+              {readinessModal.blockedMode.blocked_reason === 'AI_NOT_CONFIGURED' && (
+                <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/80 space-y-2">
+                  <p className="font-bold text-indigo-900 dark:text-indigo-200">
+                    Chế độ này yêu cầu AI nhưng hệ thống chưa được kích hoạt AI.
+                  </p>
+                  <p className="text-[11px] text-indigo-800 dark:text-indigo-300">
+                    Bạn có thể mở Cài đặt AI để kết nối khóa API hoặc chuyển sang các chế độ học không cần AI (Flashcard, Học từ kết hợp, Viết từ, Trắc nghiệm).
+                  </p>
+                </div>
+              )}
+
+              {readinessModal.blockedMode.blocked_reason === 'EMPTY_SET' && (
+                <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 space-y-2">
+                  <p className="font-bold text-slate-900 dark:text-white">
+                    Bộ từ chưa có từ vựng nào.
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    Hãy thêm ít nhất một thẻ từ vào bộ này trước khi bắt đầu bài luyện tập.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => {
+                  const sid = readinessModal.set.id;
+                  setReadinessModal(null);
+                  navigate('/study/' + sid + '?studyMode=learn');
+                }}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition"
+              >
+                Chuyển sang Học từ vựng (Không cần ví dụ)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const sid = readinessModal.set.id;
+                  setReadinessModal(null);
+                  navigate('/study-set/' + sid);
+                }}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs transition"
+              >
+                Mở bộ thẻ để bổ sung
+              </button>
+              <button
+                type="button"
+                onClick={() => setReadinessModal(null)}
+                className="w-full sm:w-auto px-3 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-600"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </>}
     </div>
   );
 };

@@ -24,7 +24,10 @@ import {
   Check,
   XCircle,
   ShieldCheck,
-  Sliders
+  Sliders,
+  Activity,
+  MessageSquare,
+  Layers
 } from 'lucide-react';
 import {
   api,
@@ -34,7 +37,9 @@ import {
   LearningAudioReviewItem,
   SkillProgressItem,
   ProgramProgressItem,
-  LearningProfile
+  LearningProfile,
+  LearningActivity,
+  LearningActivityItem
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
 
@@ -42,7 +47,7 @@ export const ProgressView: React.FC = () => {
   const { path, navigate } = useRouter();
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'overview' | 'history'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'history'>('overview');
   const [windowDays, setWindowDays] = useState<number>(30);
 
   // Data state
@@ -50,6 +55,12 @@ export const ProgressView: React.FC = () => {
   const [progressError, setProgressError] = useState<string | null>(null);
   const [progressData, setProgressData] = useState<LearningProgressData | null>(null);
   const [profile, setProfile] = useState<LearningProfile | null>(null);
+
+  // Cross-engine activity state (1.19.0 / 1.20 contract)
+  const [activityData, setActivityData] = useState<LearningActivity | null>(null);
+  const [loadingActivity, setLoadingActivity] = useState(false);
+  const [activityError, setActivityError] = useState<string | null>(null);
+  const activityReqRef = React.useRef<number>(0);
 
   // History state
   const [historyStatus, setHistoryStatus] = useState<'all' | 'active' | 'completed'>('all');
@@ -65,14 +76,20 @@ export const ProgressView: React.FC = () => {
   const [loadingEvidence, setLoadingEvidence] = useState(false);
   const [evidenceError, setEvidenceError] = useState<string | null>(null);
 
-  // Fetch Progress Overview
+  // Fetch Progress Overview & Cross-Engine Activity
   const fetchProgress = async (days = windowDays) => {
     setLoadingProgress(true);
     setProgressError(null);
+    const currentReq = ++activityReqRef.current;
+    setLoadingActivity(true);
+    setActivityError(null);
+
+    const actPromise = api.getLearningActivity({ days, limit: 50, offset: 0 });
+
     try {
       const [prog, prof] = await Promise.all([
         api.getLearningProgress(days),
-        api.getLearningProfile().catch(() => null)
+        api.getLearningProfile().catch(() => null),
       ]);
       setProgressData(prog);
       setProfile(prof);
@@ -80,6 +97,51 @@ export const ProgressView: React.FC = () => {
       setProgressError((err as Error).message || 'Không thể tải dữ liệu tiến độ học tập');
     } finally {
       setLoadingProgress(false);
+    }
+
+    try {
+      const act = await actPromise;
+      if (currentReq === activityReqRef.current) {
+        setActivityData(act);
+        setActivityError(null);
+      }
+    } catch (err) {
+      if (currentReq === activityReqRef.current) {
+        setActivityData(null);
+        setActivityError((err as Error).message || 'Chưa tải được hoạt động toàn hệ thống');
+      }
+    } finally {
+      if (currentReq === activityReqRef.current) {
+        setLoadingActivity(false);
+      }
+    }
+  };
+
+  const fetchActivity = async (days = windowDays, offset = 0, append = false) => {
+    const currentReq = ++activityReqRef.current;
+    setLoadingActivity(true);
+    setActivityError(null);
+    try {
+      const act = await api.getLearningActivity({ days, limit: 50, offset });
+      if (currentReq !== activityReqRef.current) return;
+      if (append && activityData) {
+        setActivityData({
+          ...act,
+          items: [...activityData.items, ...act.items],
+        });
+      } else {
+        setActivityData(act);
+      }
+      setActivityError(null);
+    } catch (err) {
+      if (currentReq === activityReqRef.current) {
+        if (!append) setActivityData(null);
+        setActivityError((err as Error).message || 'Chưa tải được hoạt động toàn hệ thống');
+      }
+    } finally {
+      if (currentReq === activityReqRef.current) {
+        setLoadingActivity(false);
+      }
     }
   };
 
@@ -191,6 +253,34 @@ export const ProgressView: React.FC = () => {
     }
   };
 
+  // Activity kind mapping (Contract 1.19.0)
+  const getActivityMeta = (kind: string) => {
+    switch (kind) {
+      case 'vocabulary':
+        return { label: 'Học từ vựng', icon: BookOpen, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-800' };
+      case 'srs_rating':
+        return { label: 'Đánh giá SRS', icon: BookmarkCheck, color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/60 border-purple-200 dark:border-purple-800' };
+      case 'lesson':
+        return { label: 'Bài học', icon: Play, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800' };
+      case 'mistake':
+        return { label: 'Ôn Sổ lỗi', icon: AlertCircle, color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800' };
+      case 'listening':
+        return { label: 'Luyện nghe', icon: Headphones, color: 'text-sky-600 bg-sky-50 dark:bg-sky-950/60 border-sky-200 dark:border-sky-800' };
+      case 'material_dictation':
+        return { label: 'Chép chính tả', icon: PenTool, color: 'text-teal-600 bg-teal-50 dark:bg-teal-950/60 border-teal-200 dark:border-teal-800' };
+      case 'conversation':
+        return { label: 'Hội thoại', icon: MessageSquare, color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800' };
+      case 'exercise':
+        return { label: 'Luyện tập', icon: Layers, color: 'text-rose-600 bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800' };
+      case 'ai_feedback':
+      case 'audio_feedback':
+      case 'speaking_feedback':
+        return { label: 'Nhận xét AI', icon: Sparkles, color: 'text-violet-600 bg-violet-50 dark:bg-violet-950/60 border-violet-200 dark:border-violet-800' };
+      default:
+        return { label: 'Hoạt động', icon: Activity, color: 'text-slate-600 bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700' };
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6 pb-24">
       {/* Top Header Card */}
@@ -222,7 +312,7 @@ export const ProgressView: React.FC = () => {
           </div>
 
           <p className="text-xs md:text-sm text-slate-300 max-w-2xl leading-relaxed">
-            Hệ thống ghi nhận minh bạch dựa trên bài nộp và lượt ôn thực tế của bạn trong các bài học V2. Không suy đoán điểm số giả lập, không làm tròn ảo.
+            Hệ thống ghi nhận minh bạch dựa trên hoạt động luyện tập thực tế xuyên suốt các chế độ học. Không suy đoán điểm số giả lập, không làm tròn ảo.
           </p>
 
           {/* Navigation Tabs */}
@@ -240,6 +330,28 @@ export const ProgressView: React.FC = () => {
             </button>
 
             <button
+              onClick={() => {
+                setActiveTab('activity');
+                if (!activityData) void fetchActivity(windowDays);
+              }}
+              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+                activeTab === 'activity'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-indigo-200 hover:bg-white/10'
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5" />
+              <span>Hoạt động gần đây</span>
+              {activityData?.summary?.total_activities ? (
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                  activeTab === 'activity' ? 'bg-slate-200 text-slate-900' : 'bg-white/10 text-white'
+                }`}>
+                  {activityData.summary.total_activities}
+                </span>
+              ) : null}
+            </button>
+
+            <button
               onClick={() => setActiveTab('history')}
               className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
                 activeTab === 'history'
@@ -248,7 +360,7 @@ export const ProgressView: React.FC = () => {
               }`}
             >
               <History className="w-3.5 h-3.5" />
-              <span>Lịch sử các phiên học</span>
+              <span>Bài nộp & Bằng chứng</span>
               {historyTotal > 0 && (
                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
                   activeTab === 'history' ? 'bg-slate-200 text-slate-900' : 'bg-white/10 text-white'
@@ -311,7 +423,7 @@ export const ProgressView: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              {/* Lifetime Metrics Grid */}
+              {/* Lifetime & Cross-Engine Metrics Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -321,19 +433,37 @@ export const ProgressView: React.FC = () => {
                     {progressData.lifetime.unique_lessons_completed}
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    trên tổng số bài V2 đã phát hành
+                    trên tổng số bài học đã phát hành
                   </p>
                 </div>
 
                 <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Lượt nộp trong kỳ ({windowDays}d)
+                    Tổng hoạt động ({windowDays}d)
                   </span>
                   <div className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">
-                    {progressData.window_activity.lesson_submissions}
+                    {activityError ? (
+                      <span className="text-xs text-rose-500 font-bold block pt-1">Chưa tải được</span>
+                    ) : loadingActivity && !activityData ? (
+                      <span className="text-xs text-slate-400 font-bold block pt-1">Đang tải...</span>
+                    ) : (
+                      activityData?.summary?.total_activities ?? 0
+                    )}
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    lần nộp các nhiệm vụ bài học
+                    {activityError ? (
+                      <button
+                        type="button"
+                        onClick={() => void fetchActivity(windowDays, 0)}
+                        className="text-indigo-600 dark:text-indigo-400 underline font-bold"
+                      >
+                        Thử lại
+                      </button>
+                    ) : activityData?.summary?.distinct_words_practised !== undefined ? (
+                      `${activityData.summary.distinct_words_practised} từ vựng đã luyện`
+                    ) : (
+                      'hoạt động toàn hệ thống'
+                    )}
                   </p>
                 </div>
 
@@ -345,20 +475,38 @@ export const ProgressView: React.FC = () => {
                     {progressData.review_practice.submitted}
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    {progressData.review_practice.unassisted_correct} lượt đúng độc lập
+                    {progressData.review_practice.unassisted_correct} lượt đúng tự nhớ
                   </p>
                 </div>
 
                 <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Ngày luyện tập thực tế
+                    Ngày học thực tế
                   </span>
                   <div className="text-2xl md:text-3xl font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                    <span>{progressData.window_activity.active_days}</span>
-                    <span className="text-sm font-bold text-slate-400">/ {windowDays}</span>
+                    {activityError ? (
+                      <span className="text-xs text-rose-500 font-bold block pt-1">Chưa tải được</span>
+                    ) : loadingActivity && !activityData ? (
+                      <span className="text-xs text-slate-400 font-bold block pt-1">Đang tải...</span>
+                    ) : (
+                      <>
+                        <span>{activityData?.summary?.active_days ?? 0}</span>
+                        <span className="text-sm font-bold text-slate-400">/ {windowDays}</span>
+                      </>
+                    )}
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    ngày có nộp bài hoặc ôn lỗi
+                    {activityError ? (
+                      <button
+                        type="button"
+                        onClick={() => void fetchActivity(windowDays, 0)}
+                        className="text-indigo-600 dark:text-indigo-400 underline font-bold"
+                      >
+                        Thử lại
+                      </button>
+                    ) : (
+                      'ngày có hoạt động toàn hệ thống'
+                    )}
                   </p>
                 </div>
               </div>
@@ -777,7 +925,159 @@ export const ProgressView: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: LEARNING HISTORY */}
+      {/* TAB 2: CROSS-ENGINE ACTIVITY (Contract 1.19.0 / 1.20) */}
+      {activeTab === 'activity' && (
+        <div className="space-y-4 animate-fade-in">
+          {/* Summary sub-card */}
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="font-bold text-slate-700 dark:text-slate-300">
+                Toàn hệ thống ({windowDays} ngày):
+              </span>
+              {activityError ? (
+                <span className="text-rose-600 dark:text-rose-400 font-bold">
+                  Chưa tải được hoạt động toàn hệ thống
+                </span>
+              ) : (
+                <>
+                  <span className="px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-extrabold">
+                    {activityData?.summary?.total_activities ?? 0} lượt hoạt động
+                  </span>
+                  <span className="px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold">
+                    {activityData?.summary?.active_days ?? 0} ngày học
+                  </span>
+                  <span className="px-2.5 py-1 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 font-extrabold">
+                    {activityData?.summary?.distinct_words_practised ?? 0} từ đã luyện
+                  </span>
+                </>
+              )}
+            </div>
+
+            <button
+              onClick={() => void fetchActivity(windowDays, 0)}
+              className="text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 flex items-center gap-1.5 transition"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Làm mới</span>
+            </button>
+          </div>
+
+          {/* Activity Items List */}
+          {loadingActivity && !activityData ? (
+            <div className="p-16 text-center text-slate-400 flex flex-col items-center justify-center space-y-2">
+              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+              <p className="text-xs font-semibold">Đang tổng hợp hoạt động toàn hệ thống...</p>
+            </div>
+          ) : activityError ? (
+            <div className="p-8 text-center rounded-3xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 space-y-3">
+              <AlertCircle className="w-10 h-10 text-rose-600 mx-auto" />
+              <h3 className="text-base font-extrabold text-rose-900 dark:text-rose-200">
+                Chưa tải được hoạt động toàn hệ thống
+              </h3>
+              <p className="text-xs text-rose-700 dark:text-rose-300 max-w-sm mx-auto">
+                {activityError}
+              </p>
+              <button
+                type="button"
+                onClick={() => void fetchActivity(windowDays, 0)}
+                className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs hover:opacity-90 transition"
+              >
+                Thử lại
+              </button>
+            </div>
+          ) : !activityData || activityData.items.length === 0 ? (
+            <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <Activity className="w-10 h-10 text-slate-400 mx-auto" />
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                Chưa có hoạt động nào trong {windowDays} ngày qua
+              </h3>
+              <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                Mỗi khi bạn nộp bài học, đánh giá từ vựng SRS, làm bài nghe hoặc ôn câu sai, hoạt động sẽ xuất hiện tại đây.
+              </p>
+              <button
+                onClick={() => navigate('/today')}
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+              >
+                Bắt đầu học ngay
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activityData.items.map((item) => {
+                const meta = getActivityMeta(item.kind);
+                const Icon = meta.icon;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="p-4 md:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-slate-700 transition flex items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <span className={`p-2.5 rounded-xl border shrink-0 ${meta.color}`}>
+                        <Icon className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0 space-y-0.5">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${meta.color}`}>
+                            {meta.label}
+                          </span>
+                          <span className="text-[11px] text-slate-400 font-medium">
+                            {formatDateTime(item.occurred_at)}
+                          </span>
+                        </div>
+                        <h4 className="font-extrabold text-sm text-slate-900 dark:text-white truncate">
+                          {item.title}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {item.route && (
+                      <button
+                        onClick={() => navigate(item.route)}
+                        className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center gap-1.5 transition shrink-0 shadow-2xs"
+                      >
+                        <span>Mở bài</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Pagination for Activity (Contract 1.20) */}
+              {activityData.items.length < activityData.total && (
+                <div className="pt-2 text-center">
+                  <button
+                    type="button"
+                    disabled={loadingActivity}
+                    onClick={() => void fetchActivity(windowDays, activityData.items.length, true)}
+                    className="px-5 py-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 shadow-2xs transition"
+                  >
+                    {loadingActivity ? 'Đang tải thêm...' : `Tải thêm hoạt động (đã xem ${activityData.items.length}/${activityData.total})`}
+                  </button>
+                </div>
+              )}
+
+              {/* Activity limitations footer */}
+              {activityData.limitations && activityData.limitations.length > 0 && (
+                <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 space-y-1 mt-4">
+                  <div className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                    <span>Quy tắc ghi nhận hoạt động:</span>
+                  </div>
+                  <ul className="list-disc list-inside space-y-0.5 text-[11px] pl-1 text-slate-500 dark:text-slate-400">
+                    {activityData.limitations.map((lim, idx) => (
+                      <li key={idx}>{lim}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 3: LEARNING SESSIONS & EVIDENCE */}
       {activeTab === 'history' && (
         <div className="space-y-4 animate-fade-in">
           {/* History filter buttons */}

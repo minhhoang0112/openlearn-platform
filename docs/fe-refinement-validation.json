@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-25",
+  "milestone": "M1 - Product Refinement FE",
+  "checks": [
+    "LessonRun mobile header stacks vertically and floating dictionary offsets away from bottom CTAs across 360/390/768/1440px",
+    "MyProgram maintains program in URL query and Exit lesson returns to exact program",
+    "Homepage cleaned: duplicate search removed, promo banner removed, fallback path truthfully labeled as suggestion",
+    "Labels standardized: \"Ngân sách\" -> \"Thời gian học\", removed technical \"V2\" from Today, Settings, and Materials",
+    "Listening Library & Practice Set Selector support search & pagination persisting in URL",
+    "StudySetView accessibility: aria-label on icon buttons, semantic buttons and keyboard-focusable flashcard",
+    "ProgressView connects GET /learning/activity (Contract 1.19.0), displays cross-engine active days, and renders Activity History tab"
+  ],
+  "viewports_tested": [
+    "360px mobile small",
+    "390px iPhone",
+    "768px tablet",
+    "1440px desktop"
+  ],
+  "page_errors": [],
+  "passed": true
+}

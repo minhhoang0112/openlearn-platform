@@ -186,7 +186,7 @@ export const LearningSettingsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-            <span>Cài đặt hệ thống V2</span>
+            <span>Cài đặt học tập cá nhân</span>
             <span>•</span>
             <span>Hồ sơ học tập</span>
           </div>
@@ -194,7 +194,7 @@ export const LearningSettingsView: React.FC = () => {
             Cài đặt lộ trình & Thời gian học
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Cá nhân hoá ngân sách thời gian, mục tiêu định hướng và lịch học hàng tuần của bạn.
+            Cá nhân hoá thời gian học, mục tiêu định hướng và lịch học hàng tuần của bạn.
           </p>
         </div>
 
@@ -231,7 +231,7 @@ export const LearningSettingsView: React.FC = () => {
             )}
           </div>
           <p className="text-indigo-700 dark:text-indigo-300">
-            Hồ sơ học tập được lưu trữ an toàn trên tài khoản của bạn. Mọi thay đổi sẽ tự động áp dụng cho lộ trình điều phối các bài học V2.
+            Hồ sơ học tập được lưu trữ an toàn trên tài khoản của bạn. Mọi thay đổi sẽ tự động áp dụng cho lộ trình điều phối các bài học.
           </p>
         </div>
       </div>
@@ -323,7 +323,7 @@ export const LearningSettingsView: React.FC = () => {
           </div>
         </section>
 
-        {/* Section 2: Ngân sách thời gian (Time Budget) */}
+        {/* Section 2: Thời lượng học mỗi ngày (Time Budget) */}
         <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 md:p-6 space-y-4 shadow-xs">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center">
@@ -341,8 +341,17 @@ export const LearningSettingsView: React.FC = () => {
               return (
                 <div
                   key={opt.value}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setTimeBudget(opt.value);
+                      setSaveSuccess(null);
+                    }
+                  }}
                   onClick={() => { setTimeBudget(opt.value); setSaveSuccess(null); }}
-                  className={`relative p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                  className={`relative p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                     isSelected
                       ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 shadow-xs'
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50'

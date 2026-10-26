@@ -377,7 +377,7 @@ export const MistakesView: React.FC = () => {
           </div>
 
           <p className="text-xs md:text-sm text-slate-300 max-w-2xl leading-relaxed">
-            Tự động thu thập các câu trắc nghiệm bạn trả lời sai trong bài học V2. Ôn tập theo chu kỳ ngắt quãng (Spaced Repetition) và đạt <strong className="text-white">2 lần trả lời đúng liên tiếp không cần trợ giúp</strong> (cách nhau tối thiểu 24 giờ) để giải quyết hoàn toàn mục lỗi.
+            Tự động thu thập các câu trắc nghiệm bạn trả lời sai trong bài học. Ôn tập theo chu kỳ ngắt quãng (Spaced Repetition) và đạt <strong className="text-white">2 lần trả lời đúng liên tiếp không cần trợ giúp</strong> (cách nhau tối thiểu 24 giờ) để giải quyết hoàn toàn mục lỗi.
           </p>
 
           {/* Summary counters */}
@@ -1027,7 +1027,7 @@ export const MistakesView: React.FC = () => {
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                 {activeTab === 'due'
                   ? 'Các câu sai sẽ tự động đến hạn theo chu kỳ ngắt quãng. Hãy tiếp tục học bài mới!'
-                  : 'Mỗi khi bạn trả lời chưa chính xác trong bài học V2, câu hỏi sẽ được tự động lưu vào đây để bạn rèn luyện lại.'}
+                  : 'Mỗi khi bạn trả lời chưa chính xác trong bài học, câu hỏi sẽ được tự động lưu vào đây để bạn rèn luyện lại.'}
               </p>
               <div className="pt-2">
                 <button

@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-26",
+  "milestone": "Mốc 2 — Một nơi bắt đầu, điều hướng 5 mục",
+  "checks": [
+    {
+      "id": "single_entry_root_redirect_and_logo",
+      "status": "PASS",
+      "initial_path": "/",
+      "redirected_to": "/today",
+      "logo_target": "/today",
+      "back_safe": true
+    },
+    {
+      "id": "deep_link_preservation_after_login",
+      "status": "PASS",
+      "requested_deep_link": "/study-set/13609",
+      "landed_url": "/study-set/13609"
+    },
+    {
+      "id": "five_main_nav_items_desktop",
+      "status": "PASS",
+      "main_nav_items": [
+        "Học hôm nay",
+        "Lộ trình",
+        "Thư viện",
+        "Luyện tập",
+        "Tiến độ"
+      ],
+      "review_shortcuts_present": true
+    },
+    {
+      "id": "dedicated_404_not_found_view",
+      "status": "PASS",
+      "rendered_404_heading": true,
+      "navigated_back_to_today": true
+    },
+    {
+      "id": "explore_relocated_under_library",
+      "status": "PASS",
+      "route": "/explore",
+      "search_query_synced": true,
+      "returned_to_library": true
+    },
+    {
+      "id": "no_unsolicited_ai_calls_on_nav",
+      "status": "PASS"
+    }
+  ],
+  "viewports_tested": [
+    {
+      "name": "mobile_small_360",
+      "width": 360,
+      "height": 740,
+      "status": "PASS",
+      "scroll_width": 360,
+      "client_width": 360
+    },
+    {
+      "name": "mobile_standard_390",
+      "width": 390,
+      "height": 844,
+      "status": "PASS",
+      "scroll_width": 390,
+      "client_width": 390
+    },
+    {
+      "name": "tablet_768",
+      "width": 768,
+      "height": 1024,
+      "status": "PASS",
+      "scroll_width": 768,
+      "client_width": 768
+    },
+    {
+      "name": "desktop_1440",
+      "width": 1440,
+      "height": 900,
+      "status": "PASS",
+      "scroll_width": 1440,
+      "client_width": 1440
+    }
+  ],
+  "page_errors": [],
+  "completed": true,
+  "total_checks_passed": 6
+}

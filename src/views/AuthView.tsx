@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useRouter } from '../context/RouterContext';
-import { Lock, Mail, User, Sparkles, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "../context/RouterContext";
+import {
+  Lock,
+  Mail,
+  User,
+  Sparkles,
+  ArrowRight,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
+import { sanitizeInternalPath } from "../utils/navigationContext";
 
 export const AuthView: React.FC = () => {
   const { login, register } = useAuth();
   const { navigate } = useRouter();
 
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [email, setEmail] = useState('user@example.com');
-  const [password, setPassword] = useState('1234567890');
-  const [name, setName] = useState('Học viên TOEIC');
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [email, setEmail] = useState("user@example.com");
+  const [password, setPassword] = useState("1234567890");
+  const [name, setName] = useState("Học viên TOEIC");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,19 +29,31 @@ export const AuthView: React.FC = () => {
     setError(null);
 
     try {
-      if (mode === 'login') {
+      if (mode === "login") {
         await login(email, password);
       } else {
         await register(email, password, name);
       }
-      navigate('/');
+      const initialPath = window.location.pathname + window.location.search;
+      const searchParams = new URLSearchParams(window.location.search);
+      const returnTo = searchParams.get("returnTo") || searchParams.get("from");
+      const target = returnTo
+        ? sanitizeInternalPath(returnTo, "/today")
+        : initialPath &&
+            initialPath !== "/" &&
+            initialPath !== "/login" &&
+            initialPath !== "/auth"
+          ? sanitizeInternalPath(initialPath, "/today")
+          : "/today";
+      navigate(target, { replace: true });
     } catch (err: any) {
-      setError(err?.message || 'Đăng nhập không thành công. Vui lòng kiểm tra lại!');
+      setError(
+        err?.message || "Đăng nhập không thành công. Vui lòng kiểm tra lại!",
+      );
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-4">
@@ -40,31 +61,45 @@ export const AuthView: React.FC = () => {
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl">
         {/* Brand */}
         <div className="flex flex-col items-center text-center mb-8">
-          <img src="/logo.svg" alt="OpenLearn" className="w-14 h-14 rounded-2xl shadow-lg mb-3" />
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">OpenLearn Platform</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Học thông minh, nhớ từ vựng vĩnh viễn với SRS & AI</p>
+          <img
+            src="/logo.svg"
+            alt="OpenLearn"
+            className="w-14 h-14 rounded-2xl shadow-lg mb-3"
+          />
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            OpenLearn Platform
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Học thông minh, ghi nhớ từ vựng bền vững với SRS & AI
+          </p>
         </div>
 
         {/* Tab switch */}
         <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-6">
           <button
             type="button"
-            onClick={() => { setMode('login'); setError(null); }}
+            onClick={() => {
+              setMode("login");
+              setError(null);
+            }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-              mode === 'login'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+              mode === "login"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             Đăng nhập
           </button>
           <button
             type="button"
-            onClick={() => { setMode('register'); setError(null); }}
+            onClick={() => {
+              setMode("register");
+              setError(null);
+            }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-              mode === 'register'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+              mode === "register"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             Đăng ký tài khoản
@@ -78,7 +113,7 @@ export const AuthView: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === 'register' && (
+          {mode === "register" && (
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
                 Họ và tên
@@ -140,7 +175,9 @@ export const AuthView: React.FC = () => {
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                <span>{mode === 'login' ? 'Đăng nhập ngay' : 'Tạo tài khoản'}</span>
+                <span>
+                  {mode === "login" ? "Đăng nhập ngay" : "Tạo tài khoản"}
+                </span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -157,10 +194,25 @@ export const AuthView: React.FC = () => {
                 setLoading(true);
                 setError(null);
                 try {
-                  await login('user@example.com', '1234567890');
-                  navigate('/');
+                  await login("user@example.com", "1234567890");
+                  const initialPath =
+                    window.location.pathname + window.location.search;
+                  const searchParams = new URLSearchParams(
+                    window.location.search,
+                  );
+                  const returnTo =
+                    searchParams.get("returnTo") || searchParams.get("from");
+                  const target = returnTo
+                    ? sanitizeInternalPath(returnTo, "/today")
+                    : initialPath &&
+                        initialPath !== "/" &&
+                        initialPath !== "/login" &&
+                        initialPath !== "/auth"
+                      ? sanitizeInternalPath(initialPath, "/today")
+                      : "/today";
+                  navigate(target, { replace: true });
                 } catch (err: any) {
-                  setError(err?.message || 'Lỗi đăng nhập nhanh');
+                  setError(err?.message || "Lỗi đăng nhập nhanh");
                 } finally {
                   setLoading(false);
                 }
@@ -171,14 +223,21 @@ export const AuthView: React.FC = () => {
             </button>
           </div>
           <div className="text-slate-600 dark:text-slate-300 font-mono text-[11px] space-y-0.5">
-            <div>Email: <strong className="text-slate-900 dark:text-white">user@example.com</strong></div>
-            <div>Mật khẩu: <strong className="text-slate-900 dark:text-white">1234567890</strong></div>
+            <div>
+              Email:{" "}
+              <strong className="text-slate-900 dark:text-white">
+                user@example.com
+              </strong>
+            </div>
+            <div>
+              Mật khẩu:{" "}
+              <strong className="text-slate-900 dark:text-white">
+                1234567890
+              </strong>
+            </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );
 };
-

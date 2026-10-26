@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-25",
+  "milestone": "M1B - Refinement Integration 1.20",
+  "checks": [
+    {
+      "id": "catalog_search_beyond_100",
+      "status": "PASS",
+      "needle_title": "[B1 Level] School and Education",
+      "needle_id": 13609,
+      "visible_in_selector": 1,
+      "total_sets": 180
+    },
+    {
+      "id": "daily_goal_completion_and_exit",
+      "status": "PASS",
+      "cursor": 5,
+      "target_cursor": 5,
+      "daily_finish_button_count": 2,
+      "returned_to_today": true
+    },
+    {
+      "id": "adjust_today_plan_modal",
+      "status": "PASS"
+    },
+    {
+      "id": "readiness_check_actionable_choices",
+      "status": "PASS",
+      "tested_set": "Kết thúc cuộc hội thoại"
+    },
+    {
+      "id": "comprehensive_core_steps_ui",
+      "status": "PASS"
+    },
+    {
+      "id": "activity_error_state_and_retry",
+      "status": "PASS"
+    }
+  ],
+  "viewports_tested": [
+    {
+      "name": "mobile_small_360",
+      "width": 360,
+      "height": 740,
+      "status": "PASS"
+    },
+    {
+      "name": "mobile_standard_390",
+      "width": 390,
+      "height": 844,
+      "status": "PASS"
+    },
+    {
+      "name": "tablet_768",
+      "width": 768,
+      "height": 1024,
+      "status": "PASS"
+    },
+    {
+      "name": "desktop_1440",
+      "width": 1440,
+      "height": 900,
+      "status": "PASS"
+    }
+  ],
+  "page_errors": [],
+  "completed": true,
+  "total_checks_passed": 6
+}

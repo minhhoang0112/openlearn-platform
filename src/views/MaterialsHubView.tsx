@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
+  ArrowLeft,
   Headphones,
   Plus,
   Search,
@@ -23,9 +24,11 @@ import {
   LearningMaterialCapabilities
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { parseNavigationContext, withNavigationContext } from '../utils/navigationContext';
 
 export const MaterialsHubView: React.FC = () => {
-  const { navigate } = useRouter();
+  const { path, navigate } = useRouter();
+  const parentRoute = parseNavigationContext(path).from || '/practice';
 
   const [materials, setMaterials] = useState<LearningMaterialItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -222,7 +225,7 @@ export const MaterialsHubView: React.FC = () => {
 
       setShowImportModal(false);
       // Navigate to player view of newly created material
-      navigate(`/materials/${res.id}`);
+      navigate(withNavigationContext(`/materials/${res.id}`, { source: 'practice', from: path }));
     } catch (err: any) {
       const msg = err?.error?.message || err?.message || 'Không thể nhập học liệu lúc này. Vui lòng thử lại.';
       setImportError(msg);
@@ -261,6 +264,9 @@ export const MaterialsHubView: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8 pb-20">
+      <button type="button" onClick={() => navigate(parentRoute)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300">
+        <ArrowLeft className="w-4 h-4" /> {parentRoute.startsWith('/listening') ? 'Trở về Thư viện nghe' : 'Trở về Luyện tập'}
+      </button>
       {/* Top Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="space-y-1.5">
@@ -284,7 +290,7 @@ export const MaterialsHubView: React.FC = () => {
             onClick={() => navigate('/listening')}
             className="px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 transition shadow-xs flex items-center gap-2"
           >
-            <span>Thư viện 27 bài học V2</span>
+            <span>Thư viện bài học chính thức</span>
           </button>
           <button
             type="button"
@@ -404,7 +410,7 @@ export const MaterialsHubView: React.FC = () => {
 
                   <div className="space-y-1">
                     <h3
-                      onClick={() => navigate(`/materials/${mat.id}`)}
+                      onClick={() => navigate(withNavigationContext(`/materials/${mat.id}`, { source: 'practice', from: path }))}
                       className="text-base font-black text-slate-900 dark:text-white line-clamp-1 cursor-pointer group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition"
                       title={mat.title}
                     >
@@ -442,7 +448,7 @@ export const MaterialsHubView: React.FC = () => {
                     </span>
                     <button
                       type="button"
-                      onClick={() => navigate(`/materials/${mat.id}`)}
+                      onClick={() => navigate(withNavigationContext(`/materials/${mat.id}`, { source: 'practice', from: path }))}
                       className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-indigo-600 dark:bg-white dark:hover:bg-indigo-400 text-white dark:text-slate-900 text-xs font-bold transition flex items-center gap-1.5"
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />

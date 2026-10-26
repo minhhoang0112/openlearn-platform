@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ArrowLeft,
   Headphones,
   Play,
   RotateCcw,
@@ -13,7 +14,9 @@ import {
   History,
   CheckCircle2,
   X,
-  Repeat
+  Repeat,
+  Search,
+  Filter
 } from 'lucide-react';
 import {
   api,
@@ -23,11 +26,31 @@ import {
   ListeningSessionSettings
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { parseNavigationContext, withNavigationContext } from '../utils/navigationContext';
 
 export const ListeningLibraryView: React.FC = () => {
-  const { navigate } = useRouter();
+  const { path, navigate } = useRouter();
+  const parentRoute = parseNavigationContext(path).from || '/practice';
 
-  const [activeTab, setActiveTab] = useState<'catalog' | 'history'>('catalog');
+  const queryParams = new URLSearchParams(path.includes('?') ? path.split('?')[1] : '');
+  const activeTab = queryParams.get('tab') === 'history' ? 'history' : 'catalog';
+  const searchQuery = queryParams.get('search') || '';
+  const selectedProgram = queryParams.get('program') || 'all';
+  const currentPage = Math.max(1, parseInt(queryParams.get('page') || '1', 10));
+
+  const updateUrlParams = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(path.includes('?') ? path.split('?')[1] : '');
+    Object.entries(updates).forEach(([key, val]) => {
+      if (val === null || val === '') params.delete(key);
+      else params.set(key, val);
+    });
+    const qs = params.toString();
+    navigate(`/listening${qs ? `?${qs}` : ''}`);
+  };
+
+  const setActiveTab = (tab: 'catalog' | 'history') => {
+    updateUrlParams({ tab: tab === 'catalog' ? null : 'tab', page: '1' });
+  };
 
   // Catalog state
   const [catalogItems, setCatalogItems] = useState<ListeningCatalogItem[]>([]);
@@ -114,7 +137,7 @@ export const ListeningLibraryView: React.FC = () => {
     try {
       const session = await api.startListeningSession(selectedItem.lesson_id, settings, resume);
       closeConfigModal();
-      navigate(`/listening/practice/${session.id}`);
+      navigate(withNavigationContext(`/listening/practice/${session.id}`, { source: 'practice', from: path }));
     } catch (err) {
       setStartError((err as Error).message || 'Không thể khởi tạo phiên luyện nghe');
     } finally {
@@ -122,13 +145,41 @@ export const ListeningLibraryView: React.FC = () => {
     }
   };
 
+  // Filter and pagination
+  const filteredCatalog = catalogItems.filter((item) => {
+    if (selectedProgram === 'foundation' && item.program_id !== 'english-foundation') return false;
+    if (selectedProgram === 'system' && item.program_id !== 'english-it-system') return false;
+    if (selectedProgram === 'checkpoint' && item.lesson_kind !== 'checkpoint') return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const matchTitle = item.title.toLowerCase().includes(q);
+      const matchTranscript = (item.transcript || '').toLowerCase().includes(q);
+      const matchLessonId = item.lesson_id.toLowerCase().includes(q);
+      if (!matchTitle && !matchTranscript && !matchLessonId) return false;
+    }
+    return true;
+  });
+
+  const PAGE_SIZE = 8;
+  const visibleCount = currentPage * PAGE_SIZE;
+  const paginatedCatalog = filteredCatalog.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredCatalog.length;
+
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6 pb-28">
+      <button
+        type="button"
+        onClick={() => navigate(parentRoute)}
+        className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg px-1 py-0.5"
+      >
+        <ArrowLeft className="w-4 h-4" /> Trở về Luyện tập
+      </button>
+
       {/* Page Header */}
       <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
           <Headphones className="w-4 h-4" />
-          <span>Thư viện luyện nghe V2</span>
+          <span>Thư viện luyện nghe</span>
           <span>•</span>
           <span>Nghe từng câu & Shadowing</span>
         </div>
@@ -141,7 +192,7 @@ export const ListeningLibraryView: React.FC = () => {
       </div>
 
       {/* Tabs navigation */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 flex-wrap">
         <button
           type="button"
           onClick={() => setActiveTab('catalog')}
@@ -170,7 +221,7 @@ export const ListeningLibraryView: React.FC = () => {
 
         <button
           type="button"
-          onClick={() => navigate('/materials')}
+          onClick={() => navigate(withNavigationContext('/materials', { source: 'practice', from: path }))}
           className="ml-auto mb-1.5 px-3.5 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold text-xs hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition flex items-center gap-1.5 shadow-2xs"
         >
           <Headphones className="w-3.5 h-3.5" />
@@ -181,7 +232,54 @@ export const ListeningLibraryView: React.FC = () => {
 
       {/* TAB 1: CATALOG ITEMS */}
       {activeTab === 'catalog' && (
-        <div className="space-y-4">
+        <div className="space-y-5">
+          {/* Search & Program Filter Toolbar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => updateUrlParams({ search: e.target.value || null, page: '1' })}
+                placeholder="Tìm bài nghe theo tiêu đề, lời thoại, mã bài..."
+                className="w-full pl-10 pr-8 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/40"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => updateUrlParams({ search: null, page: '1' })}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                  aria-label="Xóa tìm kiếm"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+              {[
+                { id: 'all', label: 'Tất cả' },
+                { id: 'foundation', label: 'Nền tảng' },
+                { id: 'system', label: 'IT / System' },
+                { id: 'checkpoint', label: 'Ôn chặng' },
+              ].map((prog) => (
+                <button
+                  key={prog.id}
+                  type="button"
+                  onClick={() => updateUrlParams({ program: prog.id === 'all' ? null : prog.id, page: '1' })}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+                    selectedProgram === prog.id
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xs'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                  }`}
+                >
+                  {prog.label}
+                </button>
+              ))}
+            </div>
+          </div>
           {loadingCatalog ? (
             <div className="py-16 text-center text-slate-400 flex flex-col items-center justify-center space-y-2">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
@@ -199,93 +297,140 @@ export const ListeningLibraryView: React.FC = () => {
                 Thử lại
               </button>
             </div>
-          ) : catalogItems.length === 0 ? (
-            <div className="p-12 text-center text-slate-400">Chưa có bài học luyện nghe nào khả dụng.</div>
+          ) : filteredCatalog.length === 0 ? (
+            <div className="p-12 text-center text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3">
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                Không tìm thấy bài học nghe nào phù hợp
+              </p>
+              <p className="text-xs text-slate-500">
+                Hãy thử đổi từ khóa tìm kiếm hoặc chọn danh mục khác.
+              </p>
+              <button
+                type="button"
+                onClick={() => updateUrlParams({ search: null, program: null, page: '1' })}
+                className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold rounded-xl"
+              >
+                Xóa bộ lọc
+              </button>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {catalogItems.map((item) => {
-                const isReady = item.sentence_practice_available && item.sentence_count > 0;
-                const isCheckpoint = item.lesson_kind === 'checkpoint';
-
-                return (
-                  <div
-                    key={item.lesson_id}
-                    className={`p-5 rounded-3xl border-2 transition-all flex flex-col justify-between space-y-4 ${
-                      isReady
-                        ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-400'
-                        : 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/60 opacity-60'
-                    }`}
+            <>
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-500 px-1">
+                <span>
+                  Hiển thị {paginatedCatalog.length} / {filteredCatalog.length} bài học nghe
+                </span>
+                {selectedProgram !== 'all' || searchQuery ? (
+                  <button
+                    type="button"
+                    onClick={() => updateUrlParams({ search: null, program: null, page: '1' })}
+                    className="text-indigo-600 hover:underline"
                   >
-                    <div className="space-y-2.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300">
-                            {item.lesson_id}
-                          </span>
-                          {item.program_id === 'english-it-system' ? (
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                              IT / System
+                    Bỏ lọc
+                  </button>
+                ) : null}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {paginatedCatalog.map((item) => {
+                  const isReady = item.sentence_practice_available && item.sentence_count > 0;
+                  const isCheckpoint = item.lesson_kind === 'checkpoint';
+
+                  return (
+                    <div
+                      key={item.lesson_id}
+                      className={`p-5 rounded-3xl border-2 transition-all flex flex-col justify-between space-y-4 ${
+                        isReady
+                          ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-400'
+                          : 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/60 opacity-60'
+                      }`}
+                    >
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                              {item.lesson_id}
                             </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-                              Nền tảng
+                            {item.program_id === 'english-it-system' ? (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                IT / System
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                                Nền tảng
+                              </span>
+                            )}
+                            {isCheckpoint && (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/80 text-[10px] font-bold text-amber-800 dark:text-amber-300">
+                                Ôn chặng
+                              </span>
+                            )}
+                            <span className="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-[10px] font-semibold text-indigo-700 dark:text-indigo-300">
+                              v{item.content_version}
                             </span>
-                          )}
-                          {isCheckpoint && (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/80 text-[10px] font-bold text-amber-800 dark:text-amber-300">
-                              Ôn chặng
-                            </span>
-                          )}
-                          <span className="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-[10px] font-semibold text-indigo-700 dark:text-indigo-300">
-                            v{item.content_version}
+                          </div>
+
+                          <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                            {item.sentence_count} câu
                           </span>
                         </div>
 
-                        <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                          {item.sentence_count} câu
+                        <div>
+                          <h3 className="font-extrabold text-base md:text-lg text-slate-900 dark:text-white">
+                            {item.title}
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 italic">
+                            "{item.transcript}"
+                          </p>
+                        </div>
+
+                        <div className="pt-1 text-[11px] text-slate-400 flex items-center gap-3">
+                          <span>Giọng: {item.voice}</span>
+                          <span>•</span>
+                          <span>WAV câu riêng</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+                        <span className="text-[11px] text-slate-400">
+                          {isReady ? 'Đã có audio từng câu' : 'Đang chuẩn bị clip'}
                         </span>
-                      </div>
 
-                      <div>
-                        <h3 className="font-extrabold text-base md:text-lg text-slate-900 dark:text-white">
-                          {item.title}
-                        </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 italic">
-                          "{item.transcript}"
-                        </p>
-                      </div>
-
-                      <div className="pt-1 text-[11px] text-slate-400 flex items-center gap-3">
-                        <span>Giọng: {item.voice}</span>
-                        <span>•</span>
-                        <span>WAV câu riêng</span>
+                        {isReady ? (
+                          <button
+                            type="button"
+                            onClick={() => openConfigModal(item)}
+                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          >
+                            <Play className="w-3.5 h-3.5 fill-current" />
+                            <span>Luyện bài này</span>
+                          </button>
+                        ) : (
+                          <span className="text-xs font-semibold text-slate-400 italic">
+                            Chưa khả dụng
+                          </span>
+                        )}
                       </div>
                     </div>
+                  );
+                })}
+              </div>
 
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
-                      <span className="text-[11px] text-slate-400">
-                        {isReady ? 'Đã có audio từng câu' : 'Đang chuẩn bị clip'}
-                      </span>
-
-                      {isReady ? (
-                        <button
-                          type="button"
-                          onClick={() => openConfigModal(item)}
-                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-xs"
-                        >
-                          <Play className="w-3.5 h-3.5 fill-current" />
-                          <span>Luyện bài này</span>
-                        </button>
-                      ) : (
-                        <span className="text-xs font-semibold text-slate-400 italic">
-                          Chưa khả dụng
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+              {/* Pagination / Load more button */}
+              {hasMore && (
+                <div className="pt-3 flex flex-col items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateUrlParams({ page: String(currentPage + 1) })}
+                    className="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-black shadow-md transition"
+                  >
+                    Tải thêm {Math.min(PAGE_SIZE, filteredCatalog.length - visibleCount)} bài học tiếp theo
+                  </button>
+                  <p className="text-[11px] text-slate-400">
+                    Còn {filteredCatalog.length - visibleCount} bài học khác
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
@@ -356,7 +501,7 @@ export const ListeningLibraryView: React.FC = () => {
                     <div className="flex items-center gap-2 self-start sm:self-center">
                       <button
                         type="button"
-                        onClick={() => navigate(`/listening/practice/${sess.id}`)}
+                        onClick={() => navigate(withNavigationContext(`/listening/practice/${sess.id}`, { source: 'practice', from: path }))}
                         className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                           isCompleted
                             ? 'border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100'

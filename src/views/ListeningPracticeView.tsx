@@ -34,9 +34,11 @@ import {
   ListeningSentenceResult
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { parseNavigationContext, withNavigationContext } from '../utils/navigationContext';
 
 export const ListeningPracticeView: React.FC = () => {
   const { path, navigate } = useRouter();
+  const parentRoute = parseNavigationContext(path).from || '/listening';
 
   // Extract sessionId from path (/listening/practice/:id)
   const sessionIdMatch = path.match(/^\/listening\/practice\/([a-zA-Z0-9-]+)/);
@@ -352,7 +354,7 @@ export const ListeningPracticeView: React.FC = () => {
     setRestarting(true);
     try {
       const newSession = await api.startListeningSession(session.lesson_id, session.settings, false);
-      navigate(`/listening/practice/${newSession.id}`);
+      navigate(withNavigationContext(`/listening/practice/${newSession.id}`, { source: 'practice', from: parentRoute }));
     } catch (err) {
       setError((err as Error).message || 'Không thể tạo phiên mới.');
       setRestarting(false);
@@ -383,7 +385,7 @@ export const ListeningPracticeView: React.FC = () => {
               Thử kết nối lại
             </button>
             <button
-              onClick={() => navigate('/listening')}
+              onClick={() => navigate(parentRoute)}
               className="px-5 py-2.5 border rounded-2xl text-sm font-bold"
             >
               Về Thư viện nghe
@@ -471,7 +473,7 @@ export const ListeningPracticeView: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => navigate('/listening')}
+              onClick={() => navigate(parentRoute)}
               className="w-full sm:w-auto px-6 py-3.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm text-slate-700 dark:text-slate-300 rounded-2xl transition"
             >
               Về Thư viện nghe
@@ -526,7 +528,7 @@ export const ListeningPracticeView: React.FC = () => {
         <div className="flex items-center justify-between">
           <button
             type="button"
-            onClick={() => navigate('/listening')}
+            onClick={() => navigate(parentRoute)}
             className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition"
           >
             <ArrowLeft className="w-4 h-4" />

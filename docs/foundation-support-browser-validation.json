@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-26",
+  "contract": "1.21.0",
+  "checks": [
+    "Bilingual support opens before answering without clearing the selected option",
+    "Closing and reopening the current-step support uses the loaded pack",
+    "A supported answer remains on its step and is recorded as assisted",
+    "Opening support preserves writing draft and assistance across reload",
+    "All four foundation lessons expose their authored support in the real runner",
+    "Support fits 360/390/768/1440px without horizontal page overflow",
+    "Unsupported lessons retain their existing runner without unrelated notes"
+  ],
+  "page_errors": [],
+  "ai_calls": 0,
+  "passed": true
+}

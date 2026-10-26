@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Loader2,
   Repeat,
+  Compass,
 } from 'lucide-react';
 
 export const MyCreatedView: React.FC = () => {
@@ -160,54 +161,85 @@ export const MyCreatedView: React.FC = () => {
               <FolderHeart className="w-5 h-5" />
             </div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              Tủ sách học tập cá nhân
+              Thư viện học tập
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Quản lý các bộ thẻ từ vựng tự tạo và các nội dung bạn đã lưu
+            Quản lý tài liệu học cá nhân và khám phá bộ từ, lộ trình mới
           </p>
         </div>
 
-        <button
-          onClick={() => navigate('/create-flashcard')}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Tạo bộ thẻ mới</span>
-        </button>
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <button
+            type="button"
+            onClick={() => navigate('/explore')}
+            className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold flex items-center gap-2 border border-indigo-200 dark:border-indigo-800/60 shadow-2xs transition"
+          >
+            <Compass className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Khám phá bộ từ &amp; lộ trình</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate('/create-flashcard')}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Tạo bộ thẻ mới</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate('/create-learning-path')}
+            className="px-3.5 py-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition"
+          >
+            <span>Tạo lộ trình</span>
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => setTab('my_sets')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              tab === 'my_sets'
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Bộ thẻ đã tạo ({sets.length})
+          </button>
+          <button
+            onClick={() => setTab('saved_sets')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              tab === 'saved_sets'
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Bộ thẻ đã lưu ({savedSets.length})
+          </button>
+          <button
+            onClick={() => setTab('saved_paths')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              tab === 'saved_paths'
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Lộ trình đã lưu ({savedPaths.length})
+          </button>
+        </div>
+
         <button
-          onClick={() => setTab('my_sets')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-            tab === 'my_sets'
-              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-              : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          type="button"
+          onClick={() => navigate('/explore')}
+          className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 py-1 px-2"
         >
-          Bộ thẻ đã tạo ({sets.length})
-        </button>
-        <button
-          onClick={() => setTab('saved_sets')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-            tab === 'saved_sets'
-              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-              : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
-        >
-          Bộ thẻ đã lưu ({savedSets.length})
-        </button>
-        <button
-          onClick={() => setTab('saved_paths')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-            tab === 'saved_paths'
-              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-              : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
-        >
-          Lộ trình đã lưu ({savedPaths.length})
+          <Compass className="w-3.5 h-3.5" />
+          <span>Tìm thêm bộ từ trong Khám phá →</span>
         </button>
       </div>
 

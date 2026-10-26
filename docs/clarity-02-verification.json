@@ -42,12 +42,6 @@
       "layout_shift_px": 0,
       "dictionary_entry_called": true,
       "user_b_isolated": true
-    },
-    "g5_contextual_navigation_and_breadcrumbs": {
-      "passed": true
-    },
-    "g6_translations_and_grammar_fallback": {
-      "passed": true
     }
   },
   "page_errors": []

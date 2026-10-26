@@ -2,7 +2,9 @@ import {randomUUID,createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {fail,integer,text,normalize} from './validation.mjs';
 import {transaction} from './database.mjs';
+import {dailyLearningPlanService} from './daily-learning-plan.mjs';
 import {starterPrograms,starterLessons} from './content/learning-v2/curriculum.mjs';
+import {supportForLesson} from './content/learning-v2/foundation-support.mjs';
 
 const now=()=>new Date().toISOString();
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -60,10 +62,12 @@ export function learningService(db,profiles,{seed=true,clock=()=>new Date(),mist
   function publicStep(step){const {answer,explanation,...safe}=step;return safe;}
   function present(s){
     const body=s.lesson.body,steps=body.steps,state=s.state,current=steps[state.cursor];
+    const support=supportForLesson(s.lesson);
     return {id:s.id,lesson_id:s.lesson_id,program_id:s.lesson.program_id,title:s.lesson.title,lesson_kind:body.lesson_kind??'lesson',objectives:body.objectives,content_version:s.content_version,revision:s.revision,status:s.completed_at?'completed':'active',cursor:state.cursor,
       steps:steps.map(step=>({id:step.id,type:step.type,title:step.title,state:Object.hasOwn(state.results,step.id)?'completed':step.id===current?.id?state.feedback?'feedback':state.draft?'draft':'ready':'pending'})),
       current:current?{...publicStep(current),state:state.feedback?'feedback':state.draft?'draft':'ready',draft:state.draft,feedback:state.feedback,media:audio(body.media_id).metadata}:null,
       completed_steps:state.cursor,total_steps:steps.length,media:audio(body.media_id).metadata,transcript:body.transcript,translation:body.translation,provenance:body.provenance,
+      learning_support:{available:!!support&&!!current,title:support?.title??null,support_version:support?.support_version??null,used_before_submission:!!current&&!!state.support_used?.[current.id]},
       results:state.results,summary:s.completed_at?{completed:true,mastered:false,graded_correct:Object.values(state.results).filter(r=>r.assessment_status==='graded'&&r.correct).length,graded_total:Object.values(state.results).filter(r=>r.assessment_status==='graded').length,open_tasks:Object.values(state.results).filter(r=>r.assessment_status==='self_review').length,...(body.checkpoint?{checkpoint:checkpointSummary(body,state.results)}:{})}:null,
       created_at:s.created_at,updated_at:s.updated_at,completed_at:s.completed_at};
   }
@@ -97,41 +101,20 @@ export function learningService(db,profiles,{seed=true,clock=()=>new Date(),mist
     const lessons=db.prepare('SELECT l.* FROM learning_lesson_versions l WHERE program_id=? AND published=1 AND version=(SELECT MAX(version) FROM learning_lesson_versions WHERE lesson_id=l.lesson_id AND published=1) ORDER BY position,lesson_id').all(id);
     return {...p,lesson_count:lessons.length,units:[{id:id+'-starter',title:'Bài khởi động',lessons:lessons.map(l=>{const b=JSON.parse(l.content),completed=db.prepare('SELECT completed_at FROM learning_sessions WHERE user_id=? AND lesson_id=? AND content_version=? AND completed_at IS NOT NULL ORDER BY completed_at DESC LIMIT 1').get(user.id,l.lesson_id,l.version);return {id:l.lesson_id,title:l.title,version:l.version,lesson_kind:b.lesson_kind??'lesson',estimated_minutes:b.estimated_minutes,objectives:b.objectives,recommended_prerequisites:b.recommended_prerequisites,completed_at:completed?.completed_at??null};})}]};
   }
-  function due(user){return db.prepare('SELECT COUNT(*) n FROM word_progress WHERE user_id=? AND due_at IS NOT NULL AND due_at<=?').get(user.id,clock().toISOString()).n;}
-  function today(user){return transaction(db,()=>{
-    const profile=profiles.getProfile(user.id),date=clock(),localDate=new Intl.DateTimeFormat('en-CA',{timeZone:profile.timezone,year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
-    let row=db.prepare('SELECT * FROM daily_learning_plans WHERE user_id=? AND local_date=?').get(user.id,localDate);
-    if(!row){
-      const weekday=new Date(localDate+'T12:00:00Z').getUTCDay()||7;
-      const scheduledDay=profile.preferred_days.includes(weekday);
-      const items=[],active=db.prepare('SELECT id,lesson_id,content_version FROM learning_sessions WHERE user_id=? AND completed_at IS NULL ORDER BY updated_at DESC LIMIT 1').get(user.id);
-      const dueCount=due(user);if(dueCount)items.push({id:'srs',kind:'review',route:'/repetition-study',estimated_minutes:Math.min(5,profile.time_budget_minutes),initial_due_count:dueCount});
-      let candidate=active;
-      if(!candidate&&scheduledDay){
-        const eligible=profile.focus==='system'?['english-foundation','english-it-system']:['english-foundation'];
-        for(const id of eligible){const p=db.prepare('SELECT id FROM learning_programs WHERE id=?').get(id);if(!p)continue;
-          const available=program(id,user).units.flatMap(u=>u.lessons).find(l=>!l.completed_at);
-          if(available){candidate={lesson_id:available.id,content_version:available.version};break;}
-        }
-      }
-      if(candidate){const l=lesson(candidate.lesson_id,candidate.content_version);items.push({id:'lesson',kind:'lesson',lesson_id:l.lesson_id,content_version:l.version,title:l.title,estimated_minutes:l.body.estimated_minutes,session_id:candidate.id??null});}
-      const stamp=now();row={id:randomUUID(),user_id:user.id,local_date:localDate,timezone:profile.timezone,budget_minutes:profile.time_budget_minutes,items:JSON.stringify({version:1,scheduled_day:scheduledDay,preferred_days:profile.preferred_days,items}),created_at:stamp};
-      db.prepare('INSERT INTO daily_learning_plans VALUES(?,?,?,?,?,?,?)').run(row.id,row.user_id,row.local_date,row.timezone,row.budget_minutes,row.items,row.created_at);
-    }
-    const saved=JSON.parse(row.items),legacy=Array.isArray(saved),scheduledDay=legacy?null:saved.scheduled_day;
-    const items=(legacy?saved:saved.items).map(item=>{
-      if(item.kind==='review'){const count=due(user);return {...item,due_count:count,status:count?'ready':'completed'};}
-      const s=item.session_id?db.prepare('SELECT id,completed_at FROM learning_sessions WHERE id=? AND user_id=?').get(item.session_id,user.id):db.prepare('SELECT id,completed_at FROM learning_sessions WHERE user_id=? AND lesson_id=? AND content_version=? ORDER BY updated_at DESC LIMIT 1').get(user.id,item.lesson_id,item.content_version);
-      return {...item,session_id:s?.id??null,route:s?`/lesson-run/${s.id}`:null,status:s?.completed_at?'completed':s?'in_progress':'ready'};
-    });
-    const completed=items.length>0&&items.every(i=>i.status==='completed');
-    const active=db.prepare('SELECT id,lesson_id FROM learning_sessions WHERE user_id=? AND completed_at IS NULL ORDER BY updated_at DESC LIMIT 1').get(user.id);
-    return {mistake_summary:mistakes?.summary(user.id)??null,plan_id:row.id,local_date:row.local_date,timezone:row.timezone,budget_minutes:row.budget_minutes,scheduled_day:scheduledDay,preferred_days:legacy?null:saved.preferred_days,schedule_policy:legacy?'legacy_unrestricted':'preferred_days',items,resume_session_id:active?.id??null,resume_lesson_id:active?.lesson_id??null,resume_route:active?`/lesson-run/${active.id}`:null,status:!items.length?scheduledDay===false?'rest_day':'content_exhausted':completed?'completed':'ready',message:!items.length?scheduledDay===false?'Hôm nay ngoài lịch học chính. Bạn vẫn có thể học tự chọn trong thư viện.':'Chưa có bài mới phù hợp. Bạn có thể học lại hoặc dùng thư viện; không có bài giả được tạo.':null,profile_changes_apply:'next_local_day',created_at:row.created_at};
-  });}
+  function startSession(user,id,version,boundSessionId){
+    if(boundSessionId)return {...present(own(boundSessionId,user)),replayed:true};
+    const l=lesson(id,version);
+    const old=db.prepare('SELECT id FROM learning_sessions WHERE user_id=? AND lesson_id=? AND content_version=? AND completed_at IS NULL ORDER BY updated_at DESC LIMIT 1').get(user.id,l.lesson_id,l.version);
+    if(old)return {...present(own(old.id,user)),replayed:true};
+    const sessionId=randomUUID(),stamp=now();
+    db.prepare('INSERT INTO learning_sessions VALUES(?,?,?,?,0,?,?,?,NULL)').run(sessionId,user.id,l.lesson_id,l.version,JSON.stringify({cursor:0,draft:null,feedback:null,results:{}}),stamp,stamp);
+    return {...present(own(sessionId,user)),replayed:false};
+  }
+  const dailyPlans=dailyLearningPlanService(db,profiles,{clock,lesson,program,mistakes,startSession});
   function registerRoutes(route){
     route('GET','/learning/programs',c=>({items:db.prepare('SELECT * FROM learning_programs ORDER BY kind,id').all().map(p=>{const v=program(p.id,c.user);const {units,...meta}=v;return meta;})}),{summary:'Published pilot programs and actual lesson counts; separate foundation and IT/System tracks'});
     route('GET','/learning/programs/:id',c=>program(c.params.id,c.user),{summary:'Real program lessons, objectives and own completion; no answer keys'});
-    route('GET','/learning/today',c=>today(c.user),{summary:'Stable own local-day plan from available content, active sessions and real due reviews'});
+    dailyPlans.registerRoutes(route);
     route('GET','/learning/media/:id',c=>{
       const {bytes}=audio(c.params.id);let start=0,end=bytes.length-1,status=200;
       const range=c.req.headers.range;
@@ -148,6 +131,17 @@ export function learningService(db,profiles,{seed=true,clock=()=>new Date(),mist
       const id=randomUUID(),stamp=now();db.prepare('INSERT INTO learning_sessions VALUES(?,?,?,?,0,?,?,?,NULL)').run(id,c.user.id,l.lesson_id,l.version,JSON.stringify({cursor:0,draft:null,feedback:null,results:{}}),stamp,stamp);c.status=201;return {...present(own(id,c.user)),replayed:false};
     }),{summary:'Start/resume own pinned-version lesson session without invoking Gemini'});
     route('GET','/learning/sessions/:id',c=>present(own(c.params.id,c.user)),{summary:'Restore exact V2 lesson step, draft and feedback; no future answer keys'});
+    route('POST','/learning/sessions/:id/support/open',c=>transaction(db,()=>{
+      if(Object.keys(c.body).some(k=>k!=='step_id'))fail(400,'VALIDATION_ERROR','Supply only the current step_id.');
+      const s=own(c.params.id,c.user),step=current(s,c.body),support=supportForLesson(s.lesson);
+      if(!support)fail(404,'SUPPORT_UNAVAILABLE','Bài này chưa có gói kiến thức hỗ trợ tương ứng.');
+      if(!s.state.feedback&&!s.state.support_used?.[step.id]){
+        s.state.support_used??={};s.state.support_used[step.id]=true;
+        // Annotation only: do not invalidate a draft request or advance/regrade.
+        db.prepare('UPDATE learning_sessions SET state=? WHERE id=? AND user_id=?').run(JSON.stringify(s.state),s.id,c.user.id);
+      }
+      return {support,session:present(s),recorded_as_assistance:!!s.state.support_used?.[step.id]};
+    }),{summary:'Open version-matched authored learning support; persist assistance before submission without AI, draft loss or progress changes'});
     route('PUT','/learning/sessions/:id/draft',c=>transaction(db,()=>{
       const s=own(c.params.id,c.user);revision(s,c.body);const step=current(s,c.body);if(s.state.feedback)fail(409,'ALREADY_SUBMITTED','Read feedback and continue.');
       s.state.draft=validate(step,c.body.response,true);save(s);return present(s);
@@ -160,9 +154,9 @@ export function learningService(db,profiles,{seed=true,clock=()=>new Date(),mist
       if(previous){if(previous.request_hash!==requestHash)fail(409,'IDEMPOTENCY_CONFLICT','Submission ID already used for another response.');return {feedback:JSON.parse(previous.feedback),session:present(s),replayed:true};}
       revision(s,c.body);const step=current(s,c.body);if(s.state.feedback)fail(409,'ALREADY_SUBMITTED','This step has already been submitted.');
       const response=validate(step,c.body.response),assistance=c.body.assistance_used??[];
-      if(!Array.isArray(assistance)||assistance.length>3||new Set(assistance).size!==assistance.length||assistance.some(x=>!['transcript','translation','model'].includes(x)))fail(400,'VALIDATION_ERROR','Invalid assistance_used.');
+      if(!Array.isArray(assistance)||assistance.length>4||new Set(assistance).size!==assistance.length||assistance.some(x=>!['transcript','translation','model','learning_support'].includes(x)))fail(400,'VALIDATION_ERROR','Invalid assistance_used.');
       const graded=step.response_schema==='choice',feedback=graded?{assessment_status:'graded',correct:response.option_id===step.answer,expected_option_id:step.answer,explanation:step.explanation}:{assessment_status:'self_review',correct:null,rubric:step.rubric??[],message:'Đã lưu hoạt động tự luyện. Chưa có đánh giá AI hoặc điểm phát âm.'};
-      feedback.assistance_used=assistance;
+      feedback.assistance_used=[...new Set([...assistance,...(s.state.support_used?.[step.id]?['learning_support']:[])])];
       if(graded&&!feedback.correct&&mistakes)feedback.mistake_id=mistakes.recordWrong({userId:c.user.id,lessonId:s.lesson_id,version:s.content_version,stepId:step.id});
       db.prepare('INSERT INTO learning_step_attempts VALUES(?,?,?,?,?,?,?)').run(s.id,submissionId,requestHash,step.id,JSON.stringify(response),JSON.stringify(feedback),now());
       s.state.draft=response;s.state.feedback=feedback;save(s);

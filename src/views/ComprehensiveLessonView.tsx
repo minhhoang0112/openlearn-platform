@@ -655,25 +655,34 @@ export function ComprehensiveLessonView() {
         {lessons.map((item) => {
           const isCurrent = lesson?.lesson_index === item.index;
           const totalSteps = item.total_steps || 5;
+          const totalCoreSteps = item.total_core_steps || 3;
+          const completedCoreSteps = item.completed_core_steps ?? Math.min(3, item.completed_steps);
+          const coreCompleted = item.core_completed || item.completed || completedCoreSteps >= totalCoreSteps;
+          const allStepsCompleted = item.all_steps_completed || item.completed_steps >= totalSteps;
           const wordCount = item.word_count ?? item.word_ids.length;
           const reviewedWords = item.reviewed_words ?? 0;
           const masteredWords = item.mastered_words ?? 0;
 
           const stateBadge =
-            item.state === 'completed' || item.completed
+            allStepsCompleted
               ? {
-                  label: 'Hoàn thành 5 bước',
+                  label: 'Hoàn thành 5/5 bước',
                   cls: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
                 }
-              : item.state === 'in_progress' || item.completed_steps > 0 || reviewedWords > 0
+              : coreCompleted
                 ? {
-                    label: 'Đang học',
-                    cls: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-800',
+                    label: 'Hoàn thành cốt lõi (3/3)',
+                    cls: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
                   }
-                : {
-                    label: 'Chưa học',
-                    cls: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
-                  };
+                : item.state === 'in_progress' || completedCoreSteps > 0 || reviewedWords > 0
+                  ? {
+                      label: 'Đang học',
+                      cls: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/50 dark:text-indigo-300 dark:border-indigo-800',
+                    }
+                  : {
+                      label: 'Chưa học',
+                      cls: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+                    };
 
           return (
             <button
@@ -709,7 +718,8 @@ export function ComprehensiveLessonView() {
                   data-testid={`lesson-${item.index}-steps`}
                   className="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
                 >
-                  {item.completed_steps}/{totalSteps} bước
+                  Cốt lõi: {completedCoreSteps}/{totalCoreSteps} bước
+                  {item.completed_steps > completedCoreSteps && ` (Tổng ${item.completed_steps}/${totalSteps})`}
                 </span>
                 <span
                   data-testid={`lesson-${item.index}-words`}
@@ -724,90 +734,112 @@ export function ComprehensiveLessonView() {
       </section>
 
       {/* 2. SELECTED LESSON WORKSPACE */}
-      {lesson && (
-        <div className="space-y-6">
-          {/* Lesson Summary & 5 Steps Bar */}
-          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-5 shadow-2xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white">
-                  Bài {lesson.lesson_index}: {lesson.words.map((w) => w.term).join(', ')}
-                </h2>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-                  Tiến độ bài này: <strong>{lesson.completed_steps}/5 bước</strong> • Đã luyện{' '}
-                  <strong>
-                    {lesson.reviewed_words}/{lesson.word_count} từ
-                  </strong>{' '}
-                  • Đã nhớ{' '}
-                  <strong>
-                    {lesson.mastered_words}/{lesson.word_count} từ
-                  </strong>
-                </p>
+      {lesson && (() => {
+        const lessonCoreTotal = lesson.total_core_steps || 3;
+        const lessonCoreCompleted = lesson.completed_core_steps ?? Math.min(3, lesson.completed_steps);
+        const isCoreDone = lesson.core_completed || lesson.completed || lessonCoreCompleted >= lessonCoreTotal;
+
+        return (
+          <div className="space-y-6">
+            {/* Lesson Summary & 5 Steps Bar */}
+            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-5 shadow-2xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div>
+                  <h2 className="text-lg font-black text-slate-900 dark:text-white">
+                    Bài {lesson.lesson_index}: {lesson.words.map((w) => w.term).join(', ')}
+                  </h2>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                    Tiến độ cốt lõi: <strong>{lessonCoreCompleted}/{lessonCoreTotal} bước</strong> {isCoreDone ? '(Hoàn thành phần cốt lõi)' : ''} • Tổng đã làm: <strong>{lesson.completed_steps}/5 bước</strong> • Đã luyện{' '}
+                    <strong>
+                      {lesson.reviewed_words}/{lesson.word_count} từ
+                    </strong>{' '}
+                    • Đã nhớ{' '}
+                    <strong>
+                      {lesson.mastered_words}/{lesson.word_count} từ
+                    </strong>
+                  </p>
+                </div>
+
+                {activeStepIndex !== null && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveStepIndex(null);
+                      setSession(null);
+                      savePersistedStepState(lesson.lesson_index, null);
+                    }}
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition self-start sm:self-auto"
+                  >
+                    Xem danh sách từ của bài
+                  </button>
+                )}
               </div>
 
-              {activeStepIndex !== null && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveStepIndex(null);
-                    setSession(null);
-                    savePersistedStepState(lesson.lesson_index, null);
-                  }}
-                  className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition self-start sm:self-auto"
-                >
-                  Xem danh sách từ của bài
-                </button>
+              {isCoreDone && (
+                <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>
+                    <strong>Hoàn thành phần cốt lõi (3/3 bước)!</strong> Bạn đã hoàn tất các bước ghi nhớ từ vựng cần thiết. Hai bước AI bên dưới là phần <em>Luyện thêm</em> tùy chọn để mở rộng phản xạ.
+                  </span>
+                </div>
               )}
-            </div>
 
-            {/* 5 Steps Selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-              {lesson.steps.map((s) => {
-                const Icon = getStepIcon(s.index);
-                const isSelected = activeStepIndex === s.index;
-                const aiReady = !s.requires_ai || s.ai_configured || Boolean(capabilities?.ai.configured);
+              {/* 5 Steps Selector */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+                {lesson.steps.map((s) => {
+                  const Icon = getStepIcon(s.index);
+                  const isSelected = activeStepIndex === s.index;
+                  const aiReady = !s.requires_ai || s.ai_configured || Boolean(capabilities?.ai.configured);
+                  const isCore = s.index <= 3;
 
-                return (
-                  <div
-                    key={s.index}
-                    data-testid={`lesson-step-${s.index}`}
-                    className={`p-3.5 rounded-2xl border transition flex flex-col justify-between gap-2.5 ${
-                      isSelected
-                        ? 'border-indigo-600 bg-indigo-50/60 dark:bg-indigo-950/40 ring-1 ring-indigo-500'
-                        : s.completed
-                          ? 'border-emerald-200 bg-emerald-50/30 dark:border-emerald-900/60 dark:bg-emerald-950/20'
-                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30'
-                    }`}
-                  >
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-slate-700 dark:text-slate-200">
-                          <Icon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                          <span>Bước {s.index}/5</span>
-                        </span>
-                        {s.completed ? (
-                          <span className="px-1.5 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black">
-                            Đã xong
+                  return (
+                    <div
+                      key={s.index}
+                      data-testid={`lesson-step-${s.index}`}
+                      className={`p-3.5 rounded-2xl border transition flex flex-col justify-between gap-2.5 ${
+                        isSelected
+                          ? 'border-indigo-600 bg-indigo-50/60 dark:bg-indigo-950/40 ring-1 ring-indigo-500'
+                          : s.completed
+                            ? 'border-emerald-200 bg-emerald-50/30 dark:border-emerald-900/60 dark:bg-emerald-950/20'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30'
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-slate-700 dark:text-slate-200">
+                            <Icon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                            <span>Bước {s.index}/5</span>
                           </span>
-                        ) : !aiReady ? (
-                          <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold">
-                            Cần AI
-                          </span>
-                        ) : null}
+                          <div className="flex items-center gap-1">
+                            <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold ${
+                              isCore
+                                ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                                : 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300'
+                            }`}>
+                              {isCore ? 'Cốt lõi' : 'Tùy chọn AI'}
+                            </span>
+                            {s.completed ? (
+                              <span className="px-1.5 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black">
+                                Đã xong
+                              </span>
+                            ) : !aiReady ? (
+                              <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold">
+                                Cần AI
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
+
+                        <div className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
+                          {s.name}
+                        </div>
+
+                        <div className="text-[10px] font-semibold text-slate-400">
+                          {isCore ? 'Cập nhật nhớ từ (SRS)' : 'Luyện thêm ngữ cảnh AI'}
+                        </div>
                       </div>
 
-                      <div className="font-extrabold text-xs text-slate-900 dark:text-white leading-snug">
-                        {s.name}
-                      </div>
-
-                      <div className="text-[10px] font-semibold text-slate-400">
-                        {s.srs_effect === 'updates_word_progress'
-                          ? 'Cập nhật nhớ từ (SRS)'
-                          : 'Thực hành AI'}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 pt-1">
+                      <div className="flex items-center gap-1.5 pt-1">
                       <button
                         type="button"
                         disabled={stepBusy}
@@ -1371,8 +1403,9 @@ export function ComprehensiveLessonView() {
               </div>
             </section>
           )}
-        </div>
-      )}
+          </div>
+        );
+      })()}
     </div>
   );
 }

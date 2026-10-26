@@ -6,7 +6,8 @@ export type NavSource =
   | 'practice'
   | 'srs'
   | 'path'
-  | 'category';
+  | 'category'
+  | 'explore';
 
 export interface NavigationContext {
   source: NavSource | null;
@@ -27,6 +28,7 @@ const VALID_SOURCES = new Set<NavSource>([
   'srs',
   'path',
   'category',
+  'explore',
 ]);
 
 export function sanitizeInternalPath(rawPath?: string | null, fallback = '/'): string {
@@ -125,21 +127,25 @@ export function forwardNavigationContext(
 }
 
 export function resolveSourceSidebarRoute(source: NavSource | null, from?: string | null): string | null {
-  if (source === 'home' || source === 'category') return '/';
+  if (source === 'home' || source === 'explore' || from?.split('?')[0] === '/' || (from && from.startsWith('/explore'))) return '/';
+  if (source === 'library' || (from && from.startsWith('/my-created'))) return '/my-created';
+  if (source === 'category' || (from && from.startsWith('/category/'))) return '/my-created';
   if (source === 'today') return '/today';
   if (source === 'program') return '/my-program';
-  if (source === 'library') return '/my-created';
   if (source === 'practice') return '/practice';
   if (source === 'srs') return '/repetition-study';
   if (source === 'path') {
-    if (from && from.startsWith('/my-created')) return '/my-created';
-    return '/';
+    if (from && (from.startsWith('/my-program') || from.startsWith('/courses'))) return '/my-program';
+    if (from?.startsWith('/learning-path/')) {
+      const parent = parseNavigationContext(from);
+      if (parent.source !== 'path') return resolveSourceSidebarRoute(parent.source, parent.from) || '/my-created';
+    }
+    return '/my-created';
   }
   if (from) {
-    if (from === '/' || from.startsWith('/category/') || from.startsWith('/learning-path/')) return '/';
-    if (from.startsWith('/today')) return '/today';
+    if (from === '/' || from.startsWith('/today')) return '/today';
     if (from.startsWith('/my-program') || from.startsWith('/courses')) return '/my-program';
-    if (from.startsWith('/my-created')) return '/my-created';
+    if (from.startsWith('/my-created') || from.startsWith('/explore')) return '/my-created';
     if (from.startsWith('/practice')) return '/practice';
     if (from.startsWith('/repetition-study')) return '/repetition-study';
   }
@@ -150,12 +156,12 @@ export function resolveActiveSidebarRoute(fullPath: string): string {
   const currentPath = fullPath.split('?')[0];
   const ctx = parseNavigationContext(fullPath);
 
-  // If on /settings/ai with returnTo, inspect returnTo only if needed, otherwise keep /settings/ai
-  if (currentPath === '/' || currentPath.startsWith('/category/')) {
-    return '/';
-  }
+  if (currentPath === '/' || currentPath === '/explore' || currentPath.startsWith('/explore/')) return '/';
   if (currentPath === '/today' || currentPath.startsWith('/today/')) {
     return '/today';
+  }
+  if (currentPath.startsWith('/category/')) {
+    return resolveSourceSidebarRoute(ctx.source, ctx.from) || '/my-created';
   }
   if (currentPath.startsWith('/my-program') || currentPath.startsWith('/courses')) {
     return '/my-program';
@@ -191,7 +197,7 @@ export function resolveActiveSidebarRoute(fullPath: string): string {
     }
   }
 
-  // Deeplink fallbacks per Section F.3 of LEARNING-CONSISTENCY-ANTI.md:
+  // Deeplink fallbacks
   if (currentPath.startsWith('/study-set/') || currentPath.startsWith('/comprehensive/')) {
     return '/my-created';
   }
@@ -213,7 +219,7 @@ export function resolveActiveSidebarRoute(fullPath: string): string {
     return '/my-program';
   }
   if (currentPath.startsWith('/learning-path/')) {
-    return '/';
+    return '/my-created';
   }
 
   return currentPath;
@@ -238,6 +244,13 @@ export function getSourceLabel(source: NavSource | null, from?: string | null, p
       route: sanitizeInternalPath(from, '/repetition-study'),
     };
   }
+  if (source === 'home' || source === 'explore' || from?.split('?')[0] === '/' || (from && from.startsWith('/explore'))) {
+    return {
+      label: 'Trang chủ',
+      backLabel: 'Về Trang chủ',
+      route: sanitizeInternalPath(from, '/'),
+    };
+  }
   if (source === 'today' || (from && from.startsWith('/today'))) {
     return {
       label: 'Học hôm nay',
@@ -245,10 +258,10 @@ export function getSourceLabel(source: NavSource | null, from?: string | null, p
       route: sanitizeInternalPath(from, '/today'),
     };
   }
-  if (source === 'program' || (from && from.startsWith('/my-program'))) {
+  if (source === 'program' || (from && (from.startsWith('/my-program') || from.startsWith('/courses')))) {
     return {
-      label: 'Lộ trình của tôi',
-      backLabel: 'Về Lộ trình của tôi',
+      label: 'Lộ trình',
+      backLabel: 'Về Lộ trình',
       route: sanitizeInternalPath(from, '/my-program'),
     };
   }
@@ -256,25 +269,18 @@ export function getSourceLabel(source: NavSource | null, from?: string | null, p
     return {
       label: pathTitle || 'Lộ trình học',
       backLabel: 'Về lộ trình',
-      route: sanitizeInternalPath(from, '/'),
+      route: sanitizeInternalPath(from, '/explore'),
     };
   }
   if (source === 'library' || (from && from.startsWith('/my-created'))) {
     return {
-      label: 'Thư viện của tôi',
+      label: 'Thư viện',
       backLabel: 'Về Thư viện',
       route: sanitizeInternalPath(from, '/my-created'),
     };
   }
-  if (source === 'home' || source === 'category') {
-    return {
-      label: 'Trang chủ',
-      backLabel: 'Về Trang chủ',
-      route: sanitizeInternalPath(from, '/'),
-    };
-  }
   return {
-    label: 'Thư viện của tôi',
+    label: 'Thư viện',
     backLabel: 'Về Thư viện',
     route: '/my-created',
   };

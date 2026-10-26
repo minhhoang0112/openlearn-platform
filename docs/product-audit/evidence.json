@@ -1,0 +1,1399 @@
+{
+  "date": "2026-10-25",
+  "scope": "isolated seeded account; current production build; no live AI",
+  "pages": [
+    {
+      "name": "home",
+      "route": "/",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 2073,
+      "headings": [
+        "Giới thiệu bản thân",
+        "Lộ trình đang học",
+        "Lộ trình A1-A2 tiếng Anh",
+        "Bộ từ đang học",
+        "Đọc hiểu nhưng không giao tiếp trôi chảy?",
+        "Lộ trình gợi ý",
+        "Bạn có nghiện Video Ngắn?",
+        "Cài đặt OpenLearn Extension"
+      ],
+      "buttons": [
+        "Tìm",
+        "Học theo kế hoạch →",
+        "Tự chọn bài luyện",
+        "Trải nghiệm ngay →",
+        "Tiếp tục học",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem bộ",
+        "Ôn lại →",
+        "Tiếp tục",
+        "English",
+        "Khác",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem ngay",
+        "Cài đặt Extension"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Tìm\nChọn cách học hôm nay: Học theo kế hoạch (bài học & ôn tập trong ngày) hoặc Tự chọn bài luyện theo bộ từ bên dưới.\nHọc theo kế hoạch →\nTự chọn bài luyện\n📢\nThử nghiệm tính năng AI Study Beta: luyện phát âm và giao tiếp trực tiếp với gia sư ảo OpenLearn AI!\nTrải nghiệm ngay →\nKẾ HOẠCH HỌC TẬP V2 HÔM NAY\nĐang học dở\nGiới thiệu bản thân\nTiếp tục học\nLộ trình đang học\nXem tất cả\nLộ trình A1-A2 tiếng Anh\n🇬🇧\n🇻🇳\n20 Bộ thẻ\nOpenLearn Team\n🌍\nBộ từ đang học\nXem tất cả\nAudit beginner set\nĐã thuộc\n1 từ • 1/1 từ đã luyện · 1 đã nhớ\nXem bộ\nÔn lại →\nAI\nĐọc hiểu nhưng không giao tiếp trôi chảy?\n\nHọc phát âm chuẩn cùng AI ngay qua phương pháp shadowing & phản xạ trực tiếp.\n\nTiếp tục\n🍎\nLộ trình gợi ý\nEnglish\nKhác\nNền tảng\nXem tất cả\nLộ trình A1-A2 tiếng Anh\n🇬🇧\n🇻🇳\n20 Bộ thẻ\n•\nOpenLearn Team\n🌙\nLộ trình làm chủ Chunking\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n💬\nTOEIC\nXem tất cả\n600 Essential words for the TOEIC Exam\n🇬🇧\n🇻🇳\n50 Bộ thẻ\n•\nOpenLearn Team\n🪐\nCông việc\nXem tất cả\nEnglish for Technical Work\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n⚙️\nEnglish for Business\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n💼\nBạn có nghiện Video Ngắn?\n\nNghiện nhưng lại muốn học tiếng Anh qua Video? Xem các đoạn cắt ngắn từ vựng đời sống.\n\nXem ngay\nCài đặt OpenLearn Extension\n\nTra cứu và bôi đen lưu từ vựng ngay khi lướt web trên trình duyệt Chrome/Edge.\n\nCài đặt Extension\n🌐\nTham gia Cộng đồng OpenLearn\nQuy chế hoạt động & Điều khoản"
+    },
+    {
+      "name": "today",
+      "route": "/today",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1000,
+      "headings": [
+        "Kế hoạch học tập hôm nay",
+        "Nhiệm vụ hôm nay",
+        "Giới thiệu bản thân"
+      ],
+      "buttons": [
+        "Đổi cài đặt học",
+        "Tiếp tục học ngay",
+        "Tiếp tục học"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "CHỦ NHẬT, 25 THÁNG 10, 2026\nKế hoạch học tập hôm nay\n\nHệ thống đã chọn lọc nội dung thực tế phù hợp với thời gian và định hướng học tập của bạn.\n\nNgân sách:\n15 phút\nĐịnh hướng:\nNỀN TẢNG\nĐổi cài đặt học\nBÀI HỌC ĐANG LÀM DỞ\nBạn có một phiên học chưa hoàn thành\nTiếp tục học ngay\n*\nMọi thay đổi trong Cài đặt học tập sẽ được áp dụng cho kế hoạch của ngày tiếp theo (next_local_day).\nNhiệm vụ hôm nay\n1 nhiệm vụ\nBÀI HỌC TRỌNG TÂM\nĐang học dở\nGiới thiệu bản thân\nƯớc tính: 20 phút\n• Đa kỹ năng (Nghe, Từ vựng, Ngữ pháp, Nói, Viết)\nTiếp tục học\nTỰ CHỌN BỘ TỪ\nTrang chủ & Kho từ vựng\n\nDuyệt danh mục bộ từ, lộ trình chuyên ngành và khóa học.\n\nKHÁM PHÁ CHƯƠNG TRÌNH\nLộ trình của tôi\n\nXem toàn bộ các chặng Nền tảng và IT / System.\n\nRÈN LUYỆN KỸ NĂNG\nTrung tâm Luyện tập\n\nLuyện nghe chép, nói AI, ngữ pháp và đọc hiểu tự do."
+    },
+    {
+      "name": "program",
+      "route": "/my-program",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 4582,
+      "headings": [
+        "Lộ trình học tập của tôi",
+        "Nền tảng tiếng Anh",
+        "English for IT/System",
+        "Nền tảng tiếng Anh",
+        "Bài khởi động"
+      ],
+      "buttons": [
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu ôn chặng",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu ôn chặng",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "CHƯƠNG TRÌNH CHUẨN HOÁ V2\n•\nBẢN THỬ NGHIỆM PILOT\nLộ trình học tập của tôi\n\nCác bài học được kết hợp đầy đủ các kỹ năng: Nghe hiểu, Từ vựng theo ngữ cảnh, Ngữ pháp câu, Phát âm và Tự luyện nói/viết.\n\nPILOT\nNỀN TẢNG\nNền tảng tiếng Anh\n\nNền tảng giao tiếp A1-B1: củng cố ngữ âm, đại từ, cấu trúc câu, từ vựng sinh hoạt.\n\n18 bài học mẫu\nĐang xem chương trình này\nPILOT\nCHUYÊN NGÀNH\nEnglish for IT/System\n\nDành cho sinh viên & kỹ sư IT: hệ thống, thao tác lệnh, báo lỗi ticket và cập nhật trạng thái.\n\n9 bài học mẫu\nBấm để xem\nNỘI DUNG CHI TIẾT\nNền tảng tiếng Anh\nPhiên bản v1\nBÀI KHỞI ĐỘNG\nMã bài: foundation-introductions-01\nBài học\nGiới thiệu bản thân\nMỤC TIÊU LÀM ĐƯỢC:\nNói và viết ba câu giới thiệu bản thân.\nPhân biệt I am và I study trong câu mẫu.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-time-01\nBài học\nGiờ giấc và lịch học\nMỤC TIÊU LÀM ĐƯỢC:\nNghe được một số mốc giờ trong lịch học.\nNói và viết về lịch của mình với at + giờ.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-help-01\nBài học\nNhờ giúp đỡ và nói điều chưa làm được\nMỤC TIÊU LÀM ĐƯỢC:\nHiểu lời nhờ giúp và mô tả một khó khăn đơn giản.\nDùng Can you…? và cannot + động từ nguyên mẫu.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-routine-01\nBài học\nMột ngày học tập\nMỤC TIÊU LÀM ĐƯỢC:\nNghe và đọc để lấy thông tin về một lịch sinh hoạt.\nNói và viết về các việc mình làm trong ngày bằng hiện tại đơn.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-people-things-01\nBài học\nNgười, đồ vật và tính từ\nMỤC TIÊU LÀM ĐƯỢC:\nNhận ra danh từ chỉ người/vật và tính từ trong câu đơn.\nGiới thiệu một người và mô tả một đồ vật.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-places-01\nBài học\nHỏi vị trí và mô tả nơi chốn\nMỤC TIÊU LÀM ĐƯỢC:\nNghe để tìm vị trí người/vật.\nDùng on, under, next to và Where is…? trong câu đơn.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-questions-01\nBài học\nHỏi và phủ định trong sinh hoạt\nMỤC TIÊU LÀM ĐƯỢC:\nHiểu Do you…? và câu trả lời ngắn.\nDùng I do not + động từ để nói việc không thường làm.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-checkpoint-01\nÔn chặng\nÔn chặng đầu: giới thiệu và sinh hoạt\nMỤC TIÊU LÀM ĐƯỢC:\nTự nhớ lại mẫu câu đã học qua các tình huống mới.\nXác định nội dung cần ôn, không suy ra trình độ hoặc điểm chứng chỉ.\n25 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu ôn chặng\nMã bài: foundation-yesterday-01\nBài học\nKể việc đã làm hôm qua\nMỤC TIÊU LÀM ĐƯỢC:\nNghe và đọc thông tin về một ngày đã qua.\nKể việc đã là"
+    },
+    {
+      "name": "library",
+      "route": "/my-created",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1000,
+      "headings": [
+        "Tủ sách học tập cá nhân",
+        "Audit beginner set"
+      ],
+      "buttons": [
+        "Tạo bộ thẻ mới",
+        "Bộ thẻ đã tạo (1)",
+        "Bộ thẻ đã lưu (0)",
+        "Lộ trình đã lưu (0)",
+        "Xem bộ",
+        "Ôn lại"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Tủ sách học tập cá nhân\n\nQuản lý các bộ thẻ từ vựng tự tạo và các nội dung bạn đã lưu\n\nTạo bộ thẻ mới\nBộ thẻ đã tạo (1)\nBộ thẻ đã lưu (0)\nLộ trình đã lưu (0)\nTừ vựng\nĐã thuộc\nAudit beginner set\n\nBộ từ vựng tiếng Anh cá nhân.\n\n1 từ • 1/1 từ đã luyện · 1 đã nhớ\nXem bộ\nÔn lại"
+    },
+    {
+      "name": "practice",
+      "route": "/practice",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1708,
+      "headings": [
+        "Luyện tập theo kỹ năng & chế độ học",
+        "1. Học liệu nghe độc lập (Mở trực tiếp — không cần chọn bộ từ)",
+        "Nghe từng câu & Shadowing",
+        "Học liệu nghe cá nhân",
+        "2. Bài luyện theo bộ từ (Bước 1: Chọn chế độ học → Bước 2: Chọn bộ từ hoặc phạm vi ôn)",
+        "Học từ kết hợp",
+        "Học hai chiều (Anh ↔ Việt)",
+        "Luyện viết từ",
+        "Trắc nghiệm từ vựng",
+        "Nghe chép chính tả",
+        "Ghép thẻ phản xạ",
+        "Kiểm tra bộ từ",
+        "Ngữ pháp & Trật tự câu",
+        "Luyện nói & Nhận xét AI",
+        "Hội thoại tương tác AI",
+        "Đọc hiểu & Điền từ AI"
+      ],
+      "buttons": [
+        "Trở về Trang chủ",
+        "Tất cả",
+        "Ôn nhớ từ",
+        "Nghe – Phát âm",
+        "Nói – Viết",
+        "Ngữ pháp – Đọc hiểu",
+        "Phản xạ – Kiểm tra"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Trở về Trang chủ\nTRUNG TÂM KỸ NĂNG\n•\nLUYỆN TẬP CHỦ ĐỘNG\nLuyện tập theo kỹ năng & chế độ học\n\nChọn mở trực tiếp học liệu nghe độc lập hoặc chọn một chế độ bài luyện bên dưới rồi chọn bộ từ (từ thư viện hoặc danh sách Ôn đến hạn).\n\n1. Học liệu nghe độc lập (Mở trực tiếp — không cần chọn bộ từ)\n\nLuyện nghe từng câu có sẵn hoặc tải lên tệp âm thanh & phụ đề cá nhân của bạn.\n\nMở trực tiếp • Không gọi AI\nNghe từng câu & Shadowing\n\nNghe 50 câu riêng biệt với audio WAV thật, điều chỉnh tốc độ, tự thu âm và luyện nói đuổi trực tiếp.\n\nMở Nghe từng câu & Shadowing\nMở trực tiếp • Không gọi AI\nHọc liệu nghe cá nhân\n\nTải lên bài nghe riêng và phụ đề SRT/VTT từ máy tính, lưu vị trí nghe, tốc độ và lặp đoạn A–B.\n\nMở Học liệu nghe cá nhân\n2. Bài luyện theo bộ từ (Bước 1: Chọn chế độ học → Bước 2: Chọn bộ từ hoặc phạm vi ôn)\n\nNhóm Ôn nhớ từ cập nhật lịch ôn SRS. Nhóm Vận dụng & Kỹ năng giúp thực hành ngữ cảnh mà không tự thay đổi lịch SRS.\n\nTất cả\nÔn nhớ từ\nNghe – Phát âm\nNói – Viết\nNgữ pháp – Đọc hiểu\nPhản xạ – Kiểm tra\nKhông gọi AI\nCập nhật SRS\nHọc từ kết hợp\n\nKết hợp trắc nghiệm, tự luận và nghe gõ từ theo nhịp độ ghi nhớ của từng thẻ.\n\nChọn Học từ kết hợp\nKhông gọi AI\nCập nhật SRS\nHọc hai chiều (Anh ↔ Việt)\n\nRèn phản xạ nhớ nghĩa xuôi và nhớ từ ngược (Anh → Việt và Việt → Anh) trên cùng bộ từ.\n\nChọn Học hai chiều (Anh ↔ Việt)\nKhông gọi AI\nCập nhật SRS\nLuyện viết từ\n\nNhìn nghĩa tiếng Việt và gõ chính xác thuật ngữ tiếng Anh để củng cố trí nhớ chủ động.\n\nChọn Luyện viết từ\nKhông gọi AI\nCập nhật SRS\nTrắc nghiệm từ vựng\n\nChọn nhanh đáp án đúng trong 4 lựa chọn cho từng từ mục tiêu.\n\nChọn Trắc nghiệm từ vựng\nKhông gọi AI\nCập nhật SRS\nNghe chép chính tả\n\nNghe phát âm từ/câu và gõ lại chính xác để rèn độ nhạy ngữ âm.\n\nChọn Nghe chép chính tả\nKhông gọi AI\nCập nhật SRS\nGhép thẻ phản xạ\n\nNối nhanh từ vựng với nghĩa tiếng Việt tương ứng để tăng tốc độ nhận diện từ.\n\nChọn Ghép thẻ phản xạ\nKhông gọi AI\nCập nhật SRS\nKiểm tra bộ từ\n\nLàm bài kiểm tra bộ từ tổng hợp (trắc nghiệm kết hợp tự luận) để rà soát mức độ thuộc từ.\n\nChọn Kiểm tra bộ từ\nKhông gọi AI\nLuyện vận dụng\nNgữ pháp & Trật tự câu\n\nSắp xếp câu đúng cấu trúc ngữ pháp dựa trên câu ví dụ có sẵn của bộ từ.\n\nChọn Ngữ pháp & Trật tự câu\nDùng AI\nLuyện vận dụng\nLuyện nói & Nhận xét AI\n\nNghe mẫu TTS, luyện trả lời câu hỏi chứa từ vựng và nhận nhận xét từ AI.\n\nChọn Luyện nói & Nhận xét AI\nDùng AI\nLuyện vận dụng\nHội thoại tương tác AI\n\nĐóng vai và trò chuyện theo tình huống cụ thể bằng các từ vựng mục tiêu của bài.\n\nChọn Hội thoại tương tác AI\nDùng AI\nLuyện vận dụng\nĐọc hiểu & Điền từ AI\n\nĐọc đoạn văn ngữ cảnh do AI biên soạn theo y"
+    },
+    {
+      "name": "selector",
+      "route": "/practice/study_learn",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 5856,
+      "headings": [
+        "Học từ kết hợp",
+        "Chọn bộ từ để bắt đầu: Học từ kết hợp"
+      ],
+      "buttons": [
+        "Trở về chọn chế độ",
+        "Thư viện bộ từ (100)",
+        "Từ đến hạn ôn (SRS)",
+        "Từ đang theo dõi",
+        "Từ đã thành thạo"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Trở về chọn chế độ\n\nLuyện tập / Chọn bộ từ\n\nHọc từ kết hợp\n\nKết hợp trắc nghiệm, tự luận và nghe gõ từ theo nhịp độ ghi nhớ của từng thẻ.\n\nBƯỚC 2 • CHỌN NGUỒN TỪ VỰNG\nKhông gọi AI\nChọn bộ từ để bắt đầu: Học từ kết hợp\nThư viện bộ từ (100)\nTừ đến hạn ôn (SRS)\nTừ đang theo dõi\nTừ đã thành thạo\nTừ vựng\n1 từ\nĐã thuộc\nAudit beginner set\n\n1/1 từ đã luyện · 1 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nKết thúc cuộc hội thoại\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nNhắc lại và tóm tắt\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐề nghị và yêu cầu\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nThể hiện sự chắc chắn và nghi ngờ\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nXử lý khi không nhớ từ\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐặt câu hỏi gợi mở\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐồng ý và phản đối\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐưa ra lời giải thích\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nThể hiện quan điểm cá nhân\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nBắt đầu câu chuyện\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 20\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 19\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 18\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 17\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 16\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 15\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 14\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 13\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 12\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 11\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 10\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssen"
+    },
+    {
+      "name": "srs",
+      "route": "/repetition-study",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1046,
+      "headings": [
+        "Product audit",
+        "Lặp lại ngắt quãng (SRS)",
+        "Thiết lập học tập & AI"
+      ],
+      "buttons": [
+        "Lặp lại ngắt quãng1 từ theo dõi",
+        "Cài đặt học tậpThời lượng, múi giờ & ngày học",
+        "Cài đặt AICấu hình nhà cung cấp AI",
+        "Đăng xuất"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "P\nProduct audit\n\nproduct-audit@test.invalid\n\nLặp lại ngắt quãng (SRS)\nTừ đến hạn: 0\nĐang học: 0\nThuần thục: 1\nTổng đang theo dõi: 1\nDự báo lịch ôn 7 ngày tới (theo ngày UTC)\nDữ liệu thực từ lịch SM-2\n0\nCN\n0\nTh2\n0\nTh3\n0\nTh4\n0\nTh5\n0\nTh6\n0\nTh7\nLặp lại ngắt quãng\n1 từ theo dõi\nThiết lập học tập & AI\n\nQuản lý mục tiêu thời gian hàng ngày, lịch học trong tuần và cấu hình khóa API AI.\n\nCài đặt học tập\nThời lượng, múi giờ & ngày học\nCài đặt AI\nCấu hình nhà cung cấp AI\nTÀI KHOẢN\nĐăng xuất"
+    },
+    {
+      "name": "mistakes",
+      "route": "/mistakes",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1000,
+      "headings": [
+        "Sổ lỗi cá nhân",
+        "Sổ lỗi hiện đang trống!"
+      ],
+      "buttons": [
+        "Về màn Hôm nay",
+        "Cần ôn ngay",
+        "Đang theo dõi0",
+        "Đã ôn đạt0",
+        "Tất cả0",
+        "Đến kế hoạch hôm nay"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "HỆ THỐNG GHI NHỚ CHỦ ĐỘNG\nSổ lỗi cá nhân\nVề màn Hôm nay\n\nTự động thu thập các câu trắc nghiệm bạn trả lời sai trong bài học V2. Ôn tập theo chu kỳ ngắt quãng (Spaced Repetition) và đạt 2 lần trả lời đúng liên tiếp không cần trợ giúp (cách nhau tối thiểu 24 giờ) để giải quyết hoàn toàn mục lỗi.\n\nCẦN ÔN NGAY\n0\nĐANG RÈN LUYỆN\n0\nĐÃ GIẢI QUYẾT\n0\nTỔNG SỐ CÂU\n0\nCần ôn ngay\nĐang theo dõi\n0\nĐã ôn đạt\n0\nTất cả\n0\nSổ lỗi hiện đang trống!\n\nMỗi khi bạn trả lời chưa chính xác trong bài học V2, câu hỏi sẽ được tự động lưu vào đây để bạn rèn luyện lại.\n\nĐến kế hoạch hôm nay"
+    },
+    {
+      "name": "progress",
+      "route": "/progress",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 2087,
+      "headings": [
+        "Tiến bộ & Lịch sử học tập",
+        "Độ bao phủ chương trình học (Programs)",
+        "Dữ liệu thực hành theo kỹ năng",
+        "Nhật ký hoạt động từng ngày (30 ngày)"
+      ],
+      "buttons": [
+        "Về màn Hôm nay",
+        "Tổng quan & Kỹ năng",
+        "Lịch sử các phiên học",
+        "7 ngày",
+        "14 ngày",
+        "30 ngày",
+        "90 ngày",
+        "Xem danh mục bài",
+        "Mở Sổ lỗi",
+        "Thư viện nghe"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "THEO DÕI DỮ LIỆU THỰC TẾ\nTiến bộ & Lịch sử học tập\nVề màn Hôm nay\n\nHệ thống ghi nhận minh bạch dựa trên bài nộp và lượt ôn thực tế của bạn trong các bài học V2. Không suy đoán điểm số giả lập, không làm tròn ảo.\n\nTổng quan & Kỹ năng\nLịch sử các phiên học\nKhung thời gian phân tích:\n(2026-09-26 đến 2026-10-25)\n7 ngày\n14 ngày\n30 ngày\n90 ngày\nBÀI HỌC ĐÃ HOÀN TẤT\n0\n\ntrên tổng số bài V2 đã phát hành\n\nLƯỢT NỘP TRONG KỲ (30D)\n0\n\nlần nộp các nhiệm vụ bài học\n\nLƯỢT ÔN SỔ LỖI\n0\n\n0 lượt đúng độc lập\n\nNGÀY LUYỆN TẬP THỰC TẾ\n0\n/ 30\n\nngày có nộp bài hoặc ôn lỗi\n\nNhận xét định tính AI trong kỳ: 0 lượt nhận xét (0 bài viết, 0 bản chép lời nói)\nNhận xét định tính không cộng vào tỷ lệ câu đúng\nĐộ bao phủ chương trình học (Programs)\nXem danh mục bài\nNỀN TẢNG\nNền tảng tiếng Anh\n0 / 18 bài\nHoàn thành bài học\n0%\nCHUYÊN NGÀNH IT\nEnglish for IT/System\n0 / 9 bài\nHoàn thành bài học\n0%\nDữ liệu thực hành theo kỹ năng\n\nPhản ánh chính xác số câu đã nộp trong khung 30 ngày. Các kỹ năng tự luyện không suy diễn điểm số khi chưa có đánh giá tự động.\n\nNghe\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNgữ pháp\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nTừ/cụm trong ngữ cảnh\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nPhát âm\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNói\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nViết\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nĐọc hiểu\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNhật ký hoạt động từng ngày (30 ngày)\n\nTính theo ngày địa phương (Asia/Ho_Chi_Minh). Bao gồm bài học và ôn Sổ lỗi.\n\nBài học\nÔn câu sai\n26-09\n01-10\n06-10\n11-10\n16-10\n21-10\n25-10\nSỔ LỖI & ÔN TẬP NGẮT QUÃNG\nHiện có 0 câu đến hạn • 0 câu đang theo dõi\nMở Sổ lỗi\nLUYỆN NGHE TỪNG CÂU & SHADOWING (TỰ LUYỆN)\nSelf-reported\nĐã luyện 0 câu • 0 lượt nhắc lại • 0 phiên hoàn tất\n\nHọc liệu WAV từng câu chất lượng cao, hỗ trợ lặp và thu âm đối chiếu.\n\nThư viện nghe\nCam kết tính minh bạch của số liệu OpenQuiz:\nSố liệu này tính các bài trong lộ trình mới và lượt ôn Sổ lỗi; chưa gồm mọi công cụ luyện tập khác.\nTỷ lệ đúng chỉ phản ánh những câu đã làm, không phải trình độ tiếng Anh tổng thể.\nNói và viết có thể nhận nhận xét AI riêng khi bạn yêu cầu; nhận xét này không tạo điểm chuẩn hóa hoặc đánh giá phát âm.\nChưa đo thời gian học thực tế hoặc ước tính trình độ, điểm chứng chỉ."
+    },
+    {
+      "name": "listening",
+      "route": "/listening",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 3895,
+      "headings": [
+        "Luyện nghe câu & Nói đuổi (Shadowing)",
+        "Giới thiệu bản thân",
+        "Giờ giấc và lịch học",
+        "Nhờ giúp đỡ và nói điều chưa làm được",
+        "Một ngày học tập",
+        "Người, đồ vật và tính từ",
+        "Hỏi vị trí và mô tả nơi chốn",
+        "Hỏi và phủ định trong sinh hoạt",
+        "Ôn chặng đầu: giới thiệu và sinh hoạt",
+        "Kể việc đã làm hôm qua",
+        "Hỏi về một chuyến đi đã qua",
+        "Nói kế hoạch sắp tới",
+        "Nói việc đang diễn ra",
+        "Ôn chặng: hôm qua, bây giờ và ngày mai",
+        "Nói số lượng và đồ vật cần dùng",
+        "Hỏi tần suất và kể thói quen",
+        "Nhờ nói lại và làm rõ điều chưa hiểu",
+        "Hỏi đường và hướng dẫn đến nơi hẹn",
+        "Mời và xác nhận lịch hẹn",
+        "Giới thiệu việc học và hướng IT/System",
+        "Hướng dẫn thao tác với tệp",
+        "Hỏi và mô tả trạng thái dịch vụ",
+        "Báo sự cố và bàn giao ngắn",
+        "Mô tả máy tính và so sánh đơn giản",
+        "Đọc kết quả kiểm tra và báo điều chưa biết",
+        "Hỏi thông tin để làm rõ sự cố",
+        "Viết cập nhật và bàn giao qua email",
+        "Ôn chặng IT/System: kiểm tra và bàn giao"
+      ],
+      "buttons": [
+        "Trở về Luyện tập",
+        "Danh mục học liệu (27)",
+        "Lịch sử các phiên luyện tập",
+        "Học liệu cá nhân của tôiMới",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Trở về Luyện tập\nTHƯ VIỆN LUYỆN NGHE V2\n•\nNGHE TỪNG CÂU & SHADOWING\nLuyện nghe câu & Nói đuổi (Shadowing)\n\nMỗi bài học được chia thành các câu ngắn với file âm thanh WAV chuẩn riêng biệt. Bạn có thể nghe lặp lại nhiều lần hoặc bật chế độ nói đuổi (shadowing) để rèn phản xạ phát âm.\n\nDanh mục học liệu (27)\nLịch sử các phiên luyện tập\nHọc liệu cá nhân của tôi\nMới\nfoundation-introductions-01\nNền tảng\nv1\n5 câu\nGiới thiệu bản thân\n\n\"Hi, I'm Linh. I'm a university student. I live in Hanoi. I study in the morning. What about you?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-time-01\nNền tảng\nv1\n5 câu\nGiờ giấc và lịch học\n\n\"I study in the morning. My class starts at eight. I have lunch at twelve. I go home at five. What time does your class start?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-help-01\nNền tảng\nv1\n5 câu\nNhờ giúp đỡ và nói điều chưa làm được\n\n\"Can you help me, please? I cannot open this file. Please try again. It works now. Thank you for your help.\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-routine-01\nNền tảng\nv1\n6 câu\nMột ngày học tập\n\n\"I get up at seven. I have breakfast at home. I go to university at eight. After class, I study in the library. I go home at five. What do you do after class?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-people-things-01\nNền tảng\nv1\n6 câu\nNgười, đồ vật và tính từ\n\n\"This is my friend Anna. She is a student. Her bag is blue. This is her laptop. It is small, but it is useful. What is in your bag?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-places-01\nNền tảng\nv1\n5 câu\nHỏi vị trí và mô tả nơi chốn\n\n\"Where is the library? It is next to the classroom. My bag is under the desk. My phone is on the desk. Can you show me the library, please?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-questions-01\nNền tảng\nv1\n7 câu\nHỏi và phủ định trong sinh hoạt\n\n\"Do you study at night? Yes, I do. I study after dinner. I do not work on Sunday. Do you work on Sunday? No, I do not. I visit my family.\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-checkpoint-01\nNền tảng\nÔn chặng\nv1\n6 câu\nÔn chặng đầu: giới thiệu và sinh hoạt\n\n\"Hi, my name is Alex. I am a student. My class starts at nine. After class, I study in the library. My blue bag is under the desk. I do not study on Sunday.\"\n\nGiọng: Microsoft Dav"
+    },
+    {
+      "name": "set",
+      "route": "/study-set/163",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 2673,
+      "headings": [
+        "Tuyển dụng & việc làm",
+        "Danh sách từ"
+      ],
+      "buttons": [
+        "Thư viện của tôi",
+        "Về Thư viện",
+        "Lặp lại ngắt quãng",
+        null,
+        null,
+        "⋮",
+        "Kết hợpĐề xuất",
+        "Speaking",
+        "Hội thoại",
+        "Ngữ pháp",
+        "Đọc hiểu",
+        "Học",
+        "Test/Game",
+        "Nghe Chép",
+        "Tạo ví dụ AI cho các từ còn thiếu",
+        null,
+        null,
+        null,
+        null,
+        "Tiến độ",
+        "Thẻ trước",
+        "Thẻ tiếp theo",
+        null,
+        "Xem hướng dẫn cách học",
+        "Ẩn bớt",
+        "Nghe ví dụ cho apply",
+        "Dịch ví dụ cho apply",
+        "Tùy chọn ví dụ cho apply",
+        null,
+        null,
+        "Nghe ví dụ cho apply for",
+        "Dịch ví dụ cho apply for",
+        "Tùy chọn ví dụ cho apply for",
+        null,
+        null
+      ],
+      "unlabelled_buttons": 12,
+      "clipped": [],
+      "text": "Thư viện của tôi\nTuyển dụng & việc làm\nVề Thư viện\nLặp lại ngắt quãng\nTuyển dụng & việc làm\n12 từ\n•\nChưa học\n0/12 từ đã luyện · 0 đã nhớ\n⋮\nKết hợp\nĐề xuất\nSpeaking\nHội thoại\nNgữ pháp\nĐọc hiểu\nHọc\nTest/Game\nNghe Chép\nTạo ví dụ AI cho các từ còn thiếu\nMặt trước (Từ vựng)\napply\nverb - /əˈplaɪ/\nPhím tắt: ← → để chuyển thẻ • Space / Enter hoặc C lật thẻ\nTiến độ\nThẻ 1 / 12\nXem hướng dẫn cách học\nDanh sách từ\nẨn bớt\nThứ tự gốc\nTheo bảng chữ cái\nĐược đánh dấu sao trước\nChưa học trước\nĐang học trước\nĐã thành thạo trước\napply\nverb - /əˈplaɪ/\nnộp đơn, áp dụng\n\nYou should apply for the job before the deadline.\n\nVí dụ đã lưu\napply for\nverb - /əˈplaɪ fɔːr/\nứng tuyển vào\n\nHe decided to apply for a job at the new company.\n\nVí dụ đã lưu\napprentice\nnoun - /əˈprentɪs/\nngười học việc\n\nThe apprentice learned carpentry skills from his master.\n\nVí dụ đã lưu\nbackground\nnoun - /ˈbækɡraʊnd/\nlý lịch, nền tảng\n\nHer strong educational background made her stand out from other applicants.\n\nVí dụ đã lưu\ncandidate\nnoun - /ˈkændɪdət/\nứng viên, thí sinh\n\nEach candidate must submit their resume before Friday.\n\nVí dụ đã lưu\nexpert\nnoun, adjective - /ˈekspɜːrt/\nchuyên gia, chuyên viên\n\nThe company hired a technical expert to solve the system issue.\n\nVí dụ đã lưu\nhire\nverb, noun - /ˈhaɪər/\nthuê, mướn; nhân viên, người làm thuê\n\nThe company plans to hire more staff next month.\n\nVí dụ đã lưu\ninterview\nnoun, verb - /ˈɪntərvjuː/\nbuổi phỏng vấn; phỏng vấn\n\nI have a job interview tomorrow.\n\nVí dụ đã lưu\nprofession\nnoun - /prəˈfeʃn/\nchuyên môn, nghề nghiệp\n\nTeaching is a rewarding profession.\n\nVí dụ đã lưu\nprofile\nnoun - /ˈproʊfaɪl/\nlý lịch\n\nShe updated her profile today.\n\nVí dụ đã lưu\npromote\nverb - /prəˈməʊt/\nthăng chức; thúc đẩy hoạt động hoặc phát triển.\n\nThey plan to promote her next year.\n\nVí dụ đã lưu\nqualifications\nnoun - /ˌkwɑːlɪfɪˈkeɪʃənz/\ntrình độ, năng lực, bằng cấp\n\nThis job requires specific qualifications.\n\nVí dụ đã lưu"
+    },
+    {
+      "name": "lesson",
+      "route": "/lesson-run/b825c904-f0fc-4b93-af8d-117388b24200",
+      "width": 1440,
+      "document_width": 1440,
+      "viewport": 1440,
+      "height": 1000,
+      "headings": [
+        "Nghe ý chính"
+      ],
+      "buttons": [
+        "Thoát bài học",
+        "Nghe audio",
+        "0.75x",
+        "1x",
+        "Xem Transcript",
+        "Xem Bản dịch",
+        "Kiểm tra đáp án"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Thoát bài học\nBước 1 / 7\nNghe hiểu\nGiới thiệu bản thân\nNghe ý chính\nNghe audio\n0.75x\n1x\nXem Transcript\nXem Bản dịch\n\nWhere does Linh live?\n\nA\nHanoi\nB\nLondon\nNhấn Enter để kiểm tra\nKiểm tra đáp án"
+    },
+    {
+      "name": "home",
+      "route": "/",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 2626,
+      "headings": [
+        "Giới thiệu bản thân",
+        "Lộ trình đang học",
+        "Lộ trình A1-A2 tiếng Anh",
+        "Bộ từ đang học",
+        "Đọc hiểu nhưng không giao tiếp trôi chảy?",
+        "Lộ trình gợi ý",
+        "Bạn có nghiện Video Ngắn?",
+        "Cài đặt OpenLearn Extension"
+      ],
+      "buttons": [
+        "Tìm",
+        "Học theo kế hoạch →",
+        "Tự chọn bài luyện",
+        "Trải nghiệm ngay →",
+        "Tiếp tục học",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem bộ",
+        "Ôn lại →",
+        "Tiếp tục",
+        "English",
+        "Khác",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem tất cả",
+        "Xem ngay",
+        "Cài đặt Extension"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Tìm\nChọn cách học hôm nay: Học theo kế hoạch (bài học & ôn tập trong ngày) hoặc Tự chọn bài luyện theo bộ từ bên dưới.\nHọc theo kế hoạch →\nTự chọn bài luyện\n📢\nThử nghiệm tính năng AI Study Beta: luyện phát âm và giao tiếp trực tiếp với gia sư ảo OpenLearn AI!\nTrải nghiệm ngay →\nKẾ HOẠCH HỌC TẬP V2 HÔM NAY\nĐang học dở\nGiới thiệu bản thân\nTiếp tục học\nLộ trình đang học\nXem tất cả\nLộ trình A1-A2 tiếng Anh\n🇬🇧\n🇻🇳\n20 Bộ thẻ\nOpenLearn Team\n🌍\nBộ từ đang học\nXem tất cả\nAudit beginner set\nĐã thuộc\n1 từ • 1/1 từ đã luyện · 1 đã nhớ\nXem bộ\nÔn lại →\nAI\nĐọc hiểu nhưng không giao tiếp trôi chảy?\n\nHọc phát âm chuẩn cùng AI ngay qua phương pháp shadowing & phản xạ trực tiếp.\n\nTiếp tục\n🍎\nLộ trình gợi ý\nEnglish\nKhác\nNền tảng\nXem tất cả\nLộ trình A1-A2 tiếng Anh\n🇬🇧\n🇻🇳\n20 Bộ thẻ\n•\nOpenLearn Team\n🌙\nLộ trình làm chủ Chunking\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n💬\nTOEIC\nXem tất cả\n600 Essential words for the TOEIC Exam\n🇬🇧\n🇻🇳\n50 Bộ thẻ\n•\nOpenLearn Team\n🪐\nCông việc\nXem tất cả\nEnglish for Technical Work\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n⚙️\nEnglish for Business\n🇬🇧\n🇻🇳\n10 Bộ thẻ\n•\nOpenLearn Team\n💼\nBạn có nghiện Video Ngắn?\n\nNghiện nhưng lại muốn học tiếng Anh qua Video? Xem các đoạn cắt ngắn từ vựng đời sống.\n\nXem ngay\nCài đặt OpenLearn Extension\n\nTra cứu và bôi đen lưu từ vựng ngay khi lướt web trên trình duyệt Chrome/Edge.\n\nCài đặt Extension\n🌐\nTham gia Cộng đồng OpenLearn\nQuy chế hoạt động & Điều khoản"
+    },
+    {
+      "name": "today",
+      "route": "/today",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 1418,
+      "headings": [
+        "Kế hoạch học tập hôm nay",
+        "Nhiệm vụ hôm nay",
+        "Giới thiệu bản thân"
+      ],
+      "buttons": [
+        "Đổi cài đặt học",
+        "Tiếp tục học ngay",
+        "Tiếp tục học"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "CHỦ NHẬT, 25 THÁNG 10, 2026\nKế hoạch học tập hôm nay\n\nHệ thống đã chọn lọc nội dung thực tế phù hợp với thời gian và định hướng học tập của bạn.\n\nNgân sách:\n15 phút\nĐịnh hướng:\nNỀN TẢNG\nĐổi cài đặt học\nBÀI HỌC ĐANG LÀM DỞ\nBạn có một phiên học chưa hoàn thành\nTiếp tục học ngay\n*\nMọi thay đổi trong Cài đặt học tập sẽ được áp dụng cho kế hoạch của ngày tiếp theo (next_local_day).\nNhiệm vụ hôm nay\n1 nhiệm vụ\nBÀI HỌC TRỌNG TÂM\nĐang học dở\nGiới thiệu bản thân\nƯớc tính: 20 phút\n• Đa kỹ năng (Nghe, Từ vựng, Ngữ pháp, Nói, Viết)\nTiếp tục học\nTỰ CHỌN BỘ TỪ\nTrang chủ & Kho từ vựng\n\nDuyệt danh mục bộ từ, lộ trình chuyên ngành và khóa học.\n\nKHÁM PHÁ CHƯƠNG TRÌNH\nLộ trình của tôi\n\nXem toàn bộ các chặng Nền tảng và IT / System.\n\nRÈN LUYỆN KỸ NĂNG\nTrung tâm Luyện tập\n\nLuyện nghe chép, nói AI, ngữ pháp và đọc hiểu tự do."
+    },
+    {
+      "name": "program",
+      "route": "/my-program",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 6659,
+      "headings": [
+        "Lộ trình học tập của tôi",
+        "Nền tảng tiếng Anh",
+        "English for IT/System",
+        "Nền tảng tiếng Anh",
+        "Bài khởi động"
+      ],
+      "buttons": [
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu ôn chặng",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu ôn chặng",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay",
+        "Bắt đầu học ngay"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "CHƯƠNG TRÌNH CHUẨN HOÁ V2\n•\nBẢN THỬ NGHIỆM PILOT\nLộ trình học tập của tôi\n\nCác bài học được kết hợp đầy đủ các kỹ năng: Nghe hiểu, Từ vựng theo ngữ cảnh, Ngữ pháp câu, Phát âm và Tự luyện nói/viết.\n\nPILOT\nNỀN TẢNG\nNền tảng tiếng Anh\n\nNền tảng giao tiếp A1-B1: củng cố ngữ âm, đại từ, cấu trúc câu, từ vựng sinh hoạt.\n\n18 bài học mẫu\nĐang xem chương trình này\nPILOT\nCHUYÊN NGÀNH\nEnglish for IT/System\n\nDành cho sinh viên & kỹ sư IT: hệ thống, thao tác lệnh, báo lỗi ticket và cập nhật trạng thái.\n\n9 bài học mẫu\nBấm để xem\nNỘI DUNG CHI TIẾT\nNền tảng tiếng Anh\nPhiên bản v1\nBÀI KHỞI ĐỘNG\nMã bài: foundation-introductions-01\nBài học\nGiới thiệu bản thân\nMỤC TIÊU LÀM ĐƯỢC:\nNói và viết ba câu giới thiệu bản thân.\nPhân biệt I am và I study trong câu mẫu.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-time-01\nBài học\nGiờ giấc và lịch học\nMỤC TIÊU LÀM ĐƯỢC:\nNghe được một số mốc giờ trong lịch học.\nNói và viết về lịch của mình với at + giờ.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-help-01\nBài học\nNhờ giúp đỡ và nói điều chưa làm được\nMỤC TIÊU LÀM ĐƯỢC:\nHiểu lời nhờ giúp và mô tả một khó khăn đơn giản.\nDùng Can you…? và cannot + động từ nguyên mẫu.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-routine-01\nBài học\nMột ngày học tập\nMỤC TIÊU LÀM ĐƯỢC:\nNghe và đọc để lấy thông tin về một lịch sinh hoạt.\nNói và viết về các việc mình làm trong ngày bằng hiện tại đơn.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-people-things-01\nBài học\nNgười, đồ vật và tính từ\nMỤC TIÊU LÀM ĐƯỢC:\nNhận ra danh từ chỉ người/vật và tính từ trong câu đơn.\nGiới thiệu một người và mô tả một đồ vật.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-places-01\nBài học\nHỏi vị trí và mô tả nơi chốn\nMỤC TIÊU LÀM ĐƯỢC:\nNghe để tìm vị trí người/vật.\nDùng on, under, next to và Where is…? trong câu đơn.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-questions-01\nBài học\nHỏi và phủ định trong sinh hoạt\nMỤC TIÊU LÀM ĐƯỢC:\nHiểu Do you…? và câu trả lời ngắn.\nDùng I do not + động từ để nói việc không thường làm.\n20 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu học ngay\nMã bài: foundation-checkpoint-01\nÔn chặng\nÔn chặng đầu: giới thiệu và sinh hoạt\nMỤC TIÊU LÀM ĐƯỢC:\nTự nhớ lại mẫu câu đã học qua các tình huống mới.\nXác định nội dung cần ôn, không suy ra trình độ hoặc điểm chứng chỉ.\n25 phút\n• Âm thanh WAV thật lưu sẵn\nBắt đầu ôn chặng\nMã bài: foundation-yesterday-01\nBài học\nKể việc đã làm hôm qua\nMỤC TIÊU LÀM ĐƯỢC:\nNghe và đọc thông tin về một ngày đã qua.\nKể việc đã là"
+    },
+    {
+      "name": "library",
+      "route": "/my-created",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 844,
+      "headings": [
+        "Tủ sách học tập cá nhân",
+        "Audit beginner set"
+      ],
+      "buttons": [
+        "Tạo bộ thẻ mới",
+        "Bộ thẻ đã tạo (1)",
+        "Bộ thẻ đã lưu (0)",
+        "Lộ trình đã lưu (0)",
+        "Xem bộ",
+        "Ôn lại"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Tủ sách học tập cá nhân\n\nQuản lý các bộ thẻ từ vựng tự tạo và các nội dung bạn đã lưu\n\nTạo bộ thẻ mới\nBộ thẻ đã tạo (1)\nBộ thẻ đã lưu (0)\nLộ trình đã lưu (0)\nTừ vựng\nĐã thuộc\nAudit beginner set\n\nBộ từ vựng tiếng Anh cá nhân.\n\n1 từ • 1/1 từ đã luyện · 1 đã nhớ\nXem bộ\nÔn lại"
+    },
+    {
+      "name": "practice",
+      "route": "/practice",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 3696,
+      "headings": [
+        "Luyện tập theo kỹ năng & chế độ học",
+        "1. Học liệu nghe độc lập (Mở trực tiếp — không cần chọn bộ từ)",
+        "Nghe từng câu & Shadowing",
+        "Học liệu nghe cá nhân",
+        "2. Bài luyện theo bộ từ (Bước 1: Chọn chế độ học → Bước 2: Chọn bộ từ hoặc phạm vi ôn)",
+        "Học từ kết hợp",
+        "Học hai chiều (Anh ↔ Việt)",
+        "Luyện viết từ",
+        "Trắc nghiệm từ vựng",
+        "Nghe chép chính tả",
+        "Ghép thẻ phản xạ",
+        "Kiểm tra bộ từ",
+        "Ngữ pháp & Trật tự câu",
+        "Luyện nói & Nhận xét AI",
+        "Hội thoại tương tác AI",
+        "Đọc hiểu & Điền từ AI"
+      ],
+      "buttons": [
+        "Trở về Trang chủ",
+        "Tất cả",
+        "Ôn nhớ từ",
+        "Nghe – Phát âm",
+        "Nói – Viết",
+        "Ngữ pháp – Đọc hiểu",
+        "Phản xạ – Kiểm tra"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [
+        {
+          "text": "Nói – Viết",
+          "left": 337,
+          "right": 427
+        },
+        {
+          "text": "Ngữ pháp – Đọc hiểu",
+          "left": 435,
+          "right": 588
+        },
+        {
+          "text": "Phản xạ – Kiểm tra",
+          "left": 596,
+          "right": 735
+        }
+      ],
+      "text": "Trở về Trang chủ\nTRUNG TÂM KỸ NĂNG\n•\nLUYỆN TẬP CHỦ ĐỘNG\nLuyện tập theo kỹ năng & chế độ học\n\nChọn mở trực tiếp học liệu nghe độc lập hoặc chọn một chế độ bài luyện bên dưới rồi chọn bộ từ (từ thư viện hoặc danh sách Ôn đến hạn).\n\n1. Học liệu nghe độc lập (Mở trực tiếp — không cần chọn bộ từ)\n\nLuyện nghe từng câu có sẵn hoặc tải lên tệp âm thanh & phụ đề cá nhân của bạn.\n\nMở trực tiếp • Không gọi AI\nNghe từng câu & Shadowing\n\nNghe 50 câu riêng biệt với audio WAV thật, điều chỉnh tốc độ, tự thu âm và luyện nói đuổi trực tiếp.\n\nMở Nghe từng câu & Shadowing\nMở trực tiếp • Không gọi AI\nHọc liệu nghe cá nhân\n\nTải lên bài nghe riêng và phụ đề SRT/VTT từ máy tính, lưu vị trí nghe, tốc độ và lặp đoạn A–B.\n\nMở Học liệu nghe cá nhân\n2. Bài luyện theo bộ từ (Bước 1: Chọn chế độ học → Bước 2: Chọn bộ từ hoặc phạm vi ôn)\n\nNhóm Ôn nhớ từ cập nhật lịch ôn SRS. Nhóm Vận dụng & Kỹ năng giúp thực hành ngữ cảnh mà không tự thay đổi lịch SRS.\n\nTất cả\nÔn nhớ từ\nNghe – Phát âm\nNói – Viết\nNgữ pháp – Đọc hiểu\nPhản xạ – Kiểm tra\nKhông gọi AI\nCập nhật SRS\nHọc từ kết hợp\n\nKết hợp trắc nghiệm, tự luận và nghe gõ từ theo nhịp độ ghi nhớ của từng thẻ.\n\nChọn Học từ kết hợp\nKhông gọi AI\nCập nhật SRS\nHọc hai chiều (Anh ↔ Việt)\n\nRèn phản xạ nhớ nghĩa xuôi và nhớ từ ngược (Anh → Việt và Việt → Anh) trên cùng bộ từ.\n\nChọn Học hai chiều (Anh ↔ Việt)\nKhông gọi AI\nCập nhật SRS\nLuyện viết từ\n\nNhìn nghĩa tiếng Việt và gõ chính xác thuật ngữ tiếng Anh để củng cố trí nhớ chủ động.\n\nChọn Luyện viết từ\nKhông gọi AI\nCập nhật SRS\nTrắc nghiệm từ vựng\n\nChọn nhanh đáp án đúng trong 4 lựa chọn cho từng từ mục tiêu.\n\nChọn Trắc nghiệm từ vựng\nKhông gọi AI\nCập nhật SRS\nNghe chép chính tả\n\nNghe phát âm từ/câu và gõ lại chính xác để rèn độ nhạy ngữ âm.\n\nChọn Nghe chép chính tả\nKhông gọi AI\nCập nhật SRS\nGhép thẻ phản xạ\n\nNối nhanh từ vựng với nghĩa tiếng Việt tương ứng để tăng tốc độ nhận diện từ.\n\nChọn Ghép thẻ phản xạ\nKhông gọi AI\nCập nhật SRS\nKiểm tra bộ từ\n\nLàm bài kiểm tra bộ từ tổng hợp (trắc nghiệm kết hợp tự luận) để rà soát mức độ thuộc từ.\n\nChọn Kiểm tra bộ từ\nKhông gọi AI\nLuyện vận dụng\nNgữ pháp & Trật tự câu\n\nSắp xếp câu đúng cấu trúc ngữ pháp dựa trên câu ví dụ có sẵn của bộ từ.\n\nChọn Ngữ pháp & Trật tự câu\nDùng AI\nLuyện vận dụng\nLuyện nói & Nhận xét AI\n\nNghe mẫu TTS, luyện trả lời câu hỏi chứa từ vựng và nhận nhận xét từ AI.\n\nChọn Luyện nói & Nhận xét AI\nDùng AI\nLuyện vận dụng\nHội thoại tương tác AI\n\nĐóng vai và trò chuyện theo tình huống cụ thể bằng các từ vựng mục tiêu của bài.\n\nChọn Hội thoại tương tác AI\nDùng AI\nLuyện vận dụng\nĐọc hiểu & Điền từ AI\n\nĐọc đoạn văn ngữ cảnh do AI biên soạn theo y"
+    },
+    {
+      "name": "selector",
+      "route": "/practice/study_learn",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 16427,
+      "headings": [
+        "Học từ kết hợp",
+        "Chọn bộ từ để bắt đầu: Học từ kết hợp"
+      ],
+      "buttons": [
+        "Trở về chọn chế độ",
+        "Thư viện bộ từ (100)",
+        "Từ đến hạn ôn (SRS)",
+        "Từ đang theo dõi",
+        "Từ đã thành thạo"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Trở về chọn chế độ\n\nLuyện tập / Chọn bộ từ\n\nHọc từ kết hợp\n\nKết hợp trắc nghiệm, tự luận và nghe gõ từ theo nhịp độ ghi nhớ của từng thẻ.\n\nBƯỚC 2 • CHỌN NGUỒN TỪ VỰNG\nKhông gọi AI\nChọn bộ từ để bắt đầu: Học từ kết hợp\nThư viện bộ từ (100)\nTừ đến hạn ôn (SRS)\nTừ đang theo dõi\nTừ đã thành thạo\nTừ vựng\n1 từ\nĐã thuộc\nAudit beginner set\n\n1/1 từ đã luyện · 1 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nKết thúc cuộc hội thoại\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nNhắc lại và tóm tắt\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐề nghị và yêu cầu\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nThể hiện sự chắc chắn và nghi ngờ\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nXử lý khi không nhớ từ\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐặt câu hỏi gợi mở\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐồng ý và phản đối\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nĐưa ra lời giải thích\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nThể hiện quan điểm cá nhân\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n50 từ\nChưa học\nBắt đầu câu chuyện\n\n0/50 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 20\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 19\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 18\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 17\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 16\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 15\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 14\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 13\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 12\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssential Word Forms Part 11\n\n0/104 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n108 từ\nChưa học\nEssential Word Forms Part 10\n\n0/108 từ đã luyện · 0 đã nhớ\n\nBắt đầu Học từ kết hợp\nNền tảng\n104 từ\nChưa học\nEssen"
+    },
+    {
+      "name": "srs",
+      "route": "/repetition-study",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 1110,
+      "headings": [
+        "Product audit",
+        "Lặp lại ngắt quãng (SRS)",
+        "Thiết lập học tập & AI"
+      ],
+      "buttons": [
+        "Lặp lại ngắt quãng1 từ theo dõi",
+        "Cài đặt học tậpThời lượng, múi giờ & ngày học",
+        "Cài đặt AICấu hình nhà cung cấp AI",
+        "Đăng xuất"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "P\nProduct audit\n\nproduct-audit@test.invalid\n\nLặp lại ngắt quãng (SRS)\nTừ đến hạn: 0\nĐang học: 0\nThuần thục: 1\nTổng đang theo dõi: 1\nDự báo lịch ôn 7 ngày tới (theo ngày UTC)\nDữ liệu thực từ lịch SM-2\n0\nCN\n0\nTh2\n0\nTh3\n0\nTh4\n0\nTh5\n0\nTh6\n0\nTh7\nLặp lại ngắt quãng\n1 từ theo dõi\nThiết lập học tập & AI\n\nQuản lý mục tiêu thời gian hàng ngày, lịch học trong tuần và cấu hình khóa API AI.\n\nCài đặt học tập\nThời lượng, múi giờ & ngày học\nCài đặt AI\nCấu hình nhà cung cấp AI\nTÀI KHOẢN\nĐăng xuất"
+    },
+    {
+      "name": "mistakes",
+      "route": "/mistakes",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 1046,
+      "headings": [
+        "Sổ lỗi cá nhân",
+        "Sổ lỗi hiện đang trống!"
+      ],
+      "buttons": [
+        "Về màn Hôm nay",
+        "Cần ôn ngay",
+        "Đang theo dõi0",
+        "Đã ôn đạt0",
+        "Tất cả0",
+        "Đến kế hoạch hôm nay"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [
+        {
+          "text": "Đã ôn đạt0",
+          "left": 293,
+          "right": 410
+        },
+        {
+          "text": "Tất cả0",
+          "left": 418,
+          "right": 513
+        }
+      ],
+      "text": "HỆ THỐNG GHI NHỚ CHỦ ĐỘNG\nSổ lỗi cá nhân\nVề màn Hôm nay\n\nTự động thu thập các câu trắc nghiệm bạn trả lời sai trong bài học V2. Ôn tập theo chu kỳ ngắt quãng (Spaced Repetition) và đạt 2 lần trả lời đúng liên tiếp không cần trợ giúp (cách nhau tối thiểu 24 giờ) để giải quyết hoàn toàn mục lỗi.\n\nCẦN ÔN NGAY\n0\nĐANG RÈN LUYỆN\n0\nĐÃ GIẢI QUYẾT\n0\nTỔNG SỐ CÂU\n0\nCần ôn ngay\nĐang theo dõi\n0\nĐã ôn đạt\n0\nTất cả\n0\nSổ lỗi hiện đang trống!\n\nMỗi khi bạn trả lời chưa chính xác trong bài học V2, câu hỏi sẽ được tự động lưu vào đây để bạn rèn luyện lại.\n\nĐến kế hoạch hôm nay"
+    },
+    {
+      "name": "progress",
+      "route": "/progress",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 3488,
+      "headings": [
+        "Tiến bộ & Lịch sử học tập",
+        "Độ bao phủ chương trình học (Programs)",
+        "Dữ liệu thực hành theo kỹ năng",
+        "Nhật ký hoạt động từng ngày (30 ngày)"
+      ],
+      "buttons": [
+        "Về màn Hôm nay",
+        "Tổng quan & Kỹ năng",
+        "Lịch sử các phiên học",
+        "7 ngày",
+        "14 ngày",
+        "30 ngày",
+        "90 ngày",
+        "Xem danh mục bài",
+        "Mở Sổ lỗi",
+        "Thư viện nghe"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "THEO DÕI DỮ LIỆU THỰC TẾ\nTiến bộ & Lịch sử học tập\nVề màn Hôm nay\n\nHệ thống ghi nhận minh bạch dựa trên bài nộp và lượt ôn thực tế của bạn trong các bài học V2. Không suy đoán điểm số giả lập, không làm tròn ảo.\n\nTổng quan & Kỹ năng\nLịch sử các phiên học\nKhung thời gian phân tích:\n(2026-09-26 đến 2026-10-25)\n7 ngày\n14 ngày\n30 ngày\n90 ngày\nBÀI HỌC ĐÃ HOÀN TẤT\n0\n\ntrên tổng số bài V2 đã phát hành\n\nLƯỢT NỘP TRONG KỲ (30D)\n0\n\nlần nộp các nhiệm vụ bài học\n\nLƯỢT ÔN SỔ LỖI\n0\n\n0 lượt đúng độc lập\n\nNGÀY LUYỆN TẬP THỰC TẾ\n0\n/ 30\n\nngày có nộp bài hoặc ôn lỗi\n\nNhận xét định tính AI trong kỳ: 0 lượt nhận xét (0 bài viết, 0 bản chép lời nói)\nNhận xét định tính không cộng vào tỷ lệ câu đúng\nĐộ bao phủ chương trình học (Programs)\nXem danh mục bài\nNỀN TẢNG\nNền tảng tiếng Anh\n0 / 18 bài\nHoàn thành bài học\n0%\nCHUYÊN NGÀNH IT\nEnglish for IT/System\n0 / 9 bài\nHoàn thành bài học\n0%\nDữ liệu thực hành theo kỹ năng\n\nPhản ánh chính xác số câu đã nộp trong khung 30 ngày. Các kỹ năng tự luyện không suy diễn điểm số khi chưa có đánh giá tự động.\n\nNghe\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNgữ pháp\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nTừ/cụm trong ngữ cảnh\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nPhát âm\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNói\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nViết\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nĐọc hiểu\nChưa đánh giá\n\nChưa có lượt đọc được chấm trong khoảng này.\n\nNhật ký hoạt động từng ngày (30 ngày)\n\nTính theo ngày địa phương (Asia/Ho_Chi_Minh). Bao gồm bài học và ôn Sổ lỗi.\n\nBài học\nÔn câu sai\n26-09\n01-10\n06-10\n11-10\n16-10\n21-10\n25-10\nSỔ LỖI & ÔN TẬP NGẮT QUÃNG\nHiện có 0 câu đến hạn • 0 câu đang theo dõi\nMở Sổ lỗi\nLUYỆN NGHE TỪNG CÂU & SHADOWING (TỰ LUYỆN)\nSelf-reported\nĐã luyện 0 câu • 0 lượt nhắc lại • 0 phiên hoàn tất\n\nHọc liệu WAV từng câu chất lượng cao, hỗ trợ lặp và thu âm đối chiếu.\n\nThư viện nghe\nCam kết tính minh bạch của số liệu OpenQuiz:\nSố liệu này tính các bài trong lộ trình mới và lượt ôn Sổ lỗi; chưa gồm mọi công cụ luyện tập khác.\nTỷ lệ đúng chỉ phản ánh những câu đã làm, không phải trình độ tiếng Anh tổng thể.\nNói và viết có thể nhận nhận xét AI riêng khi bạn yêu cầu; nhận xét này không tạo điểm chuẩn hóa hoặc đánh giá phát âm.\nChưa đo thời gian học thực tế hoặc ước tính trình độ, điểm chứng chỉ."
+    },
+    {
+      "name": "listening",
+      "route": "/listening",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 7836,
+      "headings": [
+        "Luyện nghe câu & Nói đuổi (Shadowing)",
+        "Giới thiệu bản thân",
+        "Giờ giấc và lịch học",
+        "Nhờ giúp đỡ và nói điều chưa làm được",
+        "Một ngày học tập",
+        "Người, đồ vật và tính từ",
+        "Hỏi vị trí và mô tả nơi chốn",
+        "Hỏi và phủ định trong sinh hoạt",
+        "Ôn chặng đầu: giới thiệu và sinh hoạt",
+        "Kể việc đã làm hôm qua",
+        "Hỏi về một chuyến đi đã qua",
+        "Nói kế hoạch sắp tới",
+        "Nói việc đang diễn ra",
+        "Ôn chặng: hôm qua, bây giờ và ngày mai",
+        "Nói số lượng và đồ vật cần dùng",
+        "Hỏi tần suất và kể thói quen",
+        "Nhờ nói lại và làm rõ điều chưa hiểu",
+        "Hỏi đường và hướng dẫn đến nơi hẹn",
+        "Mời và xác nhận lịch hẹn",
+        "Giới thiệu việc học và hướng IT/System",
+        "Hướng dẫn thao tác với tệp",
+        "Hỏi và mô tả trạng thái dịch vụ",
+        "Báo sự cố và bàn giao ngắn",
+        "Mô tả máy tính và so sánh đơn giản",
+        "Đọc kết quả kiểm tra và báo điều chưa biết",
+        "Hỏi thông tin để làm rõ sự cố",
+        "Viết cập nhật và bàn giao qua email",
+        "Ôn chặng IT/System: kiểm tra và bàn giao"
+      ],
+      "buttons": [
+        "Trở về Luyện tập",
+        "Danh mục học liệu (27)",
+        "Lịch sử các phiên luyện tập",
+        "Học liệu cá nhân của tôiMới",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này",
+        "Luyện bài này"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Trở về Luyện tập\nTHƯ VIỆN LUYỆN NGHE V2\n•\nNGHE TỪNG CÂU & SHADOWING\nLuyện nghe câu & Nói đuổi (Shadowing)\n\nMỗi bài học được chia thành các câu ngắn với file âm thanh WAV chuẩn riêng biệt. Bạn có thể nghe lặp lại nhiều lần hoặc bật chế độ nói đuổi (shadowing) để rèn phản xạ phát âm.\n\nDanh mục học liệu (27)\nLịch sử các phiên luyện tập\nHọc liệu cá nhân của tôi\nMới\nfoundation-introductions-01\nNền tảng\nv1\n5 câu\nGiới thiệu bản thân\n\n\"Hi, I'm Linh. I'm a university student. I live in Hanoi. I study in the morning. What about you?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-time-01\nNền tảng\nv1\n5 câu\nGiờ giấc và lịch học\n\n\"I study in the morning. My class starts at eight. I have lunch at twelve. I go home at five. What time does your class start?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-help-01\nNền tảng\nv1\n5 câu\nNhờ giúp đỡ và nói điều chưa làm được\n\n\"Can you help me, please? I cannot open this file. Please try again. It works now. Thank you for your help.\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-routine-01\nNền tảng\nv1\n6 câu\nMột ngày học tập\n\n\"I get up at seven. I have breakfast at home. I go to university at eight. After class, I study in the library. I go home at five. What do you do after class?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-people-things-01\nNền tảng\nv1\n6 câu\nNgười, đồ vật và tính từ\n\n\"This is my friend Anna. She is a student. Her bag is blue. This is her laptop. It is small, but it is useful. What is in your bag?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-places-01\nNền tảng\nv1\n5 câu\nHỏi vị trí và mô tả nơi chốn\n\n\"Where is the library? It is next to the classroom. My bag is under the desk. My phone is on the desk. Can you show me the library, please?\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-questions-01\nNền tảng\nv1\n7 câu\nHỏi và phủ định trong sinh hoạt\n\n\"Do you study at night? Yes, I do. I study after dinner. I do not work on Sunday. Do you work on Sunday? No, I do not. I visit my family.\"\n\nGiọng: Microsoft David Desktop\n•\nWAV câu riêng\nĐã có audio từng câu\nLuyện bài này\nfoundation-checkpoint-01\nNền tảng\nÔn chặng\nv1\n6 câu\nÔn chặng đầu: giới thiệu và sinh hoạt\n\n\"Hi, my name is Alex. I am a student. My class starts at nine. After class, I study in the library. My blue bag is under the desk. I do not study on Sunday.\"\n\nGiọng: Microsoft Dav"
+    },
+    {
+      "name": "set",
+      "route": "/study-set/163",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 3489,
+      "headings": [
+        "Tuyển dụng & việc làm",
+        "Danh sách từ"
+      ],
+      "buttons": [
+        "Thư viện của tôi",
+        "Về Thư viện",
+        "Lặp lại ngắt quãng",
+        null,
+        null,
+        "⋮",
+        "Kết hợpĐề xuất",
+        "Speaking",
+        "Hội thoại",
+        "Ngữ pháp",
+        "Đọc hiểu",
+        "Học",
+        "Test/Game",
+        "Nghe Chép",
+        "Tạo ví dụ AI cho các từ còn thiếu",
+        null,
+        null,
+        null,
+        null,
+        "Tiến độ",
+        "Thẻ trước",
+        "Thẻ tiếp theo",
+        null,
+        "Xem hướng dẫn cách học",
+        "Ẩn bớt",
+        "Nghe ví dụ cho apply",
+        "Dịch ví dụ cho apply",
+        "Tùy chọn ví dụ cho apply",
+        null,
+        null,
+        "Nghe ví dụ cho apply for",
+        "Dịch ví dụ cho apply for",
+        "Tùy chọn ví dụ cho apply for",
+        null,
+        null
+      ],
+      "unlabelled_buttons": 12,
+      "clipped": [],
+      "text": "Thư viện của tôi\nTuyển dụng & việc làm\nVề Thư viện\nLặp lại ngắt quãng\nTuyển dụng & việc làm\n12 từ\n•\nChưa học\n0/12 từ đã luyện · 0 đã nhớ\n⋮\nKết hợp\nĐề xuất\nSpeaking\nHội thoại\nNgữ pháp\nĐọc hiểu\nHọc\nTest/Game\nNghe Chép\nTạo ví dụ AI cho các từ còn thiếu\nMặt trước (Từ vựng)\napply\nverb - /əˈplaɪ/\nPhím tắt: ← → để chuyển thẻ • Space / Enter hoặc C lật thẻ\nTiến độ\nThẻ 1 / 12\nXem hướng dẫn cách học\nDanh sách từ\nẨn bớt\nThứ tự gốc\nTheo bảng chữ cái\nĐược đánh dấu sao trước\nChưa học trước\nĐang học trước\nĐã thành thạo trước\napply\nverb - /əˈplaɪ/\nnộp đơn, áp dụng\n\nYou should apply for the job before the deadline.\n\nVí dụ đã lưu\napply for\nverb - /əˈplaɪ fɔːr/\nứng tuyển vào\n\nHe decided to apply for a job at the new company.\n\nVí dụ đã lưu\napprentice\nnoun - /əˈprentɪs/\nngười học việc\n\nThe apprentice learned carpentry skills from his master.\n\nVí dụ đã lưu\nbackground\nnoun - /ˈbækɡraʊnd/\nlý lịch, nền tảng\n\nHer strong educational background made her stand out from other applicants.\n\nVí dụ đã lưu\ncandidate\nnoun - /ˈkændɪdət/\nứng viên, thí sinh\n\nEach candidate must submit their resume before Friday.\n\nVí dụ đã lưu\nexpert\nnoun, adjective - /ˈekspɜːrt/\nchuyên gia, chuyên viên\n\nThe company hired a technical expert to solve the system issue.\n\nVí dụ đã lưu\nhire\nverb, noun - /ˈhaɪər/\nthuê, mướn; nhân viên, người làm thuê\n\nThe company plans to hire more staff next month.\n\nVí dụ đã lưu\ninterview\nnoun, verb - /ˈɪntərvjuː/\nbuổi phỏng vấn; phỏng vấn\n\nI have a job interview tomorrow.\n\nVí dụ đã lưu\nprofession\nnoun - /prəˈfeʃn/\nchuyên môn, nghề nghiệp\n\nTeaching is a rewarding profession.\n\nVí dụ đã lưu\nprofile\nnoun - /ˈproʊfaɪl/\nlý lịch\n\nShe updated her profile today.\n\nVí dụ đã lưu\npromote\nverb - /prəˈməʊt/\nthăng chức; thúc đẩy hoạt động hoặc phát triển.\n\nThey plan to promote her next year.\n\nVí dụ đã lưu\nqualifications\nnoun - /ˌkwɑːlɪfɪˈkeɪʃənz/\ntrình độ, năng lực, bằng cấp\n\nThis job requires specific qualifications.\n\nVí dụ đã lưu"
+    },
+    {
+      "name": "lesson",
+      "route": "/lesson-run/b825c904-f0fc-4b93-af8d-117388b24200",
+      "width": 390,
+      "document_width": 390,
+      "viewport": 390,
+      "height": 866,
+      "headings": [
+        "Nghe ý chính"
+      ],
+      "buttons": [
+        "Thoát bài học",
+        "Nghe audio",
+        "0.75x",
+        "1x",
+        "Xem Transcript",
+        "Xem Bản dịch",
+        "Kiểm tra đáp án"
+      ],
+      "unlabelled_buttons": 0,
+      "clipped": [],
+      "text": "Thoát bài học\nBước 1 / 7\nNghe hiểu\nGiới thiệu bản thân\nNghe ý chính\nNghe audio\n0.75x\n1x\nXem Transcript\nXem Bản dịch\n\nWhere does Linh live?\n\nA\nHanoi\nB\nLondon\nKiểm tra đáp án"
+    }
+  ],
+  "backend": {
+    "plan_budget": {
+      "requested_before": 15,
+      "requested_after": 45,
+      "returned_before": 15,
+      "returned_after": 15,
+      "items": [
+        {
+          "id": "lesson",
+          "kind": "lesson",
+          "lesson_id": "foundation-introductions-01",
+          "content_version": 1,
+          "title": "Giới thiệu bản thân",
+          "estimated_minutes": 20,
+          "session_id": null,
+          "route": null,
+          "status": "ready"
+        }
+      ],
+      "changes_apply": "next_local_day"
+    },
+    "same_day_reviews": [
+      {
+        "correct": true,
+        "progress": {
+          "ease": 2.5,
+          "repetitions": 1,
+          "interval_days": 1,
+          "status": "learning",
+          "due_at": "2026-10-26T14:44:22.514Z",
+          "last_reviewed_at": "2026-10-25T14:44:22.514Z"
+        }
+      },
+      {
+        "correct": true,
+        "progress": {
+          "ease": 2.5,
+          "repetitions": 2,
+          "interval_days": 6,
+          "status": "learning",
+          "due_at": "2026-10-31T14:44:22.567Z",
+          "last_reviewed_at": "2026-10-25T14:44:22.567Z"
+        }
+      },
+      {
+        "correct": true,
+        "progress": {
+          "ease": 2.5,
+          "repetitions": 3,
+          "interval_days": 15,
+          "status": "mastered",
+          "due_at": "2026-11-09T14:44:22.580Z",
+          "last_reviewed_at": "2026-10-25T14:44:22.580Z"
+        }
+      }
+    ],
+    "srs_after_study": {
+      "due": 0,
+      "learning": 0,
+      "mastered": 1,
+      "tracked": 1,
+      "memory_levels": [
+        {
+          "level": 0,
+          "label": "Chưa nhớ",
+          "count": 0
+        },
+        {
+          "level": 1,
+          "label": "Cần học",
+          "count": 0
+        },
+        {
+          "level": 2,
+          "label": "Hay quên",
+          "count": 0
+        },
+        {
+          "level": 3,
+          "label": "Nhớ tạm",
+          "count": 0
+        },
+        {
+          "level": 4,
+          "label": "Nhớ sâu",
+          "count": 1
+        }
+      ],
+      "forecast": [
+        {
+          "date": "2026-10-25",
+          "count": 0
+        },
+        {
+          "date": "2026-10-26",
+          "count": 0
+        },
+        {
+          "date": "2026-10-27",
+          "count": 0
+        },
+        {
+          "date": "2026-10-28",
+          "count": 0
+        },
+        {
+          "date": "2026-10-29",
+          "count": 0
+        },
+        {
+          "date": "2026-10-30",
+          "count": 0
+        },
+        {
+          "date": "2026-10-31",
+          "count": 0
+        },
+        {
+          "date": "2026-11-01",
+          "count": 0
+        },
+        {
+          "date": "2026-11-02",
+          "count": 0
+        },
+        {
+          "date": "2026-11-03",
+          "count": 0
+        },
+        {
+          "date": "2026-11-04",
+          "count": 0
+        },
+        {
+          "date": "2026-11-05",
+          "count": 0
+        },
+        {
+          "date": "2026-11-06",
+          "count": 0
+        },
+        {
+          "date": "2026-11-07",
+          "count": 0
+        }
+      ]
+    },
+    "v2_progress_after_study": {
+      "scope": "learning_v2",
+      "timezone": "Asia/Ho_Chi_Minh",
+      "generated_at": "2026-10-25T14:44:22.588Z",
+      "window": {
+        "days": 30,
+        "from_local_date": "2026-09-26",
+        "to_local_date": "2026-10-25"
+      },
+      "lifetime": {
+        "sessions_started": 0,
+        "active_sessions": 0,
+        "completed_sessions": 0,
+        "unique_lessons_completed": 0
+      },
+      "programs": [
+        {
+          "id": "english-foundation",
+          "title": "Nền tảng tiếng Anh",
+          "kind": "foundation",
+          "status": "pilot",
+          "published_lessons": 18,
+          "completed_lessons": 0,
+          "completion_percent": 0
+        },
+        {
+          "id": "english-it-system",
+          "title": "English for IT/System",
+          "kind": "specialist",
+          "status": "pilot",
+          "published_lessons": 9,
+          "completed_lessons": 0,
+          "completion_percent": 0
+        }
+      ],
+      "skills": [
+        {
+          "key": "listening",
+          "label": "Nghe",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "grammar",
+          "label": "Ngữ pháp",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "vocabulary",
+          "label": "Từ/cụm trong ngữ cảnh",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "pronunciation",
+          "label": "Phát âm",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "speaking",
+          "label": "Nói",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "writing",
+          "label": "Viết",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        },
+        {
+          "key": "reading",
+          "label": "Đọc hiểu",
+          "submitted_tasks": 0,
+          "distinct_tasks": 0,
+          "graded_tasks": 0,
+          "correct": 0,
+          "unassisted_graded": 0,
+          "unassisted_correct": 0,
+          "assisted_graded": 0,
+          "assisted_correct": 0,
+          "unknown_support": 0,
+          "self_review_tasks": 0,
+          "last_practised_at": null,
+          "accuracy_percent": null,
+          "unassisted_accuracy_percent": null,
+          "ai_feedback_count": 0,
+          "ai_audio_review_count": 0,
+          "evidence_status": "not_assessed"
+        }
+      ],
+      "window_activity": {
+        "lesson_submissions": 0,
+        "mistake_reviews": 0,
+        "active_days": 0
+      },
+      "daily_activity": [
+        {
+          "date": "2026-09-26",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-09-27",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-09-28",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-09-29",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-09-30",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-01",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-02",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-03",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-04",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-05",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-06",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-07",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-08",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-09",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-10",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-11",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-12",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-13",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-14",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-15",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-16",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-17",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-18",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-19",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-20",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-21",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-22",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-23",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-24",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        },
+        {
+          "date": "2026-10-25",
+          "lesson_submissions": 0,
+          "mistake_reviews": 0
+        }
+      ],
+      "review_practice": {
+        "submitted": 0,
+        "correct": 0,
+        "unassisted_correct": 0
+      },
+      "mistakes": {
+        "total": 0,
+        "active_count": 0,
+        "resolved_count": 0,
+        "due_count": 0,
+        "route": "/mistakes"
+      },
+      "ai_feedback": {
+        "reviews_created": 0,
+        "writing": 0,
+        "speaking_transcript": 0,
+        "last_created_at": null
+      },
+      "audio_feedback": {
+        "reviews_created": 0,
+        "last_created_at": null,
+        "assessment_scope": "qualitative_audio_feedback",
+        "pronunciation_score": null
+      },
+      "listening_practice": {
+        "sessions_started": 0,
+        "completed_sessions": 0,
+        "active_sessions": 0,
+        "practised_sentences": 0,
+        "skipped_sentences": 0,
+        "repetitions_self_reported": 0,
+        "last_practised_at": null,
+        "resume_session_id": null,
+        "resume_route": null,
+        "route": "/listening",
+        "assessment": "self_reported",
+        "listening_accuracy": null,
+        "pronunciation_score": null
+      },
+      "limitations": [
+        "Số liệu này tính các bài trong lộ trình mới và lượt ôn Sổ lỗi; chưa gồm mọi công cụ luyện tập khác.",
+        "Tỷ lệ đúng chỉ phản ánh những câu đã làm, không phải trình độ tiếng Anh tổng thể.",
+        "Nói và viết có thể nhận nhận xét AI riêng khi bạn yêu cầu; nhận xét này không tạo điểm chuẩn hóa hoặc đánh giá phát âm.",
+        "Chưa đo thời gian học thực tế hoặc ước tính trình độ, điểm chứng chỉ."
+      ]
+    },
+    "word_columns": [
+      "id",
+      "set_id",
+      "term",
+      "definition",
+      "part_of_speech",
+      "phonetic",
+      "example",
+      "synonyms",
+      "image_url",
+      "position"
+    ],
+    "content": {
+      "total": 8364,
+      "with_example": 22,
+      "with_phonetic": 8272
+    },
+    "visible_content": {
+      "scope": "public visible sets after runtime prepared-example enrichment; no personal notes",
+      "sets": 180,
+      "words": 8363,
+      "examples": 81,
+      "translated_examples": 59,
+      "synonyms": 0
+    }
+  },
+  "page_errors": [],
+  "http_errors": [],
+  "completed": true
+}

@@ -50,9 +50,11 @@ import {
   SubtitleExportResponse
 } from '../api/client';
 import { useRouter } from '../context/RouterContext';
+import { parseNavigationContext } from '../utils/navigationContext';
 
 export const MaterialDetailView: React.FC = () => {
   const { path, navigate } = useRouter();
+  const parentRoute = parseNavigationContext(path).from || '/materials';
 
   // Extract material id from route /materials/:id
   const materialId = path.replace(/^\/materials\//, '').split('/')[0].split('?')[0];
@@ -923,7 +925,7 @@ export const MaterialDetailView: React.FC = () => {
         audioRef.current.pause();
         audioRef.current.src = '';
       }
-      navigate('/materials');
+      navigate(parentRoute);
     } catch (err: any) {
       alert(err?.message || 'Không thể xóa học liệu này');
       setIsDeleting(false);
@@ -965,7 +967,7 @@ export const MaterialDetailView: React.FC = () => {
         </div>
         <button
           type="button"
-          onClick={() => navigate('/materials')}
+          onClick={() => navigate(parentRoute)}
           className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-xs font-bold transition"
         >
           Quay lại danh sách
@@ -985,7 +987,7 @@ export const MaterialDetailView: React.FC = () => {
         <div className="space-y-1.5">
           <button
             type="button"
-            onClick={() => navigate('/materials')}
+            onClick={() => navigate(parentRoute)}
             className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition"
           >
             <ArrowLeft className="w-4 h-4" />

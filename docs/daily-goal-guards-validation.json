@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-26",
+  "checks": [
+    "Failed daily start shows error without silently starting a different generic lesson",
+    "Forged target_cursor=0 cannot claim daily completion before any work",
+    "A mismatched plan item offers recovery instead of a false completion",
+    "Real completed daily goal is confirmed using the server target, ignoring stale URL value"
+  ],
+  "page_errors": [],
+  "passed": true
+}

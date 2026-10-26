@@ -30,7 +30,7 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
   const isOnStudySetPage = currentPathname.startsWith('/study-set/');
 
   // Determine root origin
-  let rootLabel = 'Thư viện của tôi';
+  let rootLabel = 'Thư viện';
   let rootRoute = '/my-created';
   let backButtonLabel = isOnStudySetPage ? 'Về Thư viện' : 'Quay lại bộ từ';
   let backButtonRoute = isOnStudySetPage
@@ -49,13 +49,15 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
     ctx.source === 'path' ||
     ctx.pathId !== null ||
     (ctx.from !== null && ctx.from.startsWith('/learning-path/'));
+  const isFromExplore =
+    ctx.source === 'explore' ||
+    (ctx.from !== null && ctx.from.startsWith('/explore'));
   const isFromHome =
     ctx.source === 'home' ||
-    ctx.source === 'category' ||
-    ctx.from === '/' ||
-    (ctx.from !== null && ctx.from.startsWith('/category/'));
+    ctx.from?.split('?')[0] === '/';
   const isFromToday =
-    ctx.source === 'today' || (ctx.from !== null && ctx.from.startsWith('/today'));
+    ctx.source === 'today' ||
+    (ctx.from !== null && ctx.from.startsWith('/today'));
   const isFromProgram =
     ctx.source === 'program' || (ctx.from !== null && ctx.from.startsWith('/my-program'));
 
@@ -70,17 +72,29 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
   if (isFromPractice) {
     rootLabel = 'Luyện tập';
     rootRoute = sanitizeInternalPath(ctx.from, defaultPracticeRoute);
-    backButtonLabel = 'Về Luyện tập';
+    backButtonLabel = rootRoute.startsWith('/practice/')
+      ? 'Trở về chọn bộ từ' : 'Về Luyện tập';
     backButtonRoute = rootRoute;
   } else if (isFromSrs) {
     rootLabel = 'Ôn đến hạn';
     rootRoute = sanitizeInternalPath(ctx.from, '/repetition-study');
     backButtonLabel = 'Về Ôn đến hạn';
     backButtonRoute = rootRoute;
+  } else if (isFromExplore) {
+    rootLabel = 'Trang chủ';
+    rootRoute = sanitizeInternalPath(ctx.from, '/explore');
+    backButtonLabel = isOnStudySetPage ? 'Về Trang chủ' : 'Về bộ từ';
+    backButtonRoute = isOnStudySetPage
+      ? rootRoute
+      : setId
+        ? withNavigationContext(`/study-set/${setId}`, ctx)
+        : rootRoute;
   } else if (isFromPath) {
-    const pathRoute = ctx.pathId
+    const pathRoute = ctx.from?.startsWith('/learning-path/')
+      ? sanitizeInternalPath(ctx.from, '/explore')
+      : ctx.pathId
       ? `/learning-path/${ctx.pathId}`
-      : sanitizeInternalPath(ctx.from, '/');
+      : sanitizeInternalPath(ctx.from, '/explore');
     rootLabel = ctx.pathTitle || 'Lộ trình học';
     rootRoute = pathRoute;
     if (isOnStudySetPage) {
@@ -99,28 +113,19 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
       backButtonLabel = 'Về lộ trình';
       backButtonRoute = pathRoute;
     }
-  } else if (isFromToday) {
-    rootLabel = 'Học hôm nay';
-    rootRoute = sanitizeInternalPath(ctx.from, '/today');
-    backButtonLabel = isOnStudySetPage ? 'Về Học hôm nay' : 'Về bộ từ';
+  } else if (isFromHome || isFromToday) {
+    rootLabel = isFromHome ? 'Trang chủ' : 'Học hôm nay';
+    rootRoute = sanitizeInternalPath(ctx.from, isFromHome ? '/' : '/today');
+    backButtonLabel = isOnStudySetPage ? `Về ${rootLabel}` : 'Về bộ từ';
     backButtonRoute = isOnStudySetPage
       ? rootRoute
       : setId
         ? withNavigationContext(`/study-set/${setId}`, ctx)
         : rootRoute;
   } else if (isFromProgram) {
-    rootLabel = 'Lộ trình của tôi';
+    rootLabel = 'Lộ trình';
     rootRoute = sanitizeInternalPath(ctx.from, '/my-program');
-    backButtonLabel = isOnStudySetPage ? 'Về Lộ trình của tôi' : 'Về bộ từ';
-    backButtonRoute = isOnStudySetPage
-      ? rootRoute
-      : setId
-        ? withNavigationContext(`/study-set/${setId}`, ctx)
-        : rootRoute;
-  } else if (isFromHome) {
-    rootLabel = 'Trang chủ';
-    rootRoute = sanitizeInternalPath(ctx.from, '/');
-    backButtonLabel = isOnStudySetPage ? 'Về Trang chủ' : 'Về bộ từ';
+    backButtonLabel = isOnStudySetPage ? 'Về Lộ trình' : 'Về bộ từ';
     backButtonRoute = isOnStudySetPage
       ? rootRoute
       : setId
@@ -143,7 +148,7 @@ export const LearningBreadcrumb: React.FC<LearningBreadcrumbProps> = ({
       rootLabel = 'Luyện tập';
       rootRoute = '/practice';
     } else {
-      rootLabel = 'Thư viện của tôi';
+      rootLabel = 'Thư viện';
       rootRoute = '/my-created';
     }
     backButtonLabel = isOnStudySetPage ? 'Về Thư viện' : 'Quay lại bộ từ';

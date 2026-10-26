@@ -138,15 +138,18 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     return activeSidebarRoute === route;
   };
 
-  const navItems = [
+  const mainNavItems = [
     { label: 'Trang chủ', route: '/', icon: Home },
     { label: 'Học hôm nay', route: '/today', icon: Calendar },
-    { label: 'Lộ trình của tôi', route: '/my-program', icon: GraduationCap },
-    { label: 'Thư viện của tôi', route: '/my-created', icon: FolderHeart },
+    { label: 'Lộ trình', route: '/my-program', icon: GraduationCap },
+    { label: 'Thư viện', route: '/my-created', icon: FolderHeart },
     { label: 'Luyện tập', route: '/practice', icon: Layers },
+    { label: 'Tiến độ', route: '/progress', icon: TrendingUp },
+  ];
+
+  const reviewShortcuts = [
     { label: 'Ôn đến hạn', route: '/repetition-study', icon: Repeat, badge: dueCount > 0 ? dueCount : undefined },
     { label: 'Sổ lỗi', route: '/mistakes', icon: BookX, badge: mistakesDueCount > 0 ? mistakesDueCount : undefined },
-    { label: 'Tiến độ', route: '/progress', icon: TrendingUp },
   ];
 
   const secondaryItems = [
@@ -168,27 +171,24 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col md:flex-row antialiased font-sans">
       {/* Mobile Header Bar */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
-        <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigate('/')}>
+        <a
+          href="/"
+          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          className="flex items-center gap-2.5 cursor-pointer"
+        >
           <img src="/logo.svg" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
           <span className="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">OpenLearn</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => navigate('/')}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${
-              isRouteActive('/') ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            Trang chủ
-          </button>
-          <button
-            onClick={() => navigate('/today')}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${
+        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href="/today"
+            onClick={(e) => { e.preventDefault(); navigate('/today'); }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
               isRouteActive('/today') ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Học hôm nay
-          </button>
+          </a>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Mở menu điều hướng"
@@ -206,11 +206,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           <aside className="relative w-72 max-w-[80vw] bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col z-10 border-r border-slate-200 dark:border-slate-800">
             {/* Header */}
             <div className="p-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { navigate('/'); setMobileMenuOpen(false); }}>
+              <a
+                href="/"
+                onClick={(e) => { e.preventDefault(); navigate('/'); setMobileMenuOpen(false); }}
+                className="flex items-center gap-2.5 cursor-pointer"
+              >
                 <img src="/logo.svg" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
                 <span className="font-black text-lg text-slate-900 dark:text-white">OpenLearn</span>
-              </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+              </a>
+              <button onClick={() => setMobileMenuOpen(false)} aria-label="Đóng menu" className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -219,13 +223,38 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div className="space-y-1">
                 <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Menu chính</div>
-                {navItems.map((item) => {
+                {mainNavItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = isRouteActive(item.route);
                   return (
-                    <button
+                    <a
                       key={item.route}
-                      onClick={() => { navigate(item.route); setMobileMenuOpen(false); }}
+                      href={item.route}
+                      onClick={(e) => { e.preventDefault(); navigate(item.route); setMobileMenuOpen(false); }}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
+                        isActive ? 'bg-slate-900 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+
+              <div className="space-y-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Ôn tập</div>
+                {reviewShortcuts.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = isRouteActive(item.route);
+                  return (
+                    <a
+                      key={item.route}
+                      href={item.route}
+                      onClick={(e) => { e.preventDefault(); navigate(item.route); setMobileMenuOpen(false); }}
                       aria-current={isActive ? 'page' : undefined}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
                         isActive ? 'bg-slate-900 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -240,7 +269,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                           {item.badge}
                         </span>
                       )}
-                    </button>
+                    </a>
                   );
                 })}
               </div>
@@ -270,16 +299,17 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   const Icon = item.icon;
                   const isActive = isRouteActive(item.route);
                   return (
-                    <button
+                    <a
                       key={item.route}
-                      onClick={() => { navigate(item.route); setMobileMenuOpen(false); }}
+                      href={item.route}
+                      onClick={(e) => { e.preventDefault(); navigate(item.route); setMobileMenuOpen(false); }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
                         isActive ? 'bg-slate-900 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                       <span>{item.label}</span>
-                    </button>
+                    </a>
                   );
                 })}
               </div>
@@ -290,16 +320,17 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   const Icon = item.icon;
                   const isActive = isRouteActive(item.route);
                   return (
-                    <button
+                    <a
                       key={item.route}
-                      onClick={() => { navigate(item.route); setMobileMenuOpen(false); }}
+                      href={item.route}
+                      onClick={(e) => { e.preventDefault(); navigate(item.route); setMobileMenuOpen(false); }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
                         isActive ? 'bg-slate-900 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                       <span>{item.label}</span>
-                    </button>
+                    </a>
                   );
                 })}
               </div>
@@ -334,9 +365,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <div className={`flex flex-col gap-4 overflow-y-auto min-h-0 flex-1 ${sidebarExpanded ? 'pr-1' : 'items-center'}`}>
           {/* Logo & Toggle Header */}
           <div className={`flex items-center ${sidebarExpanded ? 'justify-between px-1' : 'justify-center flex-col gap-2'}`}>
-            <div
-              onClick={() => navigate('/')}
-              title="OpenLearn Trang chủ"
+            <a
+              href="/"
+              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              title="OpenLearn - Trang chủ"
               className="flex items-center gap-3 cursor-pointer group"
             >
               <img
@@ -354,7 +386,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   </div>
                 </div>
               )}
-            </div>
+            </a>
 
             {/* Collapse/Expand Toggle Button */}
             <button
@@ -370,17 +402,73 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </button>
           </div>
 
-          {/* Main Navigation Items */}
-          <div className="space-y-1">
-            {navItems.map((item) => {
+          {/* Main Navigation Items (5 items) */}
+          <nav className="space-y-1" aria-label="Menu chính">
+            {mainNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = isRouteActive(item.route);
 
               if (!sidebarExpanded) {
                 return (
-                  <button
+                  <a
                     key={item.route}
-                    onClick={() => navigate(item.route)}
+                    href={item.route}
+                    onClick={(e) => { e.preventDefault(); navigate(item.route); }}
+                    title={item.label}
+                    aria-label={item.label}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`w-16 py-2 px-1 rounded-2xl flex flex-col items-center justify-center gap-1 relative transition-all ${
+                      isActive
+                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 stroke-[2]" />
+                    <span className="text-[9px] font-bold leading-tight text-center truncate w-full">
+                      {item.label}
+                    </span>
+                  </a>
+                );
+              }
+
+              return (
+                <a
+                  key={item.route}
+                  href={item.route}
+                  onClick={(e) => { e.preventDefault(); navigate(item.route); }}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
+                    isActive
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-3.5">
+                    <Icon className={`w-4 h-4 stroke-[2.2] ${isActive ? 'text-white dark:text-slate-900' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Review Shortcuts (Ôn đến hạn & Sổ lỗi) */}
+          <div className="space-y-1 pt-1" role="region" aria-label="Lối tắt ôn tập">
+            {sidebarExpanded && (
+              <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Ôn tập
+              </div>
+            )}
+            {reviewShortcuts.map((item) => {
+              const Icon = item.icon;
+              const isActive = isRouteActive(item.route);
+
+              if (!sidebarExpanded) {
+                return (
+                  <a
+                    key={item.route}
+                    href={item.route}
+                    onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                     title={item.label}
                     aria-label={item.label}
                     aria-current={isActive ? 'page' : undefined}
@@ -399,14 +487,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                         {item.badge}
                       </span>
                     )}
-                  </button>
+                  </a>
                 );
               }
 
               return (
-                <button
+                <a
                   key={item.route}
-                  onClick={() => navigate(item.route)}
+                  href={item.route}
+                  onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                   aria-current={isActive ? 'page' : undefined}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
                     isActive
@@ -423,7 +512,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                       {item.badge}
                     </span>
                   )}
-                </button>
+                </a>
               );
             })}
           </div>
@@ -505,9 +594,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
               if (!sidebarExpanded) {
                 return (
-                  <button
+                  <a
                     key={item.route}
-                    onClick={() => navigate(item.route)}
+                    href={item.route}
+                    onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                     title={item.label}
                     className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${
                       isActive
@@ -516,14 +606,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     }`}
                   >
                     <Icon className="w-5 h-5 stroke-[2]" />
-                  </button>
+                  </a>
                 );
               }
 
               return (
-                <button
+                <a
                   key={item.route}
-                  onClick={() => navigate(item.route)}
+                  href={item.route}
+                  onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                   className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
                     isActive
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
@@ -532,7 +623,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 >
                   <Icon className={`w-4 h-4 stroke-[2.2] ${isActive ? 'text-white dark:text-slate-900' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
-                </button>
+                </a>
               );
             })}
           </div>
@@ -553,9 +644,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
               if (!sidebarExpanded) {
                 return (
-                  <button
+                  <a
                     key={item.route}
-                    onClick={() => navigate(item.route)}
+                    href={item.route}
+                    onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                     title={item.label}
                     className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${
                       isActive
@@ -564,14 +656,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     }`}
                   >
                     <Icon className="w-5 h-5 stroke-[2]" />
-                  </button>
+                  </a>
                 );
               }
 
               return (
-                <button
+                <a
                   key={item.route}
-                  onClick={() => navigate(item.route)}
+                  href={item.route}
+                  onClick={(e) => { e.preventDefault(); navigate(item.route); }}
                   className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl text-sm font-bold transition-all ${
                     isActive
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
@@ -580,7 +673,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 >
                   <Icon className={`w-4 h-4 stroke-[2.2] ${isActive ? 'text-white dark:text-slate-900' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
-                </button>
+                </a>
               );
             })}
           </div>
@@ -750,14 +843,28 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </main>
       </div>
 
-      {/* Floating Dictionary Button (Matching OpenQuiz screenshots 100%) */}
+      {/* Floating Dictionary Button (Safe offset on mobile study rooms to avoid overlapping bottom CTAs) */}
       <button
+        type="button"
+        data-testid="floating-dictionary-button"
         onClick={() => { setDictQuery(''); setDictOpen(true); }}
+        aria-label="Mở từ điển tra từ nhanh"
         title="Mở từ điển tra từ nhanh"
-        className="fixed bottom-6 right-6 z-40 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 px-4 py-2.5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center gap-2 font-bold text-xs md:text-sm group scale-100 hover:scale-105 active:scale-95"
+        className={`fixed z-40 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 p-2.5 sm:px-4 sm:py-2.5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center gap-2 font-bold text-xs md:text-sm group scale-100 hover:scale-105 active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+          path.startsWith('/lesson-run/') ||
+          path.startsWith('/study/') ||
+          path.startsWith('/comprehensive/') ||
+          path.startsWith('/reading/') ||
+          path.startsWith('/grammar/') ||
+          path.startsWith('/exam/') ||
+          path.startsWith('/dictation/') ||
+          path.startsWith('/listening/practice/')
+            ? 'bottom-24 md:bottom-6 right-4 md:right-6'
+            : 'bottom-6 right-4 md:right-6'
+        }`}
       >
         <span className="font-black text-indigo-400 dark:text-indigo-600 group-hover:translate-x-0.5 transition-transform">&gt;</span>
-        <span>Tra từ</span>
+        <span className="hidden sm:inline">Tra từ</span>
       </button>
 
       {/* Global Modals */}

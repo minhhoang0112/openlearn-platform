@@ -86,11 +86,14 @@ test('today plan is stable across reload/profile changes, respects local dates a
   for(const l of (await api('GET','/learning/programs/english-foundation')).data.units.flatMap(u=>u.lessons).filter(l=>l.id!=='foundation-introductions-01'))await complete(api,await start(api,l.id));
   instant=new Date('2026-10-21T18:00:00Z');
   const second=(await api('GET','/learning/today')).data;
-  assert.notEqual(second.plan_id,first.plan_id);assert.equal(second.budget_minutes,15);assert.equal(second.items[0].lesson_id,'system-introductions-01');
+  assert.notEqual(second.plan_id,first.plan_id);assert.equal(second.budget_minutes,15);assert.equal(second.items.find(i=>i.kind==='lesson').lesson_id,'system-introductions-01');
   assert.equal(app.db.prepare('SELECT COUNT(*) n FROM daily_learning_plans').get().n,2);
   await complete(api,await start(api,'system-introductions-01'));
   for(const l of (await api('GET','/learning/programs/english-it-system')).data.units.flatMap(u=>u.lessons).filter(l=>l.id!=='system-introductions-01'))await complete(api,await start(api,l.id));
-  instant=new Date('2026-10-22T18:00:00Z');assert.equal((await api('GET','/learning/today')).data.status,'content_exhausted');
+  instant=new Date('2026-10-22T18:00:00Z');
+  const finished=(await api('GET','/learning/today')).data;
+  assert.equal(finished.items.some(i=>i.kind==='lesson'),false,'no new lesson after both catalogs are complete');
+  assert.ok(finished.items.every(i=>['review','mistake_review'].includes(i.kind)),'real due reviews can remain after curriculum completion');
 });
 
 test('weekly schedule is frozen per day, rest days keep real reviews/resume and manual study remains open',async t=>{

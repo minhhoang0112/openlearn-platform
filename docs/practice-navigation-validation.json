@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-25",
+  "checks": [
+    "Mode picker contains no inline Step 2",
+    "Click mode opens independent set selector, without mode grid",
+    "Selector deep link survives refresh",
+    "Exercise returns to the same mode and category",
+    "Scope, category and browser Back/Forward restore independently",
+    "Exit listening session restores its history tab",
+    "Material detail restores its library and original listening parent",
+    "Listening history and personal materials retain parent and provide Back",
+    "Invalid mode offers safe return without unrelated exercises",
+    "Old mode links still open the dedicated selector"
+  ],
+  "page_errors": [],
+  "passed": true
+}
