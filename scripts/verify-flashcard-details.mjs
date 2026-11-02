@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {writeFileSync} from 'node:fs';
-const require=createRequire('C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core');
 const origin='http://127.0.0.1:3000';
 const browser=await chromium.launch({channel:'chrome',headless:true});

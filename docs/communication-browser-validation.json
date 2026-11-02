@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-11-02T15:17:07.590Z",
+  "checks": [
+    "Beginner gets Vietnamese welcome; no forced English interview, no initial generation or open panels",
+    "Single scrolling transcript; fixed visible composer/mic at 360/390/768/1440 including 640px height",
+    "Text and translation persist; direct contextual help in Vietnamese preserves unfinished draft",
+    "Samples and device settings use dismissible focus-managed dialogs, not more page sections",
+    "Native AudioWorklet microphone works with independent clock while physical speaker is blocked",
+    "Translate stays enabled during an active call and shows persisted Vietnamese meaning",
+    "Replay uses saved AI voice, pauses microphone to avoid echo and restores prior mic state without ending call",
+    "Live contextual help after replay reaches same conversation AND renders response audio in native worklet",
+    "Stopping playback while idle does not silence the next spoken answer",
+    "Stopping an active answer suppresses its remaining audio, then restores audio for the next answer",
+    "Prepared/old message gets generated read-aloud once; repeated replay reuses audio without Web Speech",
+    "Summary, finish/resume and memory remain accessible from compact room menu",
+    "Granted microphone + stalled processor fails with specific message and releases microphone",
+    "Cancel before delayed mic returns does not leak tracks or open provider connection",
+    "History search/reopen and original homepage/logo preserved"
+  ],
+  "page_errors": [],
+  "provider": "mock",
+  "real_microphone": false,
+  "audio_output": "production capture + playback routing; synthetic HTML playback acknowledgement only",
+  "passed": true
+}

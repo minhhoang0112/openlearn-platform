@@ -1,6 +1,6 @@
 @echo off
 setlocal
-title OpenQuiz - Local Development
+title OpenLearn - Local Development
 pushd "%~dp0"
 if errorlevel 1 goto :failed
  
@@ -44,6 +44,6 @@ exit /b 0
 
 :failed
 echo.
-echo [ERROR] OpenQuiz could not start. Check the message above.
+echo [ERROR] OpenLearn could not start. Check the message above.
 pause
 popd

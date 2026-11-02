@@ -80,6 +80,6 @@ test('configured gateway: real requests, private histories, and conversation per
 test('SQLite records survive reopening and schema migrations are idempotent',()=>{
   const directory=mkdtempSync(join(tmpdir(),'openquiz-be-test-'));const path=join(directory,'test.sqlite');
   let db;
-  try{db=openDatabase(path);db.prepare('INSERT INTO users(email,password_hash,name,created_at) VALUES(?,?,?,?)').run('persist@example.test','test-only','Persisted',new Date().toISOString());assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);db.close();db=null;db=openDatabase(path);assert.equal(db.prepare('SELECT name FROM users').get().name,'Persisted');}
+  try{db=openDatabase(path);db.prepare('INSERT INTO users(email,password_hash,name,created_at) VALUES(?,?,?,?)').run('persist@example.test','test-only','Persisted',new Date().toISOString());assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);db.close();db=null;db=openDatabase(path);assert.equal(db.prepare('SELECT name FROM users').get().name,'Persisted');}
   finally{db?.close();assert.ok(resolve(directory).startsWith(resolve(tmpdir())+sep)&&basename(directory).startsWith('openquiz-be-test-'));rmSync(directory,{recursive:true,force:true});}
 });

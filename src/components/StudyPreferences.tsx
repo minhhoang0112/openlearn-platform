@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { speechRecognitionAvailable } from '../utils/audio';
 import { X, RotateCcw, Sparkles } from 'lucide-react';
 
 export interface StudyPreferences {
+  learning_engine?: 'legacy_v1' | 'segmented_v2';
   direction: 'term_to_definition' | 'definition_to_term' | 'both';
   answer_mode: 'meaning' | 'synonyms' | 'speech';
   starred_only: boolean;
@@ -21,20 +21,21 @@ export interface StudyPreferences {
 }
 
 export const defaultStudyPreferences: StudyPreferences = {
-  direction: 'term_to_definition',
+  direction: 'definition_to_term',
+  learning_engine: 'segmented_v2',
   answer_mode: 'meaning',
   starred_only: false,
   unmastered_only: false,
-  shuffle: false,
+  shuffle: true,
   adaptive: true,
   required_correct: 2,
   max_attempts: 3,
-  auto_audio: false,
+  auto_audio: true,
   audio_rate: 0.9,
   voice_uri: '',
   dictation_content: 'word',
-  question_types: ['write'],
-  accept_synonyms: false,
+  question_types: ['write', 'quiz'],
+  accept_synonyms: true,
   auto_advance_on_correct: false,
 };
 
@@ -117,7 +118,7 @@ export function StudyPreferencesDialog({
                 {[
                   { value: 'term_to_definition', label: 'Hỏi tiếng Anh, trả lời tiếng Việt' },
                   { value: 'definition_to_term', label: 'Hỏi tiếng Việt, trả lời tiếng Anh' },
-                  { value: 'both', label: 'Luyện cả hai chiều (Cần 2 lần đúng mỗi chiều)' },
+                  { value: 'both', label: 'Luân phiên hai chiều Anh – Việt / Việt – Anh' },
                 ].map((opt) => (
                   <label
                     key={opt.value}
@@ -154,9 +155,6 @@ export function StudyPreferencesDialog({
               >
                 <option value="meaning">Nhập nghĩa / từ</option>
                 <option value="synonyms">Trả lời bằng từ đồng nghĩa</option>
-                <option value="speech" disabled={!speechRecognitionAvailable()}>
-                  Trả lời bằng cách phát âm (giọng nói)
-                </option>
               </select>
             </div>
 
@@ -346,24 +344,7 @@ export function StudyPreferencesDialog({
               </div>
             </label>
 
-            {!dictation && (
-              <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                <input
-                  type="checkbox"
-                  checked={draft.adaptive}
-                  onChange={(e) => patch({ adaptive: e.target.checked })}
-                  className="w-4 h-4 text-indigo-600 rounded mt-0.5"
-                />
-                <div>
-                  <span className="font-bold text-slate-800 dark:text-slate-200 block">
-                    Ôn lại thích nghi (Cần 2 lần đúng liên tiếp để ghi nhớ)
-                  </span>
-                  <span className="text-[11px] text-slate-400">
-                    Câu sai được xếp vào cuối hàng đợi ôn lại (tối đa 3 lượt)
-                  </span>
-                </div>
-              </label>
-            )}
+            {!dictation && draft.learning_engine === 'segmented_v2' && <p className="text-xs text-slate-500 p-3 border rounded-xl">Học theo chặng 4–7 từ. Từ mới cần hai lần đúng để đạt mục tiêu; sai sẽ được ôn lại. Từ đạt mục tiêu rời hàng đợi phiên này, vẫn trở lại khi đến lịch ôn.</p>}
 
             <label className="flex items-center gap-2.5 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs font-medium cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50">
               <input

@@ -99,8 +99,8 @@ test('schema 8 backfills historical graded errors once without inventing errors 
     const insert=db.prepare('INSERT INTO learning_step_attempts VALUES(?,?,?,?,?,?,?)');
     insert.run('s','a','hash','listen-main','{}',JSON.stringify({assessment_status:'graded',correct:false}),'2026-10-21T00:00:00Z');
     insert.run('s','b','hash','speaking','{}',JSON.stringify({assessment_status:'self_review',correct:null}),'2026-10-21T00:00:00Z');
-    db.exec('DROP TABLE learning_material_dictations; DROP TABLE learning_material_cues; DROP TABLE learning_material_playback; DROP TABLE learning_materials; DROP TABLE learning_phrase_links; DROP TABLE learning_phrase_collections; DROP TABLE learning_audio_review_requests; DROP TABLE learning_audio_reviews; DROP TABLE listening_practice_events; DROP TABLE listening_practice_sessions; DROP TABLE learning_ai_feedback; DROP TABLE learning_mistake_reviews; DROP TABLE learning_mistakes; PRAGMA user_version=7;');db.close();
-    db=openDatabase(file);assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);
+    db.exec('DROP TABLE communication_memories; DROP TABLE communication_turns; DROP TABLE communication_sessions; DROP TABLE learning_material_dictations; DROP TABLE learning_material_cues; DROP TABLE learning_material_playback; DROP TABLE learning_materials; DROP TABLE learning_phrase_links; DROP TABLE learning_phrase_collections; DROP TABLE learning_audio_review_requests; DROP TABLE learning_audio_reviews; DROP TABLE listening_practice_events; DROP TABLE listening_practice_sessions; DROP TABLE learning_ai_feedback; DROP TABLE learning_mistake_reviews; DROP TABLE learning_mistakes; PRAGMA user_version=7;');db.close();
+    db=openDatabase(file);assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);
     assert.equal(db.prepare('SELECT COUNT(*) n FROM learning_mistakes').get().n,1);assert.equal(db.prepare('SELECT wrong_count FROM learning_mistakes').get().wrong_count,1);
     db.close();db=openDatabase(file);assert.equal(db.prepare('SELECT COUNT(*) n FROM learning_mistakes').get().n,1);
   }finally{db?.close();rmSync(dir,{recursive:true,force:true});}

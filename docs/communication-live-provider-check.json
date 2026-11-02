@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-02T10:42:32.351Z",
+  "model": "gemini-3.8-live",
+  "configured": true,
+  "setup_ok": true,
+  "audio_received": true,
+  "transcript_received": true,
+  "input_transcript_received": true,
+  "turn_complete": true,
+  "synthetic_only": true,
+  "input": "prepared_curriculum_wav"
+}

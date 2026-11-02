@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-11-02T15:04:32.957Z",
+  "synthetic_only": true,
+  "mode": "free",
+  "level": "beginner",
+  "turns": [
+    {
+      "prompt": "Mình mới học, hãy hướng dẫn bằng tiếng Việt xuyên suốt nhé. Mình sẽ thử nói một câu tiếng Anh, nhưng vẫn cần bạn giải thích tiếng Việt.",
+      "reply": "Chào bạn! Mình rất sẵn lòng đồng hành cùng bạn. Bạn cứ tự nhiên nói câu tiếng Anh của mình nhé, mình sẽ giải thích mọi thứ bằng tiếng Việt cho bạn dễ hiểu. Bạn muốn bắt đầu với câu nào trước nào?",
+      "first_audio_ms": 776,
+      "complete_ms": 10984,
+      "vietnamese_support": true
+    },
+    {
+      "prompt": "I like music.",
+      "reply": "Câu này có nghĩa là \"Tôi thích âm nhạc\". Trong đó, \"I\" là \"tôi\", \"like\" là \"thích\", và \"music\" là \"âm nhạc\". Bạn thích thể loại nhạc nào nhất?",
+      "first_audio_ms": 797,
+      "complete_ms": 9998,
+      "vietnamese_support": true
+    }
+  ],
+  "passed": true
+}

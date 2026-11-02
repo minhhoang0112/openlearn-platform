@@ -1,0 +1,26 @@
+{
+  "source": "Vietnamese Wiktionary via Kaikki/Wiktextract",
+  "source_url": "https://kaikki.org/viwiktionary/Ti%E1%BA%BFng%20Anh/",
+  "download_url": "https://kaikki.org/viwiktionary/Ti%E1%BA%BFng%20Anh/kaikki.org-dictionary-Ti%E1%BA%BFngAnh.jsonl",
+  "license": "CC-BY-SA-4.0 and GFDL",
+  "license_url": "https://vi.wiktionary.org/wiki/Wiktionary:Bản_quyền",
+  "attribution": "Wiktionary contributors; extraction by Kaikki.org / Wiktextract (Tatu Ylonen).",
+  "records": 133547,
+  "senses": 190480,
+  "headwords": 119032,
+  "forms": 17999,
+  "text_only": true,
+  "imported_at": "2026-11-02T16:04:07.875Z",
+  "file": "en-vi-90f2b8e3f6deac25.sqlite",
+  "download_bytes": 114884234,
+  "source_sha256": "90f2b8e3f6deac2546be95e6f7353db02866457bcb19b267b8fd123e480247d3",
+  "sqlite_bytes": 38522880,
+  "installed": true,
+  "images_downloaded": 0,
+  "audio_files_downloaded": 0,
+  "checks": [
+    "Indexed SQLite integrity verified during import",
+    "Two lookup routes use the shared read-only store",
+    "Dictionary browser checks passed with no external requests"
+  ]
+}

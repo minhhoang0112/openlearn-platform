@@ -12,7 +12,7 @@ export function dictionaryTranslationService(local,{fetchImpl=fetch,timeoutMs=80
       const base={term:q,phonetic:'',sourceLang:source,targetLang:target,relatedWords:[],isSentence:/\s/.test(q),query:q};
       if(source===target)return {...base,senses:[{pos:'',meaning:q}],fullTranslation:q,source:'identity',cached:false,external_request:false};
       // Only exact English entries qualify; substring suggestions are never definitions.
-      if(source==='en'&&target==='vi'&&q.length<=200){const found=local.lookup(q,c.user);if(found.found)return {...base,phonetic:found.entries.find(e=>e.phonetic)?.phonetic??'',senses:found.entries.map(e=>({pos:e.part_of_speech,meaning:e.definition,exampleEn:e.example||undefined,exampleVi:e.example_translation||undefined})),source:'local_exact',cached:false,external_request:false};}
+      if(source==='en'&&target==='vi'&&q.length<=200){const found=local.lookup(q,c.user);if(found.found)return {...base,phonetic:found.entries.find(e=>e.phonetic)?.phonetic??'',senses:found.entries.map(e=>({pos:e.part_of_speech,meaning:e.definition,exampleEn:e.example||undefined,exampleVi:e.example_translation||undefined,sourceUrl:e.source_url,license:e.license,matchedTerm:e.matched_term,lookupKind:e.lookup_kind})),source:'local_exact',cached:false,external_request:false};}
       if(Buffer.byteLength(q,'utf8')>500)fail(400,'TRANSLATION_TEXT_TOO_LONG','Mỗi lần dịch tối đa500byte UTF-8. Hãy chia đoạn dài thành các câu ngắn.');
       const key=JSON.stringify([c.user.id,source,target,q]),saved=cache.get(key);
       if(saved&&saved.until>clock())return {...saved.value,cached:true,external_request:false};

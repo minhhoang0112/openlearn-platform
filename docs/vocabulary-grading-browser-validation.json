@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-02T16:53:19.117Z",
+  "checks": [
+    "Reordered Vietnamese senses are accepted with green feedback",
+    "Missing Vietnamese accents show accepted yellow feedback and do not auto-advance past the explanation",
+    "Accepted missing accents count toward BE practice mastery rather than being marked wrong",
+    "Manual self-correction still reverses an accepted yellow answer",
+    "English typo gets a distinct yellow not-yet-correct state and remains eligible for review"
+  ],
+  "page_errors": [],
+  "passed": true
+}

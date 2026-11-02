@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-11-02T14:43:29.361Z",
+  "synthetic_only": true,
+  "checks": [
+    {
+      "kind": "voice_vietnamese_explanation",
+      "model": "gemini-3.8-live",
+      "transcript": "Mình xin lỗi nhé. Câu vừa rồi \"What are you working on today?\" có nghĩa là \"Hôm nay bạn đang làm việc gì?\" hoặc \"Bạn đang bận làm dự án nào?\".\n\nĐể trả lời, bạn có thể nói đơn giản như: \"I am working on a report\" (Tôi đang làm báo cáo) hoặc \"I am checking emails\" (Tôi đang kiểm tra email). Bạn có muốn chọn câu nào không?",
+      "audio_received": true,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

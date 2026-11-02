@@ -95,7 +95,7 @@ test('practice resumes from persisted DB and old version while a newer unprepare
   const dir=mkdtempSync(join(tmpdir(),'oq-listening-')),file=join(dir,'listening.sqlite');
   const {api,app}=await fixture(t,{database:file});t.after(()=>rmSync(dir,{recursive:true,force:true}));
   let s=await start(api);s=(await complete(api,s)).data.session;
-  const db=openDatabase(file);try{const row=db.prepare('SELECT state FROM listening_practice_sessions WHERE id=?').get(s.id);assert.equal(JSON.parse(row.state).cursor,1);assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);}finally{db.close();}
+  const db=openDatabase(file);try{const row=db.prepare('SELECT state FROM listening_practice_sessions WHERE id=?').get(s.id);assert.equal(JSON.parse(row.state).cursor,1);assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);}finally{db.close();}
   const old=app.db.prepare('SELECT * FROM learning_lesson_versions WHERE lesson_id=? AND version=1').get(s.lesson_id);
   app.db.prepare('INSERT INTO learning_lesson_versions VALUES(?,?,?,?,?,?,1)').run(old.lesson_id,2,old.program_id,old.title,old.position,old.content);
   assert.equal((await api('POST','/learning/listening/sessions',{lesson_id:s.lesson_id})).error.code,'SENTENCE_AUDIO_NOT_READY');

@@ -50,7 +50,7 @@ export function learningFeedbackService(db,ai){
       if(pending.has(key))return pending.get(key);
       if(!ai.isConfigured(c.user))fail(503,'AI_NOT_CONFIGURED','Cấu hình AI trong Cài đặt trước khi yêu cầu nhận xét. Bài đã nộp vẫn được giữ.');
       c.limited(`ai:${c.user.id}`,20,60000);
-      const config=ai.describe(c.user);
+      const config=ai.describe(c.user,'learning_feedback');
       const work=(async()=>{
         const result=await ai.generate('learning_feedback',{
           lesson:{title:s.session.title,objectives:s.body.objectives,content_version:s.session.content_version},

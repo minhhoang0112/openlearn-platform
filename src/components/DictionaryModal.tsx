@@ -148,7 +148,7 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
     setLoading(true);setError('');
     try {
       const sense=result.senses[senseIdx];
-      await api.createSet({title:'Tra cứu: '+result.term,visibility:'private',learning_language:result.sourceLang,native_language:result.targetLang,words:[{term:result.term,definition:sense.meaning,phonetic:result.phonetic,part_of_speech:sense.pos,example:sense.exampleEn||''}]});
+      await api.createSet({title:'Tra cứu: '+result.term,description:sense.sourceUrl?`Nguồn: Wiktionary contributors — ${sense.sourceUrl}\nGiấy phép: ${sense.license}; https://creativecommons.org/licenses/by-sa/4.0/\nĐịnh dạng lại từ dữ liệu Kaikki/Wiktextract.`:'',visibility:'private',learning_language:result.sourceLang,native_language:result.targetLang,words:[{term:result.term,definition:sense.meaning,phonetic:result.phonetic,part_of_speech:sense.pos,example:sense.exampleEn||'',example_translation:sense.exampleVi||''}]});
       setAddedCards(prev=>({...prev,[senseIdx]:true}));
     } catch(e) {setError(e instanceof Error?e.message:'Không lưu được bộ thẻ.');}
     finally {setLoading(false);}
@@ -385,15 +385,15 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
                 {result.senses.map((sense, idx) => (
                   <div key={idx} className="space-y-3">
                     {/* Sense Heading with + Thêm vào thẻ Button */}
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2.5">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-2.5 min-w-0 flex-1">
                         <span className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
                           {idx + 1}
                         </span>
                         <span className="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs">
                           {sense.pos || 'Bản dịch'}
                         </span>
-                        <span className="text-base font-bold text-slate-900 dark:text-white">
+                        <span className="text-base font-bold text-slate-900 dark:text-white break-words">
                           {sense.meaning}
                         </span>
                       </div>
@@ -421,6 +421,8 @@ export const DictionaryModal: React.FC<DictionaryModalProps> = ({
                       </button>
                     </div>
 
+                    {sense.lookupKind==='form'&&sense.matchedTerm&&<p className="ml-8 text-xs text-slate-500">Dạng biến đổi của {sense.matchedTerm}</p>}
+                    {sense.sourceUrl&&<a href={sense.sourceUrl} target="_blank" rel="noopener noreferrer" className="ml-8 text-xs text-slate-400 underline">Wiktionary · {sense.license}</a>}
                     {/* Example Sentence Box matching Image 1 */}
                     {sense.exampleEn && (
                       <div className="ml-8 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800/80 space-y-1">

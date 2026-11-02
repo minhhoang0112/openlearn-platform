@@ -1,6 +1,8 @@
 import { randomUUID, randomInt } from 'node:crypto';
 import { fail,integer,enumeration,boolean,normalize,pagination } from './validation.mjs';
 import { transaction } from './database.mjs';
+import {VOCABULARY_ENGINE,vocabularyProgress,vocabularySegments} from './vocabulary-learning.mjs';
+import {gradeWrittenVocabulary} from './vocabulary-grading.mjs';
 const now=()=>new Date().toISOString();
 const sentenceNormalize=value=>normalize(value).replace(/[.,!?;:…]+$/gu,'').replace(/[‘’]/g,"'");
 const memoryLevel=p=>p.status==='new'?0:p.repetitions===0?1:p.repetitions===1?2:p.repetitions===2?3:4;
@@ -38,6 +40,7 @@ export function studyService(db,content) {
     return {...row,state:JSON.parse(row.state)};
   }
   function mastery(row,answers=db.prepare('SELECT question_id,word_id,correct FROM study_answers WHERE session_id=? ORDER BY id').all(row.id)) {
+    if(row.state.vocabulary)return [...vocabularyProgress(row.state.vocabulary.cards,row.state.questions,answers).values()].map(p=>({...p,direction:'mixed',required_correct:p.initial_status==='new'?2:1}));
     const threshold=row.mode==='learn'?(row.state.settings.required_correct??1):1;
     const groups=new Map(),byId=new Map(row.state.questions.map(q=>[q.id,q]));
     for(const q of row.state.questions){const key=q.word_id+':'+(q.direction||'default');if(!groups.has(key))groups.set(key,{word_id:q.word_id,direction:q.direction||'default',correct_streak:0});}
@@ -49,13 +52,13 @@ export function studyService(db,content) {
     const q=row.mode==='match'?questions.find(question=>!db.prepare('SELECT 1 FROM study_answers WHERE session_id=? AND question_id=?').get(row.id,question.id)):questions[cursor];
     const answers=db.prepare('SELECT question_id,word_id,correct FROM study_answers WHERE session_id=? ORDER BY id').all(row.id);
     const answered={correct:answers.filter(a=>a.correct).length};
-    const unique=[...new Set(questions.map(q=>q.word_id))];
+    const unique=row.state.vocabulary?row.state.vocabulary.cards.map(c=>c.id):[...new Set(questions.map(q=>q.word_id))];
     const wordMastery=mastery(row,answers);
     const mastered=unique.filter(wordId=>wordMastery.filter(g=>g.word_id===wordId).every(g=>g.complete)).length;
     return {id:row.id,set_id:row.set_id,mode:row.mode,settings,status:row.completed_at?'completed':'active',total:questions.length,completed:cursor,correct:answered.correct,total_words:unique.length,completed_words:mastered,word_mastery:wordMastery,retry_limit_reached:!!row.state.retry_limit_reached,question:q?{id:q.id,word_id:q.word_id,type:q.type,prompt:q.prompt,phonetic:q.phonetic,part_of_speech:q.part_of_speech,options:q.options,speech_text:q.speech_text,direction:q.direction,answer_mode:q.answer_mode,dictation_content:q.dictation_content}:null,created_at:row.created_at,updated_at:row.updated_at,completed_at:row.completed_at};
   }
-  function makeQuestions(words,mode,settings) {
-    let selected=settings.shuffle?shuffle(words):words;
+  function makeQuestions(words,mode,settings,selection) {
+    let selected=selection||(settings.shuffle?shuffle(words):words);
     if(settings.word_ids)selected=selected.filter(w=>settings.word_ids.includes(w.id));
     if(settings.starred_only)selected=selected.filter(w=>w.starred);
     if(settings.unmastered_only)selected=selected.filter(w=>w.status!=='mastered');
@@ -70,9 +73,9 @@ export function studyService(db,content) {
     const modes=mode==='comprehensive'?['quiz','write','dictation']:[mode];
     const questions=[];
     for(const selectedType of modes) for(const [index,w] of selected.entries()) {
-      const directions=mode==='learn'&&settings.direction==='both'?['term_to_definition','definition_to_term']:[settings.direction];
+      const directions=mode==='learn'&&settings.direction==='both'?(settings.learning_engine===VOCABULARY_ENGINE?[randomInt(2)?'term_to_definition':'definition_to_term']:['term_to_definition','definition_to_term']):[settings.direction];
       for(const [directionIndex,direction] of directions.entries()){
-      const type=selectedType==='learn'?settings.question_types[(index*directions.length+directionIndex)%settings.question_types.length]:selectedType==='exam'?(index%2===0?'write':'quiz'):selectedType;
+      const type=selectedType==='learn'?settings.question_types[settings.learning_engine===VOCABULARY_ENGINE?randomInt(settings.question_types.length):(index*directions.length+directionIndex)%settings.question_types.length]:selectedType==='exam'?(index%2===0?'write':'quiz'):selectedType;
       const termAnswer=type==='dictation'||direction==='definition_to_term';
       const sentence=type==='dictation'&&settings.dictation_content==='example';
       const expected=sentence?w.example:settings.answer_mode==='synonyms'?w.synonyms:termAnswer?w.term:w.definition;
@@ -80,10 +83,12 @@ export function studyService(db,content) {
       if(!accepted.length)fail(409,'NO_SYNONYMS','Synonym mode requires synonyms for every selected word.');
       const q={id:randomUUID(),word_id:w.id,type,prompt:type==='dictation'?null:settings.answer_mode==='synonyms'?w.term:termAnswer?w.definition:w.term,expected,accepted,phonetic:w.phonetic,part_of_speech:w.part_of_speech,direction,answer_mode:settings.answer_mode,dictation_content:sentence?'example':'word'};
       q.speech_text=sentence?w.example:w.term;
+      q.answer_language=termAnswer||settings.answer_mode==='synonyms'||settings.answer_mode==='speech'?settings.learning_language:settings.native_language;
       if(type==='quiz') {
         const distractors=[...new Set(shuffle(words.filter(v=>v.id!==w.id)).map(v=>settings.answer_mode==='synonyms'?v.synonyms:termAnswer?v.term:v.definition))].filter(v=>v?.trim()&&!v.split(/[;,]/).some(part=>accepted.includes(normalize(part)))&&!accepted.includes(normalize(v))).slice(0,3);
-        if(!distractors.length)fail(409,'NOT_ENOUGH_OPTIONS','Quiz mode requires at least two distinct answers.');
-        q.options=shuffle([expected,...distractors]).map(value=>({id:randomUUID(),text:value}));q.expected_option_id=q.options.find(o=>o.text===expected).id;
+        if(!distractors.length&&settings.learning_engine===VOCABULARY_ENGINE)q.type='write';
+        else{if(!distractors.length)fail(409,'NOT_ENOUGH_OPTIONS','Quiz mode requires at least two distinct answers.');
+        q.options=shuffle([expected,...distractors]).map(value=>({id:randomUUID(),text:value}));q.expected_option_id=q.options.find(o=>o.text===expected).id;}
       }
       questions.push(q);
       }
@@ -91,12 +96,24 @@ export function studyService(db,content) {
     return questions;
   }
   function addRetry(row,q){
+    if(row.state.vocabulary)return;
     if(row.mode!=='learn'||!row.state.settings.adaptive)return;
     if(mastery(row).find(g=>g.word_id===q.word_id&&g.direction===(q.direction||'default'))?.complete)return;
     if(row.state.questions.slice(row.state.cursor).some(item=>item.id!==q.id&&item.word_id===q.word_id&&item.direction===q.direction))return;
     const attempts=row.state.questions.filter(item=>item.word_id===q.word_id&&item.direction===q.direction).length;
     if(attempts<row.state.settings.max_attempts)row.state.questions.push({...q,id:randomUUID(),retry_of:q.retry_of||q.id});
     else row.state.retry_limit_reached=true;
+  }
+  function planVocabulary(row,force=false){
+    const v=row.state.vocabulary;if(!v||!force&&row.state.cursor<v.segment_end)return;
+    const answers=db.prepare('SELECT question_id,word_id,correct FROM study_answers WHERE session_id=? ORDER BY id').all(row.id);
+    const progress=vocabularyProgress(v.cards,row.state.questions,answers);
+    const segments=vocabularySegments(v.cards,progress,{ordered:!row.state.settings.shuffle});
+    // Keep every answered question and its id; rebuild only the unsubmitted tail.
+    row.state.questions=row.state.questions.slice(0,row.state.cursor);
+    const tail=segments.flatMap(cards=>makeQuestions(v.cards,'learn',{...row.state.settings,shuffle:false},cards));
+    row.state.questions.push(...tail);v.segment_end=row.state.cursor+(segments[0]?.length||0);v.segment_index=(v.segment_index||0)+1;
+    row.state.retry_limit_reached=false;
   }
   function summary(user,setId,pathId) {
     const params=[user.id];let where='p.user_id=?';
@@ -110,7 +127,7 @@ export function studyService(db,content) {
     route('GET','/study/options',c=>{
       const mode=enumeration(c.query.get('mode')||'learn','mode',studyModes),setId=c.query.get('set_id');
       let words=[];if(setId){const set=content.setAccess(setId,c.user);words=content.words(set.id,c.user);}
-      const defaults={direction:'term_to_definition',answer_mode:'meaning',question_types:['write'],required_correct:mode==='learn'?2:1,max_attempts:3,adaptive:mode==='learn',starred_only:false,unmastered_only:false,shuffle:false,accept_synonyms:false,auto_advance_on_correct:false,auto_audio:mode==='dictation',audio_rate:0.9,voice_uri:'',dictation_content:'word'};
+      const defaults={direction:mode==='learn'?'definition_to_term':'term_to_definition',answer_mode:'meaning',question_types:mode==='learn'?['write','quiz']:['write'],required_correct:mode==='learn'?2:1,max_attempts:3,adaptive:mode==='learn',starred_only:false,unmastered_only:false,shuffle:true,accept_synonyms:true,auto_advance_on_correct:false,auto_audio:true,audio_rate:0.9,voice_uri:'',dictation_content:'word',...(mode==='learn'?{learning_engine:VOCABULARY_ENGINE}:{})};
       const raw=JSON.parse(c.user.settings).study?.[mode],saved=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
       return {mode,defaults,saved,settings:{...defaults,...saved},directions:['term_to_definition','definition_to_term','both'],answer_modes:['meaning','synonyms','speech'],question_types:['write','quiz'],counts:{total:words.length,starred:words.filter(w=>w.starred).length,unmastered:words.filter(w=>w.status!=='mastered').length},subscription_required:false};
     },{summary:'Effective study defaults, saved preferences and actual filter counts for FE settings'});
@@ -123,20 +140,22 @@ export function studyService(db,content) {
       const q=row.state.questions.find(q=>q.id===questionId);
       if(!q)fail(400,'INVALID_QUESTION','Question does not belong to this session.');
       const existing=db.prepare('SELECT * FROM study_answers WHERE session_id=? AND question_id=?').get(row.id,q.id);
-      if(existing)return {correct:!!existing.correct,expected:q.expected,replayed:true,session:present(row)};
+      if(existing)return {...row.state.grading?.[q.id],correct:!!existing.correct,expected:q.expected,replayed:true,session:present(row)};
       if(row.completed_at||(row.mode!=='match'&&row.state.questions[row.state.cursor].id!==q.id))fail(409,'QUESTION_OUT_OF_ORDER','Answer the current question first.');
       if(typeof c.body.answer!=='string'||c.body.answer.length>4000)fail(400,'VALIDATION_ERROR','answer must be a string of at most 4000 characters.');
-      let correct=q.type==='flashcard'?boolean(c.body.known,'known'):q.type==='quiz'?c.body.option_id===q.expected_option_id:q.accepted.includes(q.dictation_content==='example'?sentenceNormalize(c.body.answer):normalize(c.body.answer));
-      if(c.body.skip===true)correct=false;
+      let grading=q.type==='flashcard'||q.type==='quiz'?{correct:q.type==='flashcard'?boolean(c.body.known,'known'):c.body.option_id===q.expected_option_id}:gradeWrittenVocabulary(q,c.body.answer);
+      if(c.body.skip===true)grading={correct:false,verdict:'incorrect',reason:'skipped',message:'Bạn đã chọn bỏ qua câu này.'};
+      const correct=grading.correct;row.state.grading??={};row.state.grading[q.id]=grading;
       row.state.review_snapshots??={};row.state.review_snapshots[q.id]=db.prepare('SELECT * FROM word_progress WHERE user_id=? AND word_id=?').get(c.user.id,q.word_id)||null;
       db.prepare('INSERT INTO study_answers(session_id,question_id,word_id,answer,correct,created_at) VALUES(?,?,?,?,?,?)').run(row.id,q.id,q.word_id,c.body.answer,Number(correct),now());
       const progress=applyReview(c.user.id,q.word_id,correct?4:1);
+      if(row.state.vocabulary){progress.status=mastery(row).find(p=>p.word_id===q.word_id).status;db.prepare('UPDATE word_progress SET status=? WHERE user_id=? AND word_id=?').run(progress.status,c.user.id,q.word_id);}
       let points=0;
       if(correct&&!db.prepare("SELECT 1 FROM activity WHERE user_id=? AND kind='word_correct' AND resource_id=? AND created_at>=?").get(c.user.id,String(q.word_id),now().slice(0,10))){points=10;const reward=db.prepare('INSERT INTO activity(user_id,kind,resource_id,points,created_at) VALUES(?,?,?,?,?)').run(c.user.id,'word_correct',String(q.word_id),points,now());row.state.rewards??={};row.state.rewards[q.id]=Number(reward.lastInsertRowid);}
       addRetry(row,q);
-      row.state.cursor++;const completed=row.state.cursor===row.state.questions.length?now():null;
+      row.state.cursor++;planVocabulary(row);const completed=row.state.cursor===row.state.questions.length?now():null;
       db.prepare('UPDATE study_sessions SET state=?,updated_at=?,completed_at=? WHERE id=?').run(JSON.stringify(row.state),now(),completed,row.id);
-      return {correct,expected:q.expected,progress,points,replayed:false,session:present(access(row.id,c.user))};
+      return {...grading,correct,expected:q.expected,progress,points,replayed:false,session:present(access(row.id,c.user))};
     }),{summary:'Grade an answer; retries are idempotent; update SRS and real points'});
     route('POST','/study/sessions/:id/answers/:question_id/correction',c=>transaction(db,()=>{
       const row=access(c.params.id,c.user),q=row.state.questions.find(item=>item.id===c.params.question_id);
@@ -160,8 +179,11 @@ export function studyService(db,content) {
       }
       const progress=applyReview(c.user.id,q.word_id,1);
       db.prepare('UPDATE study_answers SET correct=0 WHERE id=?').run(answer.id);
+      row.state.grading??={};row.state.grading[q.id]={correct:false,verdict:'incorrect',reason:'self_correction',message:'Bạn đã đánh dấu câu này chưa đúng để ôn lại.'};
+      if(row.state.vocabulary){progress.status=mastery(row).find(p=>p.word_id===q.word_id).status;db.prepare('UPDATE word_progress SET status=? WHERE user_id=? AND word_id=?').run(progress.status,c.user.id,q.word_id);}
       if(row.state.rewards?.[q.id])db.prepare('DELETE FROM activity WHERE id=? AND user_id=?').run(row.state.rewards[q.id],c.user.id);
       row.state.corrections[q.id]={at:now(),from_correct:true};addRetry(row,q);
+      planVocabulary(row,true);
       db.prepare('INSERT INTO activity(user_id,kind,resource_id,points,created_at) VALUES(?,?,?,?,?)').run(c.user.id,'answer_self_correction',row.id+':'+q.id,0,now());
       const completed=row.state.cursor>=row.state.questions.length?now():null;
       db.prepare('UPDATE study_sessions SET state=?,updated_at=?,completed_at=? WHERE id=?').run(JSON.stringify(row.state),now(),completed,row.id);
@@ -173,17 +195,18 @@ export function studyService(db,content) {
     },{summary:'Exam questions without answer keys, for the all-questions test screen'});
     route('POST','/study/sessions/:id/submit',c=>transaction(db,()=>{
       const row=access(c.params.id,c.user);if(row.mode!=='exam')fail(409,'WRONG_MODE','Batch submission is available for exams only.');
-      if(row.completed_at)return {replayed:true,session:present(row),results:db.prepare('SELECT question_id,correct FROM study_answers WHERE session_id=? ORDER BY id').all(row.id)};
+      if(row.completed_at)return {replayed:true,session:present(row),results:db.prepare('SELECT question_id,correct FROM study_answers WHERE session_id=? ORDER BY id').all(row.id).map(a=>({...row.state.grading?.[a.question_id],...a,correct:!!a.correct,expected:row.state.questions.find(q=>q.id===a.question_id)?.expected}))};
       const answers=c.body.answers;
       if(!Array.isArray(answers)||answers.length!==row.state.questions.length||new Set(answers.map(a=>a?.question_id)).size!==answers.length)fail(400,'INVALID_ANSWERS','Supply one answer for every question; use an empty string to skip.');
       const results=[];
       for(const q of row.state.questions){
         const answer=answers.find(a=>a?.question_id===q.id);if(!answer||typeof answer.answer!=='string'||answer.answer.length>4000)fail(400,'INVALID_ANSWERS','Unknown question ID or invalid answer.');
-        const correct=q.type==='quiz'?answer.option_id===q.expected_option_id:q.accepted.includes(normalize(answer.answer));
+        const grading=q.type==='quiz'?{correct:answer.option_id===q.expected_option_id}:gradeWrittenVocabulary(q,answer.answer),correct=grading.correct;
+        row.state.grading??={};row.state.grading[q.id]=grading;
         db.prepare('INSERT INTO study_answers(session_id,question_id,word_id,answer,correct,created_at) VALUES(?,?,?,?,?,?)').run(row.id,q.id,q.word_id,answer.answer,Number(correct),now());
         applyReview(c.user.id,q.word_id,correct?4:1);
         if(correct&&!db.prepare("SELECT 1 FROM activity WHERE user_id=? AND kind='word_correct' AND resource_id=? AND created_at>=?").get(c.user.id,String(q.word_id),now().slice(0,10)))db.prepare('INSERT INTO activity(user_id,kind,resource_id,points,created_at) VALUES(?,?,?,?,?)').run(c.user.id,'word_correct',String(q.word_id),10,now());
-        results.push({question_id:q.id,correct,expected:q.expected});
+        results.push({question_id:q.id,...grading,correct,expected:q.expected});
       }
       row.state.cursor=row.state.questions.length;
       db.prepare('UPDATE study_sessions SET state=?,updated_at=?,completed_at=? WHERE id=?').run(JSON.stringify(row.state),now(),now(),row.id);
@@ -215,17 +238,23 @@ export function studyService(db,content) {
     if(set.content_status.startsWith('unavailable'))fail(409,'CONTENT_UNAVAILABLE','Bộ từ này đang được đối chiếu vì dữ liệu trùng hoặc sai chủ đề.');
     const mode=enumeration(body.mode,'mode',studyModes,'learn');const input=body.settings??{};
     const settings={shuffle:input.shuffle===undefined?false:boolean(input.shuffle,'shuffle'),starred_only:input.starred_only===undefined?false:boolean(input.starred_only,'starred_only'),unmastered_only:input.unmastered_only===undefined?false:boolean(input.unmastered_only,'unmastered_only'),due_only:input.due_only===undefined?false:boolean(input.due_only,'due_only'),direction:enumeration(input.direction,'direction',['term_to_definition','definition_to_term','both'],mode==='exam'?'definition_to_term':'term_to_definition'),answer_mode:enumeration(input.answer_mode,'answer_mode',['meaning','synonyms','speech'],'meaning'),dictation_content:enumeration(input.dictation_content,'dictation_content',['word','example'],'word'),adaptive:input.adaptive===undefined?mode==='learn':boolean(input.adaptive,'adaptive'),max_attempts:integer(input.max_attempts??3,'max_attempts',{max:5}),auto_audio:input.auto_audio===undefined?false:boolean(input.auto_audio,'auto_audio'),audio_rate:input.audio_rate??1,voice_uri:typeof input.voice_uri==='string'?input.voice_uri.slice(0,300):'',limit:integer(input.limit??100,'limit',{max:500})};
+    settings.learning_language=set.learning_language;settings.native_language=set.native_language;
     if(typeof settings.audio_rate!=='number'||!Number.isFinite(settings.audio_rate)||settings.audio_rate<0.5||settings.audio_rate>1.5)fail(400,'VALIDATION_ERROR','audio_rate must be between 0.5 and 1.5.');
     settings.question_types=input.question_types??['write'];
     if(!Array.isArray(settings.question_types)||!settings.question_types.length||settings.question_types.length>2||new Set(settings.question_types).size!==settings.question_types.length||settings.question_types.some(type=>!['write','quiz'].includes(type)))fail(400,'VALIDATION_ERROR','question_types must select write, quiz, or both without duplicates.');
     settings.accept_synonyms=input.accept_synonyms===undefined?false:boolean(input.accept_synonyms,'accept_synonyms');
     settings.auto_advance_on_correct=input.auto_advance_on_correct===undefined?false:boolean(input.auto_advance_on_correct,'auto_advance_on_correct');
+    settings.learning_engine=enumeration(input.learning_engine,'learning_engine',['legacy_v1',VOCABULARY_ENGINE],'legacy_v1');
+    if(settings.learning_engine===VOCABULARY_ENGINE&&(mode!=='learn'||!settings.adaptive))fail(400,'VALIDATION_ERROR','Segmented learning requires adaptive learn mode.');
     settings.required_correct=mode==='learn'?integer(input.required_correct??1,'required_correct',{max:3}):1;
-    if(settings.required_correct>settings.max_attempts)fail(400,'VALIDATION_ERROR','max_attempts must be at least required_correct.');
+    if(settings.learning_engine===VOCABULARY_ENGINE)settings.required_correct=2;
+    if(settings.learning_engine!=='segmented_v2'&&settings.required_correct>settings.max_attempts)fail(400,'VALIDATION_ERROR','max_attempts must be at least required_correct.');
     if(settings.answer_mode==='speech'){settings.direction='definition_to_term';settings.question_types=['write'];}
     if(input.word_ids!==undefined){if(!Array.isArray(input.word_ids)||input.word_ids.length>500)fail(400,'VALIDATION_ERROR','word_ids must be an array of at most 500 IDs.');settings.word_ids=input.word_ids.map(id=>integer(id,'word_id'));const all=content.words(set.id,user).map(w=>w.id);if(new Set(settings.word_ids).size!==settings.word_ids.length||settings.word_ids.some(id=>!all.includes(id)))fail(400,'VALIDATION_ERROR','word_ids must belong to this set without duplicates.');}
-    const questions=makeQuestions(content.words(set.id,user),mode,settings),id=randomUUID();
-    db.prepare('INSERT INTO study_sessions(id,user_id,set_id,mode,state,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run(id,user.id,set.id,mode,JSON.stringify({questions,cursor:0,settings}),now(),now());return present(access(id,user));
+    const allWords=content.words(set.id,user),initial=makeQuestions(allWords,mode,settings),id=randomUUID();
+    const state={questions:initial,cursor:0,settings};
+    if(settings.learning_engine===VOCABULARY_ENGINE){const ids=new Set(initial.map(q=>q.word_id));state.vocabulary={cards:allWords.filter(w=>ids.has(w.id)),segment_end:0,segment_index:-1};planVocabulary({id,mode,state});}
+    db.prepare('INSERT INTO study_sessions(id,user_id,set_id,mode,state,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').run(id,user.id,set.id,mode,JSON.stringify(state),now(),now());return present(access(id,user));
   }
   return {registerRoutes,access,present,summary,applyReview,start};
 }

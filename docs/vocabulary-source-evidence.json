@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-11-02T15:40:54.958Z",
+  "origin": "https://openquiz.ai",
+  "runtime_evidence": [
+    "ev_c4e0fe661bd3fe96d4fb9cb7a00dcc7175f189f3c2b3ee5ab1adacfa9ac1ecc4",
+    "ev_ec7d852ef37653008e5cf7761b351ed87f2edca054a2bcb1ac4539509e944a45"
+  ],
+  "static_evidence": "ev_862aeed07d9039d02661678b4a4ebe7f5f27e62c6edc20225cf1f9ba01b72a16",
+  "modules": [
+    {
+      "url": "https://openquiz.ai/assets/FillInQuestion-DZJy2BUG.js",
+      "bytes": 132117,
+      "sha256": "824eab4a8b35e26155edfd1714f3464c60bbd434124b573540eb871198644d42"
+    },
+    {
+      "url": "https://openquiz.ai/assets/FlipCard-BWG4HIqo.js",
+      "bytes": 26359,
+      "sha256": "bb47831e0d1622535c266694b4ee057532e060de96ac1f63476576a0d3dada7c"
+    },
+    {
+      "url": "https://openquiz.ai/assets/MultipleChoiceQuestion-NSYPDFIl.js",
+      "bytes": 16467,
+      "sha256": "9d5e1d65fbd8133be1cd90050c5b18c7f9ccb7157d5b6a942f5c9448f4011404"
+    },
+    {
+      "url": "https://openquiz.ai/assets/Study-5PyHAcGP.js",
+      "bytes": 23292,
+      "sha256": "b0b5ca0b3b89f187d54d9253dbb9bee8309fb75fff5641d36908f2b0ed31730d"
+    },
+    {
+      "url": "https://openquiz.ai/assets/studyAlgorithm-BGR1FvkZ.js",
+      "bytes": 6528,
+      "sha256": "8c3b7275f96e0da844f90628008ff85bdf3d31b115e06b870ac4187280c041e2"
+    },
+    {
+      "url": "https://openquiz.ai/assets/useStudySettings-DJna-hCs.js",
+      "bytes": 5170,
+      "sha256": "7c3b45d114d36a7b7234ce5af3605c2bed2a1816c9aa8827d1ecf72a8e76bb42"
+    }
+  ],
+  "limitations": [
+    "Static client behavior does not prove proprietary server scheduling.",
+    "Authenticated learning flow not exercised; clean browser required sign-in.",
+    "Local queue independently implemented; full 100% equivalence not established."
+  ]
+}

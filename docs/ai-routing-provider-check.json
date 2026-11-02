@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-11-02T08:41:00.857Z",
+  "synthetic_generation": true,
+  "connections": [
+    {
+      "connection": "secondary",
+      "configured": true,
+      "model": "gemini-3.5-flash-lite",
+      "discovery_http": 200,
+      "model_available": true,
+      "generation_ok": true,
+      "elapsed_ms": 1025
+    }
+  ],
+  "distinct_credentials": true
+}

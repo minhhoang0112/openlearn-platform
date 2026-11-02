@@ -169,6 +169,7 @@ export function resolveSourceSidebarRoute(
 export function resolveActiveSidebarRoute(fullPath: string): string {
   const currentPath = fullPath.split("?")[0];
   const ctx = parseNavigationContext(fullPath);
+  if(currentPath==='/communication'||currentPath.startsWith('/communication/'))return '/communication';
 
   if (
     currentPath === "/today" ||

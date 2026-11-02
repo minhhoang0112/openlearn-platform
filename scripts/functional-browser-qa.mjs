@@ -7,7 +7,7 @@ import {once} from 'node:events';
 import {readFileSync,existsSync,writeFileSync} from 'node:fs';
 import {resolve,extname,sep} from 'node:path';
 import {createApp} from '../server/app.mjs';
-const require=createRequire('C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core');
 let failOnce=true;
 const gateway=createServer(async(req,res)=>{

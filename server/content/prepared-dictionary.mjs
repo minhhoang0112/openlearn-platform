@@ -1,4 +1,5 @@
 export const preparedDictionary=[
+  ['intern','thực tập sinh; người thực tập','noun','The intern is learning from an experienced engineer.','Thực tập sinh đang học hỏi từ một kỹ sư có kinh nghiệm.'],
   ['submit','nộp; gửi (đơn, tài liệu)','verb','Please submit your application today.','Vui lòng nộp đơn của bạn hôm nay.'],
   ['register','đăng ký','verb','You can register online.','Bạn có thể đăng ký trực tuyến.'],
   ['experience','kinh nghiệm; trải nghiệm','noun, verb','She has experience in customer service.','Cô ấy có kinh nghiệm trong lĩnh vực dịch vụ khách hàng.'],

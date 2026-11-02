@@ -48,6 +48,13 @@ test('saving only a key inherits the configured model instead of silently switch
   assert.equal((await api('PUT','/settings/ai',{provider:'gemini',api_key:'test-account-key'})).data.model,'gemini-3.5-flash');
   const settings=(await api('GET','/settings/ai')).data;assert.equal(settings.model,'gemini-3.5-flash');assert.equal(settings.configuration_source,'account');
   assert.ok(!JSON.stringify(settings).includes('test-account-key'));
+  assert.equal(settings.routing.policy,'personal_model');
+  assert.equal((await api('DELETE','/settings/ai')).status,200);
+  const shared=(await api('GET','/settings/ai')).data;
+  assert.equal(shared.configuration_source,'environment');assert.equal(shared.routing.policy,'task_routing_v1');
+  assert.equal(shared.routing.routes.find(r=>r.task==='translation').model,'gemini-3.5-flash-lite');
+  assert.equal(shared.routing.routes.find(r=>r.task==='reading').model,'gemini-3.5-flash');
+  assert.equal(shared.routing.quota_failover,false);
 });
 
 test('course activities use actual lesson/topic IDs; repair mismatched A1 topic links without overwriting lesson content or progress',async t=>{

@@ -166,7 +166,11 @@ export interface DictionaryEntryItem {
   phonetic: string;
   example: string;
   example_translation: string;
-  source: 'library' | 'prepared';
+  source: string;
+  source_url?: string;
+  license?: string;
+  matched_term?: string;
+  lookup_kind?: 'exact' | 'form';
   word_id: number | null;
   set_id: number | null;
 }
@@ -202,7 +206,7 @@ export interface StudySession {
     part_of_speech?: string; options?: { id: string; text: string }[]; speech_text?: string } | null;
 }
 
-export interface GradedAnswer { correct: boolean; expected: string; points?: number; replayed: boolean; session: StudySession }
+export interface GradedAnswer { correct: boolean; verdict?:'exact'|'equivalent'|'close'|'incorrect'; reason?:string; message?:string; expected: string; points?: number; replayed: boolean; session: StudySession }
 
 export interface UserProfile {
   id: number; email: string; name: string;

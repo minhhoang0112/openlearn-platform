@@ -5,7 +5,7 @@ import {once} from 'node:events';
 import {readFileSync,writeFileSync,existsSync} from 'node:fs';
 import {resolve,extname,sep} from 'node:path';
 import {createApp} from '../server/app.mjs';
-const require=createRequire('C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core'),origins=[],root=resolve('dist');let calls=0;
 const app=createApp({origins,dictionary:{fetchImpl:async url=>{calls++;const q=new URL(url).searchParams.get('q');if(q==='offline')throw Error('offline');return Response.json({responseStatus:200,responseData:{translatedText:q==='tail'?'đuôi, đoạn cuối':'tìm kiếm'}});}}});
 app.server.listen(0,'127.0.0.1');await once(app.server,'listening');const upstream=`http://127.0.0.1:${app.server.address().port}`;

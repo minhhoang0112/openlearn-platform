@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-11-02T14:51:06.218Z",
+  "synthetic_only": true,
+  "checks": [
+    {
+      "kind": "read_aloud",
+      "model": "gemini-3.8-live",
+      "wav_bytes": 113326,
+      "valid_wav": true,
+      "repeat_cached": true,
+      "passed": true
+    },
+    {
+      "kind": "translation",
+      "translation": "Hôm nay bạn muốn học gì?",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

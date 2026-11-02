@@ -7,7 +7,7 @@ import { resolve, extname, sep } from 'node:path';
 import { createApp } from '../server/app.mjs';
 
 const require = createRequire(
-  'C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json'
+  new URL('../package.json',import.meta.url)
 );
 const { chromium } = require('playwright-core');
 

@@ -1,14 +1,15 @@
 {
   "checks": [
-    "standalone Ctrl plays term; Ctrl+A does not trigger audio",
-    "Enter grades partial Vietnamese meaning; self-correction repairs server state",
-    "adaptive queue and cursor survive reload",
-    "settings persist on backend and change real filtered two-direction queue",
-    "sentence dictation plays actual example and grades the full sentence",
-    "quiz control changes real questions; selected option Enter grades; correct answer advances after delay",
-    "reset cancelled leaves progress; confirmed reset removes progress and starts new session",
-    "self-correction cancels pending automatic advance"
+    "Flashcards speak on entry/change without Ctrl; auto-read switch disables playback",
+    "Learn launches segmented, shuffled mixed questions with production direction; typing has no mic",
+    "English pronunciation plays automatically after revealing a production answer; hidden answer is not leaked",
+    "Reload preserves the exact persisted question and queue instead of restarting apply",
+    "Ordered/type settings persist; first visible English prompt auto-reads, standalone Ctrl replays and Ctrl+A does not",
+    "Self-correction updates BE mastery and requeues the word without clearing history",
+    "A full UI practice loop repeats weak words, removes mastered words and updates all set mastery counts",
+    "Sentence dictation still plays and grades the full saved example"
   ],
   "errors": [],
-  "audio": "Speech synthesis invocation observed with a browser spy; no microphone or audible-output claim."
+  "audio": "Speech synthesis calls observed with a spy; physical speaker and autoplay permission not verified.",
+  "passed": true
 }

@@ -36,6 +36,7 @@ function ensureDetails(wordId: number, userId: number, allowAi: boolean): Promis
 
 interface SynonymLookupCacheEntry {
   matched: DictionaryEntryItem | null;
+  until: number;
 }
 
 const synonymLookupCache = new Map<string, SynonymLookupCacheEntry>();
@@ -314,14 +315,14 @@ export function WordLearningDetails({
 
     const posNormalized = (word.part_of_speech || '').trim().toLowerCase();
     const cacheKey = `${user?.id ?? 'anon'}:${normalized}:en:${posNormalized}`;
+    const reqId = ++lookupReqIdRef.current;
     const cached = synonymLookupCache.get(cacheKey);
-    if (cached !== undefined) {
+    if (cached !== undefined && cached.until > Date.now()) {
       setSynonymMatch(cached.matched);
       setSynonymLoading(false);
       return;
     }
 
-    const reqId = ++lookupReqIdRef.current;
     setSynonymLoading(true);
     setSynonymMatch(null);
     try {
@@ -337,7 +338,7 @@ export function WordLearningDetails({
         : undefined;
       const chosen = posMatch || pool[0] || null;
 
-      synonymLookupCache.set(cacheKey, { matched: chosen });
+      if(chosen){if(synonymLookupCache.size>=300)synonymLookupCache.delete(synonymLookupCache.keys().next().value!);synonymLookupCache.set(cacheKey, { matched: chosen, until: Date.now()+10*60*1000 });}
       setSynonymMatch(chosen);
     } catch (e) {
       if (reqId !== lookupReqIdRef.current) return;
@@ -493,6 +494,8 @@ export function WordLearningDetails({
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
                   {synonymMatch.definition}
                 </p>
+                {synonymMatch.lookup_kind==='form'&&synonymMatch.matched_term&&<p className="text-[11px] text-slate-500">Dạng biến đổi của {synonymMatch.matched_term}</p>}
+                {synonymMatch.source_url&&<a href={synonymMatch.source_url} target="_blank" rel="noopener noreferrer" className="text-[10px] underline text-slate-400">Wiktionary · {synonymMatch.license}</a>}
                 {synonymMatch.example && (
                   <p className="text-[11px] italic text-slate-500 dark:text-slate-400">
                     "{synonymMatch.example}"

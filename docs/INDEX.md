@@ -1,4 +1,16 @@
-# MỤC LỤC TÀI LIỆU PHÂN TÍCH TOÀN BỘ HỆ THỐNG OPENQUIZ.AI
+# Tài liệu OpenLearn
+
+Để cài web, đọc [README](../README.md). Hướng dẫn hiện tại:
+
+- [API](API-CONTRACT.md), [danh mục route](API-ROUTES.md).
+- [Học từ vựng V2](VOCABULARY-LEARNING-V2.md), [chấm câu trả lời](VOCABULARY-GRADING.md).
+- [AI routing](AI-ROUTING.md), [giao tiếp AI](COMMUNICATION-AI.md).
+- [Từ điển cục bộ](LOCAL-DICTIONARY.md), [nguồn và giấy phép](DICTIONARY-DATA-NOTICE.md).
+- [Dọn repo](REPOSITORY-CLEANUP.md).
+
+## Tài liệu phân tích / bàn giao lịch sử
+
+Các mục dưới phân tích trang tham khảo và đề xuất thiết kế ban đầu; không phải danh sách chức năng đã triển khai đầy đủ của OpenLearn.
 ### (Dành cho việc ghép nối Frontend và Codex lập trình Backend)
 
 Tài liệu được phân tích chuyên sâu qua REA từ toàn bộ mã nguồn bundle 70+ chunks của OpenQuiz.ai:

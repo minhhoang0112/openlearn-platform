@@ -52,7 +52,7 @@ export const AuthView: React.FC = () => {
         {/* Brand */}
         <div className="flex flex-col items-center text-center mb-8">
           <img
-            src="/logo.svg"
+            src="/logo.svg?v=ol-2026"
             alt="OpenLearn"
             className="w-14 h-14 rounded-2xl shadow-lg mb-3"
           />

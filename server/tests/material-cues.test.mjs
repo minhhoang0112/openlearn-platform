@@ -72,9 +72,9 @@ test('cue and answer endpoints enforce private ownership and reject malformed su
 
 test('schema13 upgrade preserves personal audio; cue history survives reopen and cascades with material deletion',async t=>{
   const dir=mkdtempSync(join(tmpdir(),'oq-cues-')),file=join(dir,'test.sqlite');
-  const initial=openDatabase(file);initial.exec('DROP TABLE learning_material_dictations; DROP TABLE learning_material_cues; PRAGMA user_version=13;');initial.close();
+  const initial=openDatabase(file);initial.exec('DROP TABLE communication_memories; DROP TABLE communication_turns; DROP TABLE communication_sessions; DROP TABLE learning_material_dictations; DROP TABLE learning_material_cues; PRAGMA user_version=13;');initial.close();
   const {api,app,path,cue,material}=await setup(t,{database:file});t.after(()=>rmSync(dir,{recursive:true,force:true}));await api('PUT',path+'/cues',{revision:0,cues:[cue]});await api('POST',path+'/dictation-attempts',attempt(cue));
-  const reopened=openDatabase(file);try{assert.equal(reopened.prepare('PRAGMA user_version').get().user_version,14);assert.equal(JSON.parse(reopened.prepare('SELECT cues FROM learning_material_cues WHERE material_id=?').get(material.id).cues)[0].id,cue.id);assert.equal(reopened.prepare('SELECT COUNT(*) n FROM learning_material_dictations').get().n,1);assert.equal(reopened.prepare('SELECT length(audio) n FROM learning_materials WHERE id=?').get(material.id).n,wav().length);}finally{reopened.close();}
+  const reopened=openDatabase(file);try{assert.equal(reopened.prepare('PRAGMA user_version').get().user_version,15);assert.equal(JSON.parse(reopened.prepare('SELECT cues FROM learning_material_cues WHERE material_id=?').get(material.id).cues)[0].id,cue.id);assert.equal(reopened.prepare('SELECT COUNT(*) n FROM learning_material_dictations').get().n,1);assert.equal(reopened.prepare('SELECT length(audio) n FROM learning_materials WHERE id=?').get(material.id).n,wav().length);}finally{reopened.close();}
   await api('DELETE',path);assert.equal((await api('GET',path+'/cues')).status,404);assert.equal((await api('GET',path+'/dictation-attempts')).status,404);
   for(const table of ['learning_material_cues','learning_material_dictations'])assert.equal(app.db.prepare('SELECT COUNT(*) n FROM '+table).get().n,0);
 });

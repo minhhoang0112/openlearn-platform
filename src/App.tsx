@@ -39,6 +39,7 @@ import { ListeningPracticeView } from "./views/ListeningPracticeView";
 import { MaterialsHubView } from "./views/MaterialsHubView";
 import { MaterialDetailView } from "./views/MaterialDetailView";
 import { NotFoundView } from "./views/NotFoundView";
+import {CommunicationView} from './views/CommunicationView';
 import { Loader2 } from "lucide-react";
 
 const AppContent: React.FC = () => {
@@ -69,6 +70,7 @@ const AppContent: React.FC = () => {
 
   // Routing renderer
   const renderCurrentView = () => {
+    if (path.split('?')[0]==='/communication'||/^\/communication\/[\w-]+$/.test(path.split('?')[0])) return <CommunicationView/>;
     if (/^\/courses\/\d+\/lesson\/\d+/.test(path)) return <CourseLessonView />;
     if (/^\/lesson-run\/[a-zA-Z0-9-]+/.test(path)) return <LessonRunView />;
     if (/^\/materials\/[a-zA-Z0-9-]+/.test(path)) return <MaterialDetailView />;

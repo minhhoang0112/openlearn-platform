@@ -89,7 +89,7 @@ test('source stays pinned, DB reopening preserves cards, and deleting the lesson
   next.steps.find(q=>q.id==='phrases').phrases[0].text='Different in version two';next.version=2;
   f.app.db.prepare('INSERT INTO learning_lesson_versions VALUES(?,?,?,?,?,?,1)').run(old.lesson_id,2,old.program_id,old.title,old.position,JSON.stringify(next));
   const result=(await f.api('POST',path(s),{phrase_indexes:[0]})).data;assert.equal(result.items[0].text,'university student');
-  const db=openDatabase(file);try{assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);assert.equal(db.prepare('SELECT term FROM words WHERE id=?').get(result.items[0].word_id).term,'university student');}finally{db.close();}
+  const db=openDatabase(file);try{assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);assert.equal(db.prepare('SELECT term FROM words WHERE id=?').get(result.items[0].word_id).term,'university student');}finally{db.close();}
   f.app.db.prepare('DELETE FROM learning_sessions WHERE id=?').run(s.id);
   assert.equal((await f.api('GET','/learning/phrase-library')).data.word_count,1);
 });

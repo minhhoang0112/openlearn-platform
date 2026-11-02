@@ -1,5 +1,7 @@
 # Học và nghe chép: logic và hợp đồng cho Anti
 
+> **Cập nhật ưu tiên 02/11/2026:** màn Học đã dùng `learning_engine: "segmented_v2"`. Đọc [VOCABULARY-LEARNING-V2.md](VOCABULARY-LEARNING-V2.md). Các mô tả bên dưới về mặc định không xáo trộn, giới hạn ba lượt, hai lần đúng mỗi chiều và mic nhập đáp án là mô tả phiên cũ `legacy_v1`, không áp dụng cho màn Học mới. Lịch sử cũ vẫn đọc được, không reset dữ liệu người học.
+
 > Bổ sung mới ưu tiên: [ANTI-BE-HANDOFF.md](ANTI-BE-HANDOFF.md). `GET /study/options?set_id=:id&mode=learn` trả cấu hình mặc định/đã lưu và số từ thực. Mặc định đề xuất `required_correct:2`, `max_attempts:3`: cần hai lần đúng liên tiếp mỗi chiều mới tăng completed_words. POST không gửi required_correct vẫn giữ giá trị 1 để tương thích; Anti cần nối options hoặc gửi rõ tiêu chí mới. Trả word_mastery để phân biệt số lượt đúng và số từ đạt mục tiêu; đây là tiêu chí local, chưa khẳng định thuật toán web gốc.
 
 Cập nhật 21/10/2026. Đây là chức năng ứng dụng cá nhân; không kiểm tra gói Pro/Plus. Anti có thể thay bố cục và CSS nhưng cần giữ chuyển trạng thái, dữ liệu server và các phím bên dưới.

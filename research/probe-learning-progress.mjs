@@ -2,7 +2,7 @@
 // No credentials, storage values, hidden answer bodies or source account state are imported.
 import {createRequire} from 'node:module';
 import {writeFileSync} from 'node:fs';
-const require=createRequire('C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core');
 const browser=await chromium.connectOverCDP('http://127.0.0.1:9222');
 const report={source:'ordinary_playwright_UI_not_REA',url:'https://openquiz.ai/study/163',steps:[],limitations:['Only three answers observed; this does not recover the full scheduling algorithm.']};

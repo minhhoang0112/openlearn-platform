@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Loader2, Mic, Settings, Star, Volume2, RotateCcw, CheckCircle2, AlertCircle, Repeat } from 'lucide-react';
+import { ArrowLeft, Loader2, Settings, Star, Volume2, RotateCcw, CheckCircle2, AlertCircle, Repeat } from 'lucide-react';
 import { api, ApiError, ApiWord, GradedAnswer, StudySession, StudyMode, UserProfile, StudyOptionsResponse } from '../api/client';
 import { useRouter } from '../context/RouterContext';
 import { useAuth } from '../context/AuthContext';
-import { playAudio, recognizeSpeech, speechRecognitionAvailable } from '../utils/audio';
+import { playAudio } from '../utils/audio';
 import { WordLearningDetails } from './WordLearningDetails';
 import { LearningBreadcrumb } from './LearningBreadcrumb';
 import { forwardNavigationContext } from '../utils/navigationContext';
@@ -45,12 +45,11 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   const [optionId, setOptionId] = useState<string | undefined>();
   const [error, setError] = useState('');
   const [missingExamples, setMissingExamples] = useState<number[]>([]);
-  const [recording, setRecording] = useState(false);
 
-  const recognitionCleanup = useRef<(() => void) | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const launchQuery = useMemo(() => parsePracticeLaunchQuery(path), [path]);
+  const launchDirection = launchQuery.direction==='en-vi'?'term_to_definition':launchQuery.direction==='vi-en'?'definition_to_term':launchQuery.direction;
   const mode: StudyMode = dictation
     ? 'dictation'
     : launchQuery.studyMode === 'write'
@@ -81,9 +80,11 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   const buildStartPayload = useCallback(
     (preferences: StudyPreferences): Record<string, unknown> => ({
       ...preferences,
+      learning_engine: mode === 'learn' ? 'segmented_v2' : 'legacy_v1',
+      ...(mode === 'learn' ? { adaptive: true } : {}),
       required_correct: mode === 'learn' ? 2 : 1,
       max_attempts: 3,
-      ...(launchQuery.direction ? { direction: launchQuery.direction } : {}),
+      ...(launchDirection ? { direction: launchDirection } : {}),
       ...(launchQuery.studyMode === 'quiz'
         ? { question_types: ['quiz'] }
         : launchQuery.studyMode === 'write'
@@ -148,11 +149,18 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
           max_attempts: 3,
         };
 
+        // Upgrade the old default once; explicit v2 settings remain respected.
+        if (mode === 'learn' && (savedStudy[mode] as any)?.learning_engine !== 'segmented_v2') {
+          Object.assign(preference, { learning_engine: 'segmented_v2', direction: 'definition_to_term', question_types: ['write','quiz'], shuffle: true, auto_audio: true, adaptive: true, accept_synonyms: true });
+        }
+        if (preference.answer_mode === 'speech') preference.answer_mode = 'meaning';
+        if (mode === 'learn') preference.adaptive = true;
+        else preference.learning_engine = 'legacy_v1';
         if (dictation && savedStudy[mode] === undefined) {
           preference.auto_audio = true;
         }
-        if (launchQuery.direction) {
-          preference.direction = launchQuery.direction as any;
+        if (launchDirection) {
+          preference.direction = launchDirection;
         }
         if (launchQuery.studyMode === 'quiz') {
           preference.question_types = ['quiz'] as any;
@@ -169,7 +177,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
               launchQuery.wordIds.length === 0
                 ? resumedWordIds.length === 0
                 : JSON.stringify(resumedWordIds) === JSON.stringify(launchQuery.wordIds);
-            if (active && resumed.set_id === setId && resumed.mode === mode && resumed.status === 'active' && sameScope) {
+            if (active && resumed.set_id === setId && resumed.mode === mode && resumed.status === 'active' && sameScope && (mode !== 'learn' || resumed.settings.learning_engine === 'segmented_v2')) {
               setSession(resumed as RichSession);
               setSettings({ ...preference, ...resumed.settings } as StudyPreferences);
               return;
@@ -196,7 +204,6 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
 
     return () => {
       active = false;
-      recognitionCleanup.current?.();
     };
   }, [setId, mode, user?.id, storageKey, buildStartPayload]);
 
@@ -206,14 +213,14 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   }, [session?.question?.speech_text, currentWord?.term, settings.audio_rate, settings.voice_uri]);
 
   useEffect(() => {
-    if (settings.auto_audio && session?.question && !result) listen();
+    // A hidden English answer is spoken after grading, not leaked on entry.
+    const revealed = session?.question?.direction !== 'definition_to_term' || dictation || !!result;
+    if (settings.auto_audio && session?.question && revealed && (!result || session.question.direction === 'definition_to_term' && !dictation)) listen();
     if (!result) inputRef.current?.focus();
-  }, [session?.question?.id, settings.auto_audio]);
+  }, [session?.question?.id, settings.auto_audio, !!result]);
 
   const submit = async (skip = false) => {
     if (!session?.question || busy || result || (!skip && !answer.trim())) return;
-    recognitionCleanup.current?.();
-    setRecording(false);
     setBusy(true);
     setError('');
     try {
@@ -237,7 +244,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
   };
 
   useEffect(() => {
-    if (!settings.auto_advance_on_correct || !result?.correct || busy || settingsOpen) return;
+    if (!settings.auto_advance_on_correct || !result?.correct || result.verdict==='close' || busy || settingsOpen) return;
     const timer = window.setTimeout(next, 1200);
     return () => window.clearTimeout(timer);
   }, [settings.auto_advance_on_correct, result, busy, settingsOpen]);
@@ -359,35 +366,6 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
     }
   };
 
-  const microphone = () => {
-    if (recording) {
-      recognitionCleanup.current?.();
-      recognitionCleanup.current = null;
-      setRecording(false);
-      return;
-    }
-    setError('');
-    setRecording(true);
-    const lang =
-      !dictation && session?.question?.direction === 'term_to_definition' && session.question.answer_mode !== 'synonyms'
-        ? 'vi-VN'
-        : 'en-US';
-    try {
-      recognitionCleanup.current = recognizeSpeech(
-        (text) => setAnswer(text),
-        () => setRecording(false),
-        (message) => {
-          setRecording(false);
-          setError(message);
-        },
-        lang
-      );
-    } catch {
-      setRecording(false);
-      setError('Không thể mở micro. Bạn vẫn có thể nhập câu trả lời.');
-    }
-  };
-
   const q = session?.question;
   const progressPercent = session?.total ? Math.round((session.completed / session.total) * 100) : 0;
 
@@ -437,7 +415,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
             <span>
-              Đã hoàn thành: <strong>{session.completed_words ?? session.correct}</strong> / {session.total_words ?? session.total} từ
+              Đạt mục tiêu phiên: <strong>{session.completed_words ?? session.correct}</strong> / {session.total_words ?? session.total} từ
             </span>
             <span>
               Câu hỏi: <strong>{Math.min(session.completed + 1, session.total)}</strong> / {session.total}
@@ -496,7 +474,7 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
                   Hoàn thành phiên {dictation ? 'nghe chép' : 'học'}
                 </h1>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Đúng {session.correct} / {session.total} lượt hỏi • Đã nhớ {session.completed_words ?? session.correct} / {session.total_words ?? session.total} từ
+                  Đúng {session.correct} / {session.total} lượt hỏi • Đạt mục tiêu phiên {session.completed_words ?? session.correct} / {session.total_words ?? session.total} từ
                 </p>
               </div>
 
@@ -664,22 +642,6 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
                       }
                       className="w-full border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-base font-semibold bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
                     />
-                    {speechRecognitionAvailable() && !result && (
-                      <button
-                        type="button"
-                        disabled={busy}
-                        aria-label={recording ? 'Dừng micro' : 'Nhập bằng giọng nói'}
-                        aria-pressed={recording}
-                        onClick={microphone}
-                        className={`px-4 rounded-2xl flex items-center justify-center transition shrink-0 ${
-                          recording
-                            ? 'bg-rose-600 text-white animate-pulse'
-                            : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-                        }`}
-                      >
-                        <Mic className="w-5 h-5" />
-                      </button>
-                    )}
                   </div>
                 )}
 
@@ -689,13 +651,15 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
                   <div className="space-y-4 pt-2">
                     <div
                       className={`p-5 rounded-2xl border space-y-3 ${
-                        result.correct
+                        result.verdict === 'close'
+                          ? 'border-amber-300 bg-amber-50/70 dark:bg-amber-950/30 text-amber-950 dark:text-amber-200'
+                          : result.correct
                           ? 'border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200'
                           : 'border-rose-200 bg-rose-50/60 dark:bg-rose-950/30 text-rose-950 dark:text-rose-200'
                       }`}
                     >
                       <div className="flex items-center gap-2 font-black text-sm">
-                        {result.correct ? (
+                        {result.verdict === 'close' ? <><AlertCircle className="w-5 h-5 text-amber-600 shrink-0"/><span>{result.correct?'Đúng nghĩa · Cần chú ý cách viết':'Gần đúng · Cần sửa cách viết'}</span></> : result.correct ? (
                           <>
                             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                             <span>✓ Câu trả lời của bạn đúng!</span>
@@ -703,10 +667,12 @@ export function StudyPractice({ dictation = false }: { dictation?: boolean }) {
                         ) : (
                           <>
                             <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                            <span>Chưa đúng. Từ này sẽ được xếp vào hàng đợi ôn lại.</span>
+                            <span>{mode === 'learn' && settings.adaptive ? 'Chưa đúng. Từ này sẽ được ôn lại trong phiên.' : 'Chưa đúng. Từ này đã được cập nhật vào lịch ôn.'}</span>
                           </>
                         )}
                       </div>
+
+                      {result.verdict === 'close' && result.message && <p className="text-xs font-medium" role="status">{result.message}</p>}
 
                       <p className="text-xs font-semibold">
                         Đáp án đầy đủ: <strong className="text-sm underline">{result.expected}</strong>

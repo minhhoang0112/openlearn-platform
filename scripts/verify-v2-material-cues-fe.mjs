@@ -10,7 +10,7 @@ import crypto from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { createApp } from '../server/app.mjs';
 
-const require = createRequire(process.env.REA_PACKAGE_JSON || 'C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require = createRequire(process.env.REA_PACKAGE_JSON || new URL('../package.json',import.meta.url));
 const { chromium } = require('playwright-core');
 
 const origins = [];

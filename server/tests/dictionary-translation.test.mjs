@@ -5,7 +5,7 @@ import {createApp} from '../app.mjs';
 
 async function fixture(t,fetchImpl){
   let calls=0;const urls=[];
-  const app=createApp({dictionary:{fetchImpl:async(url,options)=>{calls++;urls.push(new URL(url));return fetchImpl(url,options);}}});
+  const app=createApp({dictionary:{databasePath:null,fetchImpl:async(url,options)=>{calls++;urls.push(new URL(url));return fetchImpl(url,options);}}});
   app.server.listen(0,'127.0.0.1');await once(app.server,'listening');t.after(async()=>{app.server.closeAllConnections();await app.close();});
   function client(){let cookie='';return async(method,path,body)=>{const r=await fetch(`http://127.0.0.1:${app.server.address().port}/api/v1${path}`,{method,headers:{Cookie:cookie,'Content-Type':'application/json','X-Requested-With':'OpenQuiz'},...(body===undefined?{}:{body:JSON.stringify(body)})});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return {status:r.status,...await r.json()};};}
   const api=client();await api('POST','/auth/register',{email:'translation@test.invalid',name:'Learner',password:'test private password'});

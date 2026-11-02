@@ -75,7 +75,7 @@ test('private audio and A-B state survive DB reopen and delete cascades only the
   const dir=mkdtempSync(join(tmpdir(),'oq-material-')),file=join(dir,'test.sqlite'),f=await fixture(t,{database:file});t.after(()=>rmSync(dir,{recursive:true,force:true}));
   const bytes=wav(64000),m=(await f.api('POST',root,input(bytes))).data;
   await f.api('PUT',`${root}/${m.id}/playback`,{revision:0,position_ms:800,loop_start_ms:100,loop_end_ms:1000,loop_enabled:true});
-  const db=openDatabase(file);try{assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);assert.deepEqual(Buffer.from(db.prepare('SELECT audio FROM learning_materials WHERE id=?').get(m.id).audio),bytes);assert.equal(JSON.parse(db.prepare('SELECT state FROM learning_material_playback WHERE material_id=?').get(m.id).state).position_ms,800);}finally{db.close();}
+  const db=openDatabase(file);try{assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);assert.deepEqual(Buffer.from(db.prepare('SELECT audio FROM learning_materials WHERE id=?').get(m.id).audio),bytes);assert.equal(JSON.parse(db.prepare('SELECT state FROM learning_material_playback WHERE material_id=?').get(m.id).state).position_ms,800);}finally{db.close();}
   assert.equal((await f.api('DELETE',`${root}/${m.id}`)).status,200);assert.equal((await f.api('GET',`${root}/${m.id}`)).status,404);
   assert.equal(f.app.db.prepare('SELECT COUNT(*) n FROM learning_material_playback').get().n,0);
   assert.equal(f.app.db.prepare('SELECT COUNT(*) n FROM learning_lesson_versions').get().n,27);

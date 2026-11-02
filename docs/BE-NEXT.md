@@ -1,3 +1,13 @@
+> 02/11/2026: Chấm nghĩa đã hỗ trợ đảo danh sách nghĩa, thiếu dấu Việt được tính đúng với feedback vàng, typo khả nghi vàng nhưng không tăng mastery. Đọc VOCABULARY-GRADING.md. Metadata grading giữ qua replay, tự sửa cập nhật lại; không tự tiếp khỏi vàng. Sửa ánh xạ chiều en-vi/vi-en. 152 ca BE, 5 nhóm Chrome chấm nghĩa và build đạt.
+
+> 02/11/2026: Đã nhập kho Anh–Việt chữ, 119.032 mục/190.480 nghĩa, SQLite 38,5 MB, không ảnh/audio. Popup và Tra từ cùng dùng kho. Đọc LOCAL-DICTIONARY.md và DICTIONARY-DATA-NOTICE.md; deploy máy mới chạy npm run dictionary:import (dữ liệu gitignore). 147 ca BE, 5 nhóm Chrome từ điển và build đạt. Không đổi schema người học.
+
+> 02/11/2026: Học từ vựng đã chuyển sang segmented_v2; đọc VOCABULARY-LEARNING-V2.md và study-browser-qa.json. 145 ca BE, 8 nhóm Chrome từ vựng và build đạt. Xáo câu/từ, trạng thái học theo chặng, SRS không tăng giả khi luyện trước hạn, bỏ mic ô nhập, tự đọc thẻ và câu hỏi/feedback đúng thời điểm. Không reset lịch sử; schema15/175 routes giữ nguyên. Không khẳng định tương đương 100% BE OpenQuiz.
+
+> 02/11/2026: Giao tiếp AI cải tiến song ngữ, trợ giúp theo câu, phòng cố định mic/ô nhập; dịch/nghe lại hoạt động trong Live. Contract 1.24.0/schema15/175 HTTP routes + WebSocket. Đọc COMMUNICATION-AI.md trước khi sửa. Giữ Trang chủ và logo. 140 ca BE và 13 nhóm Chrome đạt; Gemini Live hướng dẫn tiếng Việt, đọc WAV và dịch thật đạt. Chưa nghiệm thu thiết bị vật lý; text provider từng báo bận.
+
+> 02/11/2026: Phân công AI theo tác vụ đã triển khai, contract 1.22.0. Đọc AI-ROUTING.md. Hai kết nối Gemini đã gọi thử thành công; 129 ca BE, build và kiểm tra Chrome cài đặt AI qua. Giữ Trang chủ gốc. Giao tiếp AI/voice chưa triển khai.
+
 > **Trạng thái hiện tại 26/10/2026:** người dùng yêu cầu khôi phục Trang chủ gốc. `/` và logo mở DashboardView; menu có Trang chủ; `/today` là mục riêng; `/explore` còn để tương thích. Đọc HOME-RESTORED.md và REFINEMENT-REGRESSION-2026-10-26.md. Kiểm lại 123 ca BE, build và 27 nhóm kiểm tra Chrome đạt. Các chỉ dẫn cũ bên dưới về Today làm cửa vào đã được thay thế, không áp dụng lại.
 
 > Mốc3 đợt1 đã dùng được: contract1.21/schema14/157route. Đọc REFINEMENT-M3-SUPPORT-API.md.4bài nền tảng đầu có25từ/cụm,ghi chú ngữ pháp,lỗi thường gặp,mẫu nói/viết có dịch;Codex đã nối LessonSupportPanel trực tiếp.123ca BE qua,buildqua,7nhóm browser/4viewport qua,0POST tạoAI. Giữ phiên/version/draft/progress cũ; chưa mở rộng hết18bài.

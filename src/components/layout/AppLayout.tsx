@@ -22,7 +22,8 @@ import {
   Layers,
   Sliders,
   BookX,
-  TrendingUp
+  TrendingUp,
+  MessageCircle
 } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
@@ -37,6 +38,7 @@ interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { path, navigate } = useRouter();
+  const isCommunicationRoom=/^\/communication\/[\w-]+$/.test(path.split('?')[0]);
   const { user, logout } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -144,6 +146,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     { label: 'Lộ trình', route: '/my-program', icon: GraduationCap },
     { label: 'Thư viện', route: '/my-created', icon: FolderHeart },
     { label: 'Luyện tập', route: '/practice', icon: Layers },
+    { label: 'Giao tiếp AI', route: '/communication', icon: MessageCircle },
     { label: 'Tiến độ', route: '/progress', icon: TrendingUp },
   ];
 
@@ -168,7 +171,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col md:flex-row antialiased font-sans">
+    <div className={(isCommunicationRoom?'h-[var(--communication-vh,100dvh)] min-h-0 overflow-hidden ':'min-h-screen ')+'bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col md:flex-row antialiased font-sans'}>
       {/* Mobile Header Bar */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
         <a
@@ -176,7 +179,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           onClick={(e) => { e.preventDefault(); navigate('/'); }}
           className="flex items-center gap-2.5 cursor-pointer"
         >
-          <img src="/logo.svg" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
+          <img src="/logo.svg?v=ol-2026" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
           <span className="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">OpenLearn</span>
         </a>
         <div className="flex items-center gap-2">
@@ -211,7 +214,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 onClick={(e) => { e.preventDefault(); navigate('/'); setMobileMenuOpen(false); }}
                 className="flex items-center gap-2.5 cursor-pointer"
               >
-                <img src="/logo.svg" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
+                <img src="/logo.svg?v=ol-2026" alt="OpenLearn" className="w-8 h-8 rounded-xl shadow-xs shrink-0" />
                 <span className="font-black text-lg text-slate-900 dark:text-white">OpenLearn</span>
               </a>
               <button onClick={() => setMobileMenuOpen(false)} aria-label="Đóng menu" className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
@@ -372,7 +375,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               className="flex items-center gap-3 cursor-pointer group"
             >
               <img
-                src="/logo.svg"
+                src="/logo.svg?v=ol-2026"
                 alt="OpenLearn"
                 className="w-10 h-10 rounded-2xl shadow-xs group-hover:scale-105 transition-transform shrink-0"
               />
@@ -717,9 +720,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Top Header Bar (Hidden in full-screen study modes and courses views) */}
-        {!(path.startsWith('/courses') || path.startsWith('/lesson-run') || path.startsWith('/study/') || path.startsWith('/exam/') || path.startsWith('/game/match/') || path.startsWith('/dictation/') || path.startsWith('/grammar/') || path.startsWith('/ai-study/') || path.startsWith('/conversation/')) && (
+        {!(isCommunicationRoom || path.startsWith('/courses') || path.startsWith('/lesson-run') || path.startsWith('/study/') || path.startsWith('/exam/') || path.startsWith('/game/match/') || path.startsWith('/dictation/') || path.startsWith('/grammar/') || path.startsWith('/ai-study/') || path.startsWith('/conversation/')) && (
           <header className="hidden md:flex items-center justify-between px-8 py-3.5 bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800 sticky top-0 z-30">
           {/* Search Box */}
           <div ref={searchRef} className="relative w-96">
@@ -838,12 +841,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         )}
 
         {/* Content Body */}
-        <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
+        <main className={isCommunicationRoom?'flex-1 min-h-0 overflow-hidden p-2 md:p-4':'flex-1 p-4 md:p-8 overflow-x-hidden'}>
           {children}
         </main>
       </div>
 
       {/* Floating Dictionary Button (Safe offset on mobile study rooms to avoid overlapping bottom CTAs) */}
+      {!isCommunicationRoom&&(
       <button
         type="button"
         data-testid="floating-dictionary-button"
@@ -866,6 +870,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <span className="font-black text-indigo-400 dark:text-indigo-600 group-hover:translate-x-0.5 transition-transform">&gt;</span>
         <span className="hidden sm:inline">Tra từ</span>
       </button>
+      )}
 
       {/* Global Modals */}
       <DictionaryModal isOpen={dictOpen} onClose={() => { setDictOpen(false); setDictQuery(''); }} initialQuery={dictQuery} />

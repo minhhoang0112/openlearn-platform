@@ -110,9 +110,11 @@ test('no configured provider and non-audio provider report capability without fa
 });
 
 test('provider quota errors preserve retry guidance and remain retryable with the original UUID',async t=>{
-  let calls=0;const f=await fixture(t,{result:()=>++calls===1?new Response(JSON.stringify({error:{details:[{retryDelay:'41s'}]}}),{status:429}):reply}),s=await f.reach(),body={submission_id:randomUUID(),audio:recording};
+  let calls=0,clock=0;const f=await fixture(t,{ai:{provider:'gemini',geminiKey:'test-only-not-a-real-key',model:'gemini-test',clock:()=>clock},result:()=>++calls===1?new Response(JSON.stringify({error:{details:[{retryDelay:'41s'}]}}),{status:429}):reply}),s=await f.reach(),body={submission_id:randomUUID(),audio:recording};
   const limited=await f.api('POST',reviewPath(s),body);assert.equal(limited.status,429);assert.equal(limited.error.code,'AI_RATE_LIMITED');assert.equal(limited.error.details.retry_after_seconds,41);
   assert.equal(f.app.db.prepare('SELECT COUNT(*) n FROM learning_audio_reviews').get().n,0);
+  assert.equal((await f.api('POST',reviewPath(s),body)).status,429);assert.equal(calls,1);
+  clock=41000;
   assert.equal((await f.api('POST',reviewPath(s),body)).status,200);assert.equal(calls,2);
   assert.equal((await f.api('POST',reviewPath(s),body)).data.cached,true);assert.equal(calls,2);
 });
@@ -124,7 +126,7 @@ test('audio reviews persist across DB reopen; deleting a session during a reques
   const f=await fixture(t,{database:path,result:async()=>{if(delayed){started();await gate;}return reply;}}),s=await f.reach();
   t.after(()=>rmSync(dir,{recursive:true,force:true}));
   await f.api('POST',reviewPath(s),{submission_id:randomUUID(),audio:recording});
-  const db=openDatabase(path);try{assert.equal(db.prepare('SELECT COUNT(*) n FROM learning_audio_reviews').get().n,1);assert.equal(db.prepare('PRAGMA user_version').get().user_version,14);}finally{db.close();}
+  const db=openDatabase(path);try{assert.equal(db.prepare('SELECT COUNT(*) n FROM learning_audio_reviews').get().n,1);assert.equal(db.prepare('PRAGMA user_version').get().user_version,15);}finally{db.close();}
   delayed=true;const changed=Buffer.from(recording.data,'base64');changed[changed.length-1]^=1;
   const pending=f.api('POST',reviewPath(s),{submission_id:randomUUID(),audio:{...recording,data:changed.toString('base64')}});await ready;
   f.app.db.prepare('DELETE FROM learning_sessions WHERE id=?').run(s.id);release();assert.equal((await pending).status,404);

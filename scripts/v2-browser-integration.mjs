@@ -7,7 +7,7 @@ import {readFileSync,existsSync,writeFileSync,mkdirSync} from 'node:fs';
 import {resolve,extname,sep} from 'node:path';
 import {createApp} from '../server/app.mjs';
 import {starterLessons} from '../server/content/learning-v2/curriculum.mjs';
-const require=createRequire(process.env.REA_PACKAGE_JSON||'C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(process.env.REA_PACKAGE_JSON||new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core');
 const origins=[],app=createApp({origins}),root=resolve('dist');
 app.server.listen(0,'127.0.0.1');await once(app.server,'listening');

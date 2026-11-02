@@ -5,7 +5,7 @@ import {once} from 'node:events';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {createApp} from '../server/app.mjs';
-const require=createRequire(process.env.REA_PACKAGE_JSON||'C:/Users/HP VICTUS/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/rea-agents/package.json');
+const require=createRequire(process.env.REA_PACKAGE_JSON||new URL('../package.json',import.meta.url));
 const {chromium}=require('playwright-core');
 const origins=[],app=createApp({origins}),report={database:'isolated_in_memory',checks:[],product_material_ui_tested:false,ai_requests:0,passed:false};
 app.server.listen(0,'127.0.0.1');await once(app.server,'listening');const origin=`http://127.0.0.1:${app.server.address().port}`;origins.push(origin);let browser;

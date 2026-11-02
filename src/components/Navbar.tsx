@@ -57,13 +57,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         <a href="#" className="flex items-center gap-2 group">
           <div className="relative flex h-9 w-9 items-center justify-center rounded-[10px] overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
             <img
-              src="/logo.svg"
-              alt="OpenQuiz Logo"
+              src="/logo.svg?v=ol-2026"
+              alt="OpenLearn Logo"
               className="h-full w-full object-contain"
             />
           </div>
           <span className="text-lg font-black tracking-tight text-foreground">
-            OpenQuiz
+            OpenLearn
           </span>
           <span className="hidden sm:inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             AI 2.0

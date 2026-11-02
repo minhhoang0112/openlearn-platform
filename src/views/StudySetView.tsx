@@ -42,7 +42,7 @@ import {
 
 export const StudySetView: React.FC = () => {
   const { params, path, navigate, goBack } = useRouter();
-  const {capabilities}=useAuth();
+  const {capabilities,user}=useAuth();
   const setId = Number(params.id) || 163;
 
   const [set, setSet] = useState<(SetCard & { words: ApiWord[] }) | null>(null);
@@ -58,6 +58,11 @@ export const StudySetView: React.FC = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
   const [shuffledIndices, setShuffledIndices] = useState<number[]>([]);
+  const audioKey=`oq-card-auto-audio:${user?.id||'guest'}`;
+  const [autoAudio,setAutoAudio]=useState(()=>localStorage.getItem(audioKey)!=='false');
+  const activeCard=set?.words[isShuffled?shuffledIndices[currentIndex]??0:currentIndex];
+  useEffect(()=>{if(loading||!autoAudio||!activeCard)return;const timer=setTimeout(()=>playAudio(activeCard.term),150);return()=>clearTimeout(timer);},[loading,autoAudio,activeCard?.id,activeCard?.term]);
+  useEffect(()=>()=>{window.speechSynthesis?.cancel();},[]);
 
   // Filter & search states
   const [saved, setSaved] = useState(false);
@@ -472,6 +477,7 @@ export const StudySetView: React.FC = () => {
                 <Shuffle className={`w-4 h-4 ${isShuffled ? 'text-indigo-600' : ''}`} />
               </button>
 
+              <button type="button" role="switch" aria-checked={autoAudio} aria-label="Tự đọc từ khi đổi thẻ" onClick={e=>{e.stopPropagation();setAutoAudio(v=>{localStorage.setItem(audioKey,String(!v));return !v;});}} className="text-xs text-slate-500 px-2 py-1 rounded-lg border">{autoAudio?'Tự đọc: Bật':'Tự đọc: Tắt'}</button>
               <span className="text-[10px] font-bold text-slate-400">
                 {isFlipped ? 'Mặt sau (Nghĩa)' : 'Mặt trước (Từ vựng)'}
               </span>

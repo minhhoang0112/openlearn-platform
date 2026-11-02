@@ -14,8 +14,8 @@ export const Footer: React.FC<FooterProps> = ({ lang, setLang }) => {
           {/* Column 1: Brand & Company info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img src="/logo.svg" alt="OpenQuiz" className="h-8 w-8 rounded-lg shadow-2xs" />
-              <span className="text-base font-extrabold tracking-tight">OpenQuiz</span>
+              <img src="/logo.svg?v=ol-2026" alt="OpenLearn" className="h-8 w-8 rounded-lg shadow-2xs" />
+              <span className="text-base font-extrabold tracking-tight">OpenLearn</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               {lang === 'vi'

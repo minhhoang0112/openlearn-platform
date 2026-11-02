@@ -1,21 +1,23 @@
 import { randomUUID } from 'node:crypto';
 import { fail,text,enumeration,list,integer,boolean } from './validation.mjs';
-import {geminiProvider,ollamaProvider} from './providers.mjs';
+import {ollamaProvider} from './providers.mjs';
 import {transaction} from './database.mjs';
+import {createGeminiRouter} from './ai-routing.mjs';
 const now=()=>new Date().toISOString();
 
 // Optional provider gateway; never scrape/reuse the original application's credentials.
 // Gateway returns JSON in the documented contract. No fabricated local AI scores.
-export function aiService(db,content,{url,key,provider='gateway',geminiKey,model,timeoutMs=60000}={}) {
-  const direct=provider==='gemini'?geminiProvider({key:geminiKey,model,timeoutMs}):null;
+export function aiService(db,content,{url,key,provider='gateway',geminiKey,model,timeoutMs=60000,...routing}={}) {
+  const router=createGeminiRouter({key:geminiKey,model,timeoutMs,...routing});
+  const direct=provider==='gemini'?router:null;
   const configured=direct?direct.configured:!!url;
   const userConfig=user=>user?db.prepare('SELECT * FROM user_ai_settings WHERE user_id=?').get(user.id):null;
-  function selectedProvider(user){const settings=userConfig(user);if(settings?.provider==='gemini')return geminiProvider({key:settings.api_key||geminiKey,model:settings.model,timeoutMs});if(settings?.provider==='ollama')return ollamaProvider({model:settings.model});return direct;}
+  function selectedProvider(user){const settings=userConfig(user);if(settings?.provider==='gemini')return router.forAccount(settings);if(settings?.provider==='ollama')return ollamaProvider({model:settings.model});return direct;}
   function isConfigured(user){const selected=selectedProvider(user);return selected?selected.configured:configured;}
   async function generate(task,input,user) {
     if(!isConfigured(user))fail(503,'AI_NOT_CONFIGURED','Kết nối AI trong Cài đặt AI để sử dụng tính năng này. Không cần nâng cấp tài khoản.');
     const selected=selectedProvider(user);
-    if(selected)return selected.generate(task,input);
+    if(selected)return selected.generate(task,input,user?.id??'anonymous');
     let response;
     try { response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',...(key?{Authorization:`Bearer ${key}`}:{})},body:JSON.stringify({task,input}),signal:AbortSignal.timeout(timeoutMs)}); }
     catch { fail(502,'AI_PROVIDER_UNAVAILABLE','AI provider could not be reached.'); }
@@ -55,13 +57,14 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       try{return await work;}finally{pendingDetails.delete(requestKey);}
   }
   function registerRoutes(route) {
+    route('DELETE','/settings/ai',c=>{db.prepare('DELETE FROM user_ai_settings WHERE user_id=?').run(c.user.id);return {configuration_source:'environment',configured:isConfigured(c.user)};},{summary:'Use shared server task routing instead of personal AI overrides'});
     route('POST','/words/:id/learning-details',async c=>{
       const allowAi=c.body.allow_ai===undefined?true:boolean(c.body.allow_ai,'allow_ai');
       return ensureLearningDetails(c.params.id,c.user,(...args)=>c.limited(...args),allowAi);
     },{summary:'Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits'});
     route('GET','/settings/ai',c=>{
       const settings=userConfig(c.user),selected=selectedProvider(c.user);
-      return {provider:settings?.provider||direct?.name||'gemini',model:settings?.model||model||'gemini-3.8-flash',configured:isConfigured(c.user),key_configured:selected?.name==='ollama'?false:!!(settings?.api_key||geminiKey),configuration_source:settings?'account':direct?'environment':'gateway',supported_providers:['gemini','ollama'],subscription_required:false};
+      return {provider:settings?.provider||direct?.name||'gemini',model:settings?.model||model||'gemini-3.8-flash',configured:isConfigured(c.user),key_configured:selected?.name==='ollama'?false:!!(settings?.api_key||geminiKey),configuration_source:settings?'account':direct?'environment':'gateway',supported_providers:['gemini','ollama'],subscription_required:false,routing:selected?.status?.()??null};
     },{summary:'Own AI settings without exposing API keys'});
     route('PUT','/settings/ai',c=>{
       const old=userConfig(c.user),name=enumeration(c.body.provider,'provider',['gemini','ollama']);
@@ -115,7 +118,7 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       )))fail(502,'AI_INVALID_RESPONSE','Provider returned invalid practice questions or answer indexes.');
       if(kind==='speaking_feedback')result._submission_transcript=input.transcript;
       if(kind.startsWith('speaking_')){result._target_word_ids=input.words.map(w=>w.word_id);result._instruction=input.instruction;result._speaking_question=text(c.body.question,'question',{min:0,max:4000,fallback:''});}
-      const id=randomUUID();db.prepare('INSERT INTO generated_content VALUES(?,?,?,?,?,?)').run(id,c.user.id,set.id,kind,JSON.stringify(result),now());c.status=201;return {id,kind,set_id:set.id,result,provider:selectedProvider(c.user)?.name||'configured_gateway'};
+      const id=randomUUID();db.prepare('INSERT INTO generated_content VALUES(?,?,?,?,?,?)').run(id,c.user.id,set.id,kind,JSON.stringify(result),now());c.status=201;return {id,kind,set_id:set.id,result,...describe(c.user,kind)};
     },{summary:'Optional AI gateway: explicit 503 until configured, no simulated scores'});
     route('GET','/ai/history',c=>({items:db.prepare('SELECT id,set_id,kind,created_at FROM generated_content g WHERE user_id=? AND NOT EXISTS(SELECT 1 FROM exercise_attempts e WHERE e.content_id=g.id) ORDER BY created_at DESC LIMIT 100').all(c.user.id)}),{summary:'Current user AI history excluding server-graded exercise answer keys'});
     route('GET','/ai/history/:id',c=>{const row=db.prepare('SELECT * FROM generated_content g WHERE id=? AND user_id=? AND NOT EXISTS(SELECT 1 FROM exercise_attempts e WHERE e.content_id=g.id)').get(c.params.id,c.user.id);if(!row)fail(404,'NOT_FOUND','Generated content not found.');content.setAccess(row.set_id,c.user);return {...row,content:JSON.parse(row.content)};},{summary:'Read owned AI history without exposing exercise answer keys'});
@@ -169,6 +172,6 @@ export function aiService(db,content,{url,key,provider='gateway',geminiKey,model
       })();pendingTranslations.set(pendingKey,work);try{return await work;}finally{pendingTranslations.delete(pendingKey);}
     },{summary:'Translate and cache an owned message in Vietnamese'});
   }
-  const describe=user=>{const settings=userConfig(user);return {provider:settings?.provider||direct?.name||'gateway',model:settings?.model||model||(direct?.name==='gemini'?'gemini-3.8-flash':null)};};
+  const describe=(user,task)=>{const selected=selectedProvider(user);if(selected?.describe)return selected.describe(task);const settings=userConfig(user);return {provider:settings?.provider||direct?.name||'gateway',model:settings?.model||model||null};};
   return {configured,isConfigured,generate,describe,ensureLearningDetails,hasAudio:user=>isConfigured(user)&&selectedProvider(user)?.name==='gemini',registerRoutes};
 }

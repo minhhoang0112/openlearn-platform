@@ -1,4 +1,5 @@
 node_modules/
+.npm-cache/
 dist/
 *.tsbuildinfo
 .env
@@ -10,3 +11,17 @@ research/captures/
 .tmp/
 *.sqlite*
 slice_*.png
+
+# Generated handoff archives and downloaded reference bundles (not app assets).
+docs/ANTI-HANDOFF.zip
+research/index.js
+research/home.html
+
+# Local editor / operating system files and tool logs.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+npm-debug.log*
+*.log
+__pycache__/

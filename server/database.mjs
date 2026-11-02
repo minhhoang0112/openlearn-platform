@@ -7,7 +7,7 @@ export function openDatabase(filename) {
   const db = new DatabaseSync(filename, { timeout: 5000 });
   db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;');
   const version = db.prepare('PRAGMA user_version').get().user_version;
-  if (version > 14) throw new Error('Database version is newer than this server.');
+  if (version > 15) throw new Error('Database version is newer than this server.');
   if (version === 0) db.exec(`
     BEGIN;
     CREATE TABLE users(id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, name TEXT NOT NULL, settings TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL);
@@ -103,6 +103,13 @@ export function openDatabase(filename) {
     CREATE TABLE learning_material_cues(material_id TEXT PRIMARY KEY REFERENCES learning_materials(id) ON DELETE CASCADE,revision INTEGER NOT NULL DEFAULT 0,cues TEXT NOT NULL,updated_at TEXT NOT NULL);
     CREATE TABLE learning_material_dictations(material_id TEXT NOT NULL REFERENCES learning_materials(id) ON DELETE CASCADE,submission_id TEXT NOT NULL,request_hash TEXT NOT NULL,result TEXT NOT NULL,created_at TEXT NOT NULL,PRIMARY KEY(material_id,submission_id));
     PRAGMA user_version=14; COMMIT;`);
+  if(version<15)db.exec(`BEGIN;
+    CREATE TABLE communication_sessions(id TEXT PRIMARY KEY,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,title TEXT NOT NULL,scenario TEXT NOT NULL,level TEXT NOT NULL,mode TEXT NOT NULL,use_memory INTEGER NOT NULL DEFAULT 1,status TEXT NOT NULL DEFAULT 'active',summary TEXT,summary_through INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
+    CREATE INDEX communication_sessions_user ON communication_sessions(user_id,updated_at DESC,id);
+    CREATE TABLE communication_turns(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id TEXT NOT NULL REFERENCES communication_sessions(id) ON DELETE CASCADE,event_id TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('user','assistant')),content TEXT NOT NULL,translation TEXT NOT NULL DEFAULT '',feedback TEXT NOT NULL DEFAULT '',status TEXT NOT NULL DEFAULT 'final',source TEXT NOT NULL,created_at TEXT NOT NULL,UNIQUE(session_id,event_id));
+    CREATE INDEX communication_turns_session ON communication_turns(session_id,id);
+    CREATE TABLE communication_memories(id TEXT PRIMARY KEY,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,source_session_id TEXT REFERENCES communication_sessions(id) ON DELETE CASCADE,content TEXT NOT NULL,created_at TEXT NOT NULL);
+    PRAGMA user_version=15; COMMIT;`);
   return db;
 }
 
