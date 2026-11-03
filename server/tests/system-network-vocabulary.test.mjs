@@ -22,6 +22,12 @@ test('system/network course has complete bilingual content and preserves progres
     const words=db.prepare('SELECT w.* FROM words w JOIN path_sets p ON p.set_id=w.set_id WHERE p.path_id=? ORDER BY p.position,w.position').all(path.id);
     assert.equal(words.length,360);assert.equal(new Set(words.map(w=>w.term.toLowerCase())).size,360);
     assert.ok(words.every(w=>w.definition&&w.example&&!w.image_url));
+    assert.ok(words.every(w=>w.part_of_speech&&/^\/.+\/$/.test(w.phonetic)));
+    assert.equal(words.find(w=>w.term==='device').part_of_speech,'noun');
+    assert.equal(words.find(w=>w.term==='device').phonetic,'/dɪˈvaɪs/');
+    assert.equal(words.find(w=>w.term==='install').part_of_speech,'verb');
+    assert.equal(words.find(w=>w.term==='connection refused').part_of_speech,'error message');
+    assert.equal(words.find(w=>w.term==='DNS').phonetic,'/ˌdiː ɛn ˈɛs/');
     db.prepare("INSERT INTO word_progress(user_id,word_id,status,starred) VALUES(?,?,'mastered',1)").run(uid,words[0].id);
     seedSystemNetworkVocabulary(db,{ownerId:uid});
     db.prepare('DELETE FROM reference_imports WHERE id=?').run(systemNetworkSource+':user:'+uid);

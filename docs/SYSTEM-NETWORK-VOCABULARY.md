@@ -46,3 +46,9 @@ Không tự thêm khóa vào mọi tài khoản khi khởi động. Công cụ `
 Mỗi hàng JSON gồm `[từ, nghĩa tiếng Việt, ví dụ tiếng Anh, bản dịch ví dụ]`. Bộ thẻ có `key` ổn định; giữ key khi sửa tiêu đề. Chạy lại công cụ khi nội dung JSON đổi sẽ cập nhật theo từ và giữ ID / tiến độ / ghi chú cá nhân. Không tự xóa thẻ cũ đã có lịch sử; việc đổi hẳn từ được xem là thêm một thẻ mới. Khi JSON không đổi, chạy lại không ghi đè chỉnh sửa riêng trên web. Bản dịch ví dụ soạn sẵn chỉ áp dụng khi câu ví dụ gốc khớp chính xác.
 
 Kiểm thử: `node --test server/tests/system-network-vocabulary.test.mjs`.
+
+## Từ loại và phiên âm
+
+Toàn bộ 360 thẻ có từ loại và phiên âm trong `server/content/system-network-pronunciation.json`. Từ loại được gán theo nghĩa đang học; thông báo lỗi / trạng thái không bị gán thành danh từ. Phiên âm giọng Mỹ chuyển từ ARPAbet của CMUdict, bổ sung cách đọc thuật ngữ và chữ viết tắt. Với cụm dài, đây là dạng đọc riêng từng từ để tra cứu, không phải bản chép ngữ điệu / nối âm của cả câu. Giọng phát âm khi bấm loa vẫn tùy bộ đọc trên máy.
+
+Nguồn và giấy phép: [CMUdict](https://github.com/cmusphinx/cmudict), giữ nguyên thông báo trong `CMUDICT-NOTICE.txt`. Chỉ phân phối 360 phiên âm cần dùng, không đưa cả từ điển hoặc file âm thanh vào repo. Muốn tạo lại dữ liệu, tải `cmudict.dict` từ nguồn trên rồi chạy `node scripts/prepare-system-network-pronunciation.mjs <đường dẫn file>`; công cụ không tự gọi mạng hoặc AI.

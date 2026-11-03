@@ -1,0 +1,1448 @@
+{
+  "accent": "en-US",
+  "source": "CMUdict with editorial technical-term readings; IPA converted from ARPAbet. Phrases show citation forms of their words, not connected-speech transcription.",
+  "source_url": "https://github.com/cmusphinx/cmudict",
+  "source_sha256": "81917843c7f44ce2b094ac63873c2c7a4cf802040792c455ba3ca406891c3d22",
+  "entries": {
+    "system": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɪstəm/"
+    },
+    "hardware": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈhɑrdˌwɛr/"
+    },
+    "software": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɔftˌwɛr/"
+    },
+    "device": {
+      "part_of_speech": "noun",
+      "phonetic": "/dɪˈvaɪs/"
+    },
+    "component": {
+      "part_of_speech": "noun",
+      "phonetic": "/kəmˈpoʊnənt/"
+    },
+    "workstation": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈwɝkˌsteɪʃən/"
+    },
+    "server": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɝvɚ/"
+    },
+    "client": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈklaɪənt/"
+    },
+    "host": {
+      "part_of_speech": "noun",
+      "phonetic": "/hoʊst/"
+    },
+    "resource": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈriːsɔrs/"
+    },
+    "configuration": {
+      "part_of_speech": "noun",
+      "phonetic": "/kənˌfɪɡjɚˈeɪʃən/"
+    },
+    "setting": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɛtɪŋ/"
+    },
+    "environment": {
+      "part_of_speech": "noun",
+      "phonetic": "/ɪnˈvaɪrənmənt/"
+    },
+    "architecture": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɑrkəˌtɛktʃɚ/"
+    },
+    "compatibility": {
+      "part_of_speech": "noun",
+      "phonetic": "/kəmˌpætəˈbɪləˌtiː/"
+    },
+    "processor": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈprɑˌsɛsɚ/"
+    },
+    "core": {
+      "part_of_speech": "noun",
+      "phonetic": "/kɔr/"
+    },
+    "memory": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈmɛmɚi/"
+    },
+    "RAM": {
+      "part_of_speech": "noun",
+      "phonetic": "/ræm/"
+    },
+    "storage": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈstɔrədʒ/"
+    },
+    "hard drive": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/hɑrd draɪv/"
+    },
+    "solid-state drive": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈsɑləd steɪt draɪv/"
+    },
+    "partition": {
+      "part_of_speech": "noun",
+      "phonetic": "/pɑrˈtɪʃən/"
+    },
+    "volume": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈvɑljum/"
+    },
+    "capacity": {
+      "part_of_speech": "noun",
+      "phonetic": "/kəˈpæsəti/"
+    },
+    "free space": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/friː speɪs/"
+    },
+    "power supply": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpaʊɚ səˈplaɪ/"
+    },
+    "motherboard": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈmʌðɚˌbɔrd/"
+    },
+    "peripheral": {
+      "part_of_speech": "noun",
+      "phonetic": "/pɚˈɪfɚəl/"
+    },
+    "firmware": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈfɝmˌwɛr/"
+    },
+    "operating system": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈɑpɚˌeɪtɪŋ ˈsɪstəm/"
+    },
+    "kernel": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈkɝnəl/"
+    },
+    "boot": {
+      "part_of_speech": "verb",
+      "phonetic": "/buːt/"
+    },
+    "startup": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈstɑrˌtʌp/"
+    },
+    "shutdown": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈʃʌtˌdaʊn/"
+    },
+    "restart": {
+      "part_of_speech": "verb",
+      "phonetic": "/riˈstɑrt/"
+    },
+    "reboot required": {
+      "part_of_speech": "status message",
+      "phonetic": "/riˈbuːt riˈkwaɪɚd/"
+    },
+    "sleep mode": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/sliːp moʊd/"
+    },
+    "hibernate": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˈhaɪbɚˌneɪt/"
+    },
+    "driver": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdraɪvɚ/"
+    },
+    "service": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɝvəs/"
+    },
+    "background process": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈbækˌɡraʊnd ˈprɑsɛs/"
+    },
+    "safe mode": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/seɪf moʊd/"
+    },
+    "recovery mode": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/rɪˈkʌvri moʊd/"
+    },
+    "boot device not found": {
+      "part_of_speech": "error message",
+      "phonetic": "/buːt dɪˈvaɪs nɑt faʊnd/"
+    },
+    "file": {
+      "part_of_speech": "noun",
+      "phonetic": "/faɪl/"
+    },
+    "directory": {
+      "part_of_speech": "noun",
+      "phonetic": "/dəˈrɛktɚi/"
+    },
+    "path": {
+      "part_of_speech": "noun",
+      "phonetic": "/pæθ/"
+    },
+    "absolute path": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈæbsəˌluːt pæθ/"
+    },
+    "relative path": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈrɛlətɪv pæθ/"
+    },
+    "root directory": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ruːt dəˈrɛktɚi/"
+    },
+    "working directory": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈwɝkɪŋ dəˈrɛktɚi/"
+    },
+    "extension": {
+      "part_of_speech": "noun",
+      "phonetic": "/ɪkˈstɛnʃən/"
+    },
+    "hidden file": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈhɪdən faɪl/"
+    },
+    "symbolic link": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/sɪmˈbɑlɪk lɪŋk/"
+    },
+    "mount": {
+      "part_of_speech": "verb",
+      "phonetic": "/maʊnt/"
+    },
+    "unmount": {
+      "part_of_speech": "verb",
+      "phonetic": "/ʌnˈmaʊnt/"
+    },
+    "read-only": {
+      "part_of_speech": "adjective",
+      "phonetic": "/riːd ˈoʊnli/"
+    },
+    "file not found": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪl nɑt faʊnd/"
+    },
+    "no such file or directory": {
+      "part_of_speech": "error message",
+      "phonetic": "/noʊ sʌtʃ faɪl ɔr dəˈrɛktɚi/"
+    },
+    "user account": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈjuːzɚ əˈkaʊnt/"
+    },
+    "administrator": {
+      "part_of_speech": "noun",
+      "phonetic": "/ədˈmɪnəˌstreɪtɚ/"
+    },
+    "privilege": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈprɪvlədʒ/"
+    },
+    "permission": {
+      "part_of_speech": "noun",
+      "phonetic": "/pɚˈmɪʃən/"
+    },
+    "ownership": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈoʊnɚˌʃɪp/"
+    },
+    "group": {
+      "part_of_speech": "noun",
+      "phonetic": "/ɡruːp/"
+    },
+    "access control": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈæksɛs kənˈtroʊl/"
+    },
+    "authentication": {
+      "part_of_speech": "noun",
+      "phonetic": "/ɔˌθɛntəˈkeɪʃən/"
+    },
+    "authorization": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɔθɚəˈzeɪʃən/"
+    },
+    "credentials": {
+      "part_of_speech": "noun",
+      "phonetic": "/krəˈdɛnʃəlz/"
+    },
+    "session": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɛʃən/"
+    },
+    "access denied": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈæksɛs dɪˈnaɪd/"
+    },
+    "permission denied": {
+      "part_of_speech": "error message",
+      "phonetic": "/pɚˈmɪʃən dɪˈnaɪd/"
+    },
+    "account locked": {
+      "part_of_speech": "error message",
+      "phonetic": "/əˈkaʊnt lɑkt/"
+    },
+    "insufficient privileges": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌɪnsəˈfɪʃənt ˈprɪvlədʒəz/"
+    },
+    "install": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˌɪnˈstɔl/"
+    },
+    "uninstall": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˌʌnɪnˈstɔl/"
+    },
+    "upgrade": {
+      "part_of_speech": "verb",
+      "phonetic": "/əpˈɡreɪd/"
+    },
+    "update": {
+      "part_of_speech": "noun",
+      "phonetic": "/əpˈdeɪt/"
+    },
+    "patch": {
+      "part_of_speech": "noun",
+      "phonetic": "/pætʃ/"
+    },
+    "package": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈpækədʒ/"
+    },
+    "dependency": {
+      "part_of_speech": "noun",
+      "phonetic": "/dɪˈpɛndənsi/"
+    },
+    "repository": {
+      "part_of_speech": "noun",
+      "phonetic": "/riˈpɑzəˌtɔri/"
+    },
+    "version": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈvɝʒən/"
+    },
+    "release": {
+      "part_of_speech": "noun",
+      "phonetic": "/riˈliːs/"
+    },
+    "installer": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɪnˈstɔlɚ/"
+    },
+    "installation failed": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌɪnstəˈleɪʃən feɪld/"
+    },
+    "dependency conflict": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/dɪˈpɛndənsi ˈkɑnflɪkt/"
+    },
+    "unsupported version": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌʌnsəˈpɔrtɪd ˈvɝʒən/"
+    },
+    "rollback": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈroʊlˌbæk/"
+    },
+    "terminal": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈtɝmənəl/"
+    },
+    "shell": {
+      "part_of_speech": "noun",
+      "phonetic": "/ʃɛl/"
+    },
+    "command": {
+      "part_of_speech": "noun",
+      "phonetic": "/kəˈmænd/"
+    },
+    "argument": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɑrɡjəmənt/"
+    },
+    "option": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɑpʃən/"
+    },
+    "flag": {
+      "part_of_speech": "noun",
+      "phonetic": "/flæɡ/"
+    },
+    "syntax": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɪnˌtæks/"
+    },
+    "environment variable": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ɪnˈvaɪrənmənt ˈvɛriəbəl/"
+    },
+    "standard output": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈstændɚd ˈaʊtpʊt/"
+    },
+    "standard error": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈstændɚd ˈɛrɚ/"
+    },
+    "pipe": {
+      "part_of_speech": "noun",
+      "phonetic": "/paɪp/"
+    },
+    "exit code": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈɛɡzɪt koʊd/"
+    },
+    "command not found": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈmænd nɑt faʊnd/"
+    },
+    "invalid argument": {
+      "part_of_speech": "error message",
+      "phonetic": "/ɪnˈvælɪd ˈɑrɡjəmənt/"
+    },
+    "syntax error": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈsɪnˌtæks ˈɛrɚ/"
+    },
+    "process": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈprɑsɛs/"
+    },
+    "thread": {
+      "part_of_speech": "noun",
+      "phonetic": "/θrɛd/"
+    },
+    "process ID": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈprɑsɛs ˌaɪ ˈdiː/"
+    },
+    "daemon": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdiːmən/"
+    },
+    "scheduler": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈskɛdʒʊlɚ/"
+    },
+    "scheduled task": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈskɛdʒʊld tæsk/"
+    },
+    "queue": {
+      "part_of_speech": "noun",
+      "phonetic": "/kjuː/"
+    },
+    "worker": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈwɝkɚ/"
+    },
+    "concurrency": {
+      "part_of_speech": "noun",
+      "phonetic": "/kənˈkɝənsi/"
+    },
+    "deadlock": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdɛdˌlɑk/"
+    },
+    "crash": {
+      "part_of_speech": "noun",
+      "phonetic": "/kræʃ/"
+    },
+    "hang": {
+      "part_of_speech": "verb",
+      "phonetic": "/hæŋ/"
+    },
+    "not responding": {
+      "part_of_speech": "status message",
+      "phonetic": "/nɑt rɪˈspɑndɪŋ/"
+    },
+    "service unavailable": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈsɝvəs ˌʌnəˈveɪləbəl/"
+    },
+    "unexpected shutdown": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌʌnɪkˈspɛktɪd ˈʃʌtˌdaʊn/"
+    },
+    "network": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈnɛˌtwɝk/"
+    },
+    "local area network": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈloʊkəl ˈɛriə ˈnɛˌtwɝk/"
+    },
+    "wide area network": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/waɪd ˈɛriə ˈnɛˌtwɝk/"
+    },
+    "router": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈruːtɚ/"
+    },
+    "switch": {
+      "part_of_speech": "noun",
+      "phonetic": "/swɪtʃ/"
+    },
+    "gateway": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɡeɪˌtweɪ/"
+    },
+    "modem": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈmoʊdəm/"
+    },
+    "access point": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈæksɛs pɔɪnt/"
+    },
+    "network interface": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈnɛˌtwɝk ˈɪntɚˌfeɪs/"
+    },
+    "network adapter": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈnɛˌtwɝk əˈdæptɚ/"
+    },
+    "Ethernet": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈiːθɚˌnɛt/"
+    },
+    "cable": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈkeɪbəl/"
+    },
+    "topology": {
+      "part_of_speech": "noun",
+      "phonetic": "/təˈpɔlədʒi/"
+    },
+    "bandwidth": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈbændwɪdθ/"
+    },
+    "throughput": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈθruːˌpʊt/"
+    },
+    "IP address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌaɪ ˈpiː ˈæˌdrɛs/"
+    },
+    "IPv4": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌaɪ piː viː ˈfɔr/"
+    },
+    "IPv6": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌaɪ piː viː ˈsɪks/"
+    },
+    "subnet": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsʌbnɛt/"
+    },
+    "subnet mask": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈsʌbnɛt mæsk/"
+    },
+    "prefix length": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpriːfɪks lɛŋkθ/"
+    },
+    "default gateway": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/dɪˈfɔlt ˈɡeɪˌtweɪ/"
+    },
+    "private IP address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpraɪvət ˌaɪ ˈpiː ˈæˌdrɛs/"
+    },
+    "public IP address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpʌblɪk ˌaɪ ˈpiː ˈæˌdrɛs/"
+    },
+    "static IP address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈstætɪk ˌaɪ ˈpiː ˈæˌdrɛs/"
+    },
+    "dynamic IP address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/daɪˈnæmɪk ˌaɪ ˈpiː ˈæˌdrɛs/"
+    },
+    "MAC address": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/mæk ˈæˌdrɛs/"
+    },
+    "loopback": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈluːpbæk/"
+    },
+    "broadcast": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈbrɔdˌkæst/"
+    },
+    "IP address conflict": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌaɪ ˈpiː ˈæˌdrɛs ˈkɑnflɪkt/"
+    },
+    "DNS": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌdiː ɛn ˈɛs/"
+    },
+    "domain name": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/doʊˈmeɪn neɪm/"
+    },
+    "hostname": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈhoʊstneɪm/"
+    },
+    "name resolution": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/neɪm ˌrɛzəˈluːʃən/"
+    },
+    "DNS record": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌdiː ɛn ˈɛs ˈrɛkɚd/"
+    },
+    "resolver": {
+      "part_of_speech": "noun",
+      "phonetic": "/rɪˈzɑlvɚ/"
+    },
+    "DHCP": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌdiː eɪtʃ siː ˈpiː/"
+    },
+    "lease": {
+      "part_of_speech": "noun",
+      "phonetic": "/liːs/"
+    },
+    "reservation": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌrɛzɚˈveɪʃən/"
+    },
+    "routing table": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈraʊtɪŋ ˈteɪbəl/"
+    },
+    "route": {
+      "part_of_speech": "noun",
+      "phonetic": "/ruːt/"
+    },
+    "next hop": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/nɛkst hɑp/"
+    },
+    "NAT": {
+      "part_of_speech": "noun",
+      "phonetic": "/næt/"
+    },
+    "TTL": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌtiː tiː ˈɛl/"
+    },
+    "could not resolve host": {
+      "part_of_speech": "error message",
+      "phonetic": "/kʊd nɑt riˈzɑlv hoʊst/"
+    },
+    "wireless": {
+      "part_of_speech": "adjective",
+      "phonetic": "/ˈwaɪrlɪs/"
+    },
+    "SSID": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɛs ɛs aɪ ˈdiː/"
+    },
+    "signal strength": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈsɪɡnəl strɛŋkθ/"
+    },
+    "interference": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɪntɚˈfɪrəns/"
+    },
+    "frequency band": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈfriːkwənsi bænd/"
+    },
+    "channel": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈtʃænəl/"
+    },
+    "roaming": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈroʊmɪŋ/"
+    },
+    "connect": {
+      "part_of_speech": "verb",
+      "phonetic": "/kəˈnɛkt/"
+    },
+    "disconnect": {
+      "part_of_speech": "verb",
+      "phonetic": "/dɪskəˈnɛkt/"
+    },
+    "reconnect": {
+      "part_of_speech": "verb",
+      "phonetic": "/rikəˈnɛkt/"
+    },
+    "connected": {
+      "part_of_speech": "adjective",
+      "phonetic": "/kəˈnɛktɪd/"
+    },
+    "disconnected": {
+      "part_of_speech": "adjective",
+      "phonetic": "/ˌdɪskəˈnɛktɪd/"
+    },
+    "no Internet access": {
+      "part_of_speech": "error message",
+      "phonetic": "/noʊ ˈɪntɚˌnɛt ˈæksɛs/"
+    },
+    "limited connectivity": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈlɪmətəd kənɛkˈtɪvɪti/"
+    },
+    "network cable unplugged": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈnɛˌtwɝk ˈkeɪbəl ʌnˈplʌɡd/"
+    },
+    "protocol": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈproʊtəˌkɑl/"
+    },
+    "port": {
+      "part_of_speech": "noun",
+      "phonetic": "/pɔrt/"
+    },
+    "socket": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɑkət/"
+    },
+    "TCP": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌtiː siː ˈpiː/"
+    },
+    "UDP": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌjuː diː ˈpiː/"
+    },
+    "packet": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈpækət/"
+    },
+    "frame": {
+      "part_of_speech": "noun",
+      "phonetic": "/freɪm/"
+    },
+    "header": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈhɛdɚ/"
+    },
+    "payload": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈpeɪˌloʊd/"
+    },
+    "handshake": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈhændˌʃeɪk/"
+    },
+    "latency": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈleɪtənsi/"
+    },
+    "packet loss": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpækət lɔs/"
+    },
+    "jitter": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdʒɪtɚ/"
+    },
+    "retransmission": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌriːtrænzˈmɪʃən/"
+    },
+    "port forwarding": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/pɔrt ˈfɔrwɚdɪŋ/"
+    },
+    "connection refused": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈnɛkʃən rəfˈjuːzd/"
+    },
+    "connection timed out": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈnɛkʃən taɪmd aʊt/"
+    },
+    "connection reset": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈnɛkʃən riˈsɛt/"
+    },
+    "connection closed": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈnɛkʃən kloʊzd/"
+    },
+    "network unreachable": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈnɛˌtwɝk ʌnˈriːtʃəbəl/"
+    },
+    "host unreachable": {
+      "part_of_speech": "error message",
+      "phonetic": "/hoʊst ʌnˈriːtʃəbəl/"
+    },
+    "no route to host": {
+      "part_of_speech": "error message",
+      "phonetic": "/noʊ ruːt tuː hoʊst/"
+    },
+    "address already in use": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈæˌdrɛs ɔlˈrɛdi ɪn juːs/"
+    },
+    "broken pipe": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈbroʊkən paɪp/"
+    },
+    "request timeout": {
+      "part_of_speech": "error message",
+      "phonetic": "/rɪˈkwɛst ˈtaɪˌmaʊt/"
+    },
+    "temporary failure in name resolution": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈtɛmpɚˌɛri ˈfeɪljɚ ɪn neɪm ˌrɛzəˈluːʃən/"
+    },
+    "destination host unreachable": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌdɛstəˈneɪʃən hoʊst ʌnˈriːtʃəbəl/"
+    },
+    "connection aborted": {
+      "part_of_speech": "error message",
+      "phonetic": "/kəˈnɛkʃən əˈbɔrtɪd/"
+    },
+    "maximum retries exceeded": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈmæksəməm ˌriːˈtraɪz ɪkˈsiːdəd/"
+    },
+    "network is down": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈnɛˌtwɝk ɪz daʊn/"
+    },
+    "request": {
+      "part_of_speech": "noun",
+      "phonetic": "/rɪˈkwɛst/"
+    },
+    "response": {
+      "part_of_speech": "noun",
+      "phonetic": "/rɪˈspɑns/"
+    },
+    "endpoint": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɛndˌpɔɪnt/"
+    },
+    "URL": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌjuː ɑr ˈɛl/"
+    },
+    "HTTP": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌeɪtʃ tiː tiː ˈpiː/"
+    },
+    "HTTPS": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌeɪtʃ tiː tiː piː ˈɛs/"
+    },
+    "status code": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈstætəs koʊd/"
+    },
+    "redirect": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌriːdɚˈɛkt/"
+    },
+    "400 Bad Request": {
+      "part_of_speech": "error message",
+      "phonetic": "/fɔr ˈhʌndrəd bæd rɪˈkwɛst/"
+    },
+    "401 Unauthorized": {
+      "part_of_speech": "error message",
+      "phonetic": "/fɔr oʊ wʌn ʌnˈɔθəˌraɪzd/"
+    },
+    "403 Forbidden": {
+      "part_of_speech": "error message",
+      "phonetic": "/fɔr oʊ θriː ˈfɔrbɪdən/"
+    },
+    "404 Not Found": {
+      "part_of_speech": "error message",
+      "phonetic": "/fɔr oʊ fɔr nɑt faʊnd/"
+    },
+    "429 Too Many Requests": {
+      "part_of_speech": "error message",
+      "phonetic": "/fɔr tuː naɪn tuː ˈmɛni rɪˈkwɛsts/"
+    },
+    "500 Internal Server Error": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪv ˈhʌndrəd ˌɪnˈtɝnəl ˈsɝvɚ ˈɛrɚ/"
+    },
+    "502 Bad Gateway": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪv oʊ tuː bæd ˈɡeɪˌtweɪ/"
+    },
+    "firewall": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈfaɪrwɑl/"
+    },
+    "firewall rule": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈfaɪrwɑl ruːl/"
+    },
+    "inbound traffic": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌɪnˈbaʊnd ˈtræfɪk/"
+    },
+    "outbound traffic": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈaʊtˌbaʊnd ˈtræfɪk/"
+    },
+    "encryption": {
+      "part_of_speech": "noun",
+      "phonetic": "/ɛnˈkrɪpʃən/"
+    },
+    "certificate": {
+      "part_of_speech": "noun",
+      "phonetic": "/sɚˈtɪfɪkət/"
+    },
+    "TLS": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌtiː ɛl ˈɛs/"
+    },
+    "certificate expired": {
+      "part_of_speech": "error message",
+      "phonetic": "/sɚˈtɪfɪkət ɪkˈspaɪrd/"
+    },
+    "VPN": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌviː piː ˈɛn/"
+    },
+    "SSH": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɛs ɛs ˈeɪtʃ/"
+    },
+    "remote desktop": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/rɪˈmoʊt ˈdɛskˌtɑp/"
+    },
+    "public key": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpʌblɪk kiː/"
+    },
+    "private key": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈpraɪvət kiː/"
+    },
+    "multi-factor authentication": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈmʌlti ˈfæktɚ ɔˌθɛntəˈkeɪʃən/"
+    },
+    "vulnerability": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌvʌlnɚəˈbɪlɪti/"
+    },
+    "operation not permitted": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌɑpɚˈeɪʃən nɑt pɚˈmɪtɪd/"
+    },
+    "no space left on device": {
+      "part_of_speech": "error message",
+      "phonetic": "/noʊ speɪs lɛft ɑn dɪˈvaɪs/"
+    },
+    "read-only file system": {
+      "part_of_speech": "error message",
+      "phonetic": "/riːd ˈoʊnli faɪl ˈsɪstəm/"
+    },
+    "device or resource busy": {
+      "part_of_speech": "error message",
+      "phonetic": "/dɪˈvaɪs ɔr ˈriːsɔrs ˈbɪzi/"
+    },
+    "too many open files": {
+      "part_of_speech": "error message",
+      "phonetic": "/tuː ˈmɛni ˈoʊpən faɪlz/"
+    },
+    "segmentation fault": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌsɛɡmənˈteɪʃən fɔlt/"
+    },
+    "core dumped": {
+      "part_of_speech": "error message",
+      "phonetic": "/kɔr dʌmpt/"
+    },
+    "out of memory": {
+      "part_of_speech": "error message",
+      "phonetic": "/aʊt ʌv ˈmɛmɚi/"
+    },
+    "input/output error": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈɪnpʊt ˈaʊtpʊt ˈɛrɚ/"
+    },
+    "file exists": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪl ɪɡˈzɪsts/"
+    },
+    "directory not empty": {
+      "part_of_speech": "error message",
+      "phonetic": "/dəˈrɛktɚi nɑt ˈɛmpti/"
+    },
+    "is a directory": {
+      "part_of_speech": "error message",
+      "phonetic": "/ɪz ə dəˈrɛktɚi/"
+    },
+    "not a directory": {
+      "part_of_speech": "error message",
+      "phonetic": "/nɑt ə dəˈrɛktɚi/"
+    },
+    "resource temporarily unavailable": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈriːsɔrs ˌtɛmpɚˈɛrəli ˌʌnəˈveɪləbəl/"
+    },
+    "failed to start": {
+      "part_of_speech": "error message",
+      "phonetic": "/feɪld tuː stɑrt/"
+    },
+    "the system cannot find the file specified": {
+      "part_of_speech": "error message",
+      "phonetic": "/ðə ˈsɪstəm ˈkænɑt faɪnd ðə faɪl ˈspɛsəˌfaɪd/"
+    },
+    "the system cannot find the path specified": {
+      "part_of_speech": "error message",
+      "phonetic": "/ðə ˈsɪstəm ˈkænɑt faɪnd ðə pæθ ˈspɛsəˌfaɪd/"
+    },
+    "the process cannot access the file": {
+      "part_of_speech": "error message",
+      "phonetic": "/ðə ˈprɑsɛs ˈkænɑt ˈæksɛs ðə faɪl/"
+    },
+    "the file is in use": {
+      "part_of_speech": "error message",
+      "phonetic": "/ðə faɪl ɪz ɪn juːs/"
+    },
+    "application has stopped working": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˌæpləˈkeɪʃən hæz stɑpt ˈwɝkɪŋ/"
+    },
+    "not recognized as an internal or external command": {
+      "part_of_speech": "error message",
+      "phonetic": "/nɑt ˈrɛkəɡˌnaɪzd æz æn ˌɪnˈtɝnəl ɔr ɪkˈstɝnəl kəˈmænd/"
+    },
+    "access violation": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈæksɛs vaɪəˈleɪʃən/"
+    },
+    "missing DLL": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈmɪsɪŋ ˌdiː ɛl ˈɛl/"
+    },
+    "entry point not found": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈɛntri pɔɪnt nɑt faʊnd/"
+    },
+    "invalid parameter": {
+      "part_of_speech": "error message",
+      "phonetic": "/ɪnˈvælɪd pɚˈæmətɚ/"
+    },
+    "disk full": {
+      "part_of_speech": "error message",
+      "phonetic": "/dɪsk fʊl/"
+    },
+    "corrupted file": {
+      "part_of_speech": "error message",
+      "phonetic": "/kɚˈʌptɪd faɪl/"
+    },
+    "device not ready": {
+      "part_of_speech": "error message",
+      "phonetic": "/dɪˈvaɪs nɑt ˈrɛdi/"
+    },
+    "the operation was canceled": {
+      "part_of_speech": "status message",
+      "phonetic": "/ðə ˌɑpɚˈeɪʃən wɑz ˈkænsəld/"
+    },
+    "restart pending": {
+      "part_of_speech": "status message",
+      "phonetic": "/riˈstɑrt ˈpɛndɪŋ/"
+    },
+    "log": {
+      "part_of_speech": "noun",
+      "phonetic": "/lɔɡ/"
+    },
+    "log entry": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/lɔɡ ˈɛntri/"
+    },
+    "timestamp": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈtaɪmstæmp/"
+    },
+    "severity": {
+      "part_of_speech": "noun",
+      "phonetic": "/sɪˈvɛrɪti/"
+    },
+    "warning": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈwɔrnɪŋ/"
+    },
+    "error": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɛrɚ/"
+    },
+    "critical": {
+      "part_of_speech": "adjective",
+      "phonetic": "/ˈkrɪtɪkəl/"
+    },
+    "debug": {
+      "part_of_speech": "verb",
+      "phonetic": "/diˈbʌɡ/"
+    },
+    "stack trace": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/stæk treɪs/"
+    },
+    "metric": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈmɛtrɪk/"
+    },
+    "CPU usage": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌsiː piː ˈjuː ˈjuːsədʒ/"
+    },
+    "memory leak": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈmɛmɚi liːk/"
+    },
+    "bottleneck": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈbɑtəlˌnɛk/"
+    },
+    "uptime": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈʌptaɪm/"
+    },
+    "downtime": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdaʊnˌtaɪm/"
+    },
+    "backup": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈbæˌkʌp/"
+    },
+    "restore": {
+      "part_of_speech": "verb",
+      "phonetic": "/rɪˈstɔr/"
+    },
+    "recovery": {
+      "part_of_speech": "noun",
+      "phonetic": "/rɪˈkʌvri/"
+    },
+    "snapshot": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsnæpˌʃɑt/"
+    },
+    "full backup": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/fʊl ˈbæˌkʌp/"
+    },
+    "incremental backup": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˌɪnkrəˈmɛntəl ˈbæˌkʌp/"
+    },
+    "retention period": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/riˈtɛnʃən ˈpɪriəd/"
+    },
+    "redundancy": {
+      "part_of_speech": "noun",
+      "phonetic": "/rɪˈdʌndənsi/"
+    },
+    "replication": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌrɛpləˈkeɪʃən/"
+    },
+    "failover": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈfeɪlˌoʊvɚ/"
+    },
+    "data integrity": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈdeɪtə ˌɪnˈtɛɡrəti/"
+    },
+    "checksum": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈtʃɛkˌsʌm/"
+    },
+    "corruption": {
+      "part_of_speech": "noun",
+      "phonetic": "/kɚˈʌpʃən/"
+    },
+    "disaster recovery": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/dɪˈzæstɚ rɪˈkʌvri/"
+    },
+    "restore point": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/rɪˈstɔr pɔɪnt/"
+    },
+    "cloud computing": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/klaʊd kəmpˈjuːtɪŋ/"
+    },
+    "virtual machine": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈvɝtʃuəl məˈʃiːn/"
+    },
+    "hypervisor": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈhaɪpɚˌvaɪzɚ/"
+    },
+    "instance": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɪnstəns/"
+    },
+    "container": {
+      "part_of_speech": "noun",
+      "phonetic": "/kənˈteɪnɚ/"
+    },
+    "container image": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/kənˈteɪnɚ ˈɪmədʒ/"
+    },
+    "registry": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈrɛdʒɪstri/"
+    },
+    "persistent volume": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/pɚˈsɪstənt ˈvɑljum/"
+    },
+    "orchestration": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˌɔrkəˈstreɪʃən/"
+    },
+    "cluster": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈklʌstɚ/"
+    },
+    "node": {
+      "part_of_speech": "noun",
+      "phonetic": "/noʊd/"
+    },
+    "load balancer": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/loʊd ˈbælənsɚ/"
+    },
+    "scaling": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈskeɪlɪŋ/"
+    },
+    "quota": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈkwoʊtə/"
+    },
+    "resource limit exceeded": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈriːsɔrs ˈlɪmət ɪkˈsiːdəd/"
+    },
+    "database": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈdeɪtəˌbeɪs/"
+    },
+    "table": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈteɪbəl/"
+    },
+    "record": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈrɛkɚd/"
+    },
+    "query": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈkwɪri/"
+    },
+    "transaction": {
+      "part_of_speech": "noun",
+      "phonetic": "/trænˈzækʃən/"
+    },
+    "commit": {
+      "part_of_speech": "verb",
+      "phonetic": "/kəˈmɪt/"
+    },
+    "index": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɪndɛks/"
+    },
+    "schema": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈskiːmə/"
+    },
+    "migration": {
+      "part_of_speech": "noun",
+      "phonetic": "/maɪˈɡreɪʃən/"
+    },
+    "constraint": {
+      "part_of_speech": "noun",
+      "phonetic": "/kənˈstreɪnt/"
+    },
+    "duplicate key": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈduːpləkət kiː/"
+    },
+    "database is locked": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈdeɪtəˌbeɪs ɪz lɑkt/"
+    },
+    "connection pool": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/kəˈnɛkʃən puːl/"
+    },
+    "query timeout": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈkwɪri ˈtaɪˌmaʊt/"
+    },
+    "foreign key constraint failed": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈfɔrən kiː kənˈstreɪnt feɪld/"
+    },
+    "deployment": {
+      "part_of_speech": "noun",
+      "phonetic": "/dɪˈplɔɪmənt/"
+    },
+    "production": {
+      "part_of_speech": "noun",
+      "phonetic": "/prəˈdʌkʃən/"
+    },
+    "staging": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsteɪdʒɪŋ/"
+    },
+    "build": {
+      "part_of_speech": "noun",
+      "phonetic": "/bɪld/"
+    },
+    "runtime": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈrʌnˌtaɪm/"
+    },
+    "module not found": {
+      "part_of_speech": "error message",
+      "phonetic": "/ˈmɑdʒul nɑt faʊnd/"
+    },
+    "configuration error": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/kənˌfɪɡjɚˈeɪʃən ˈɛrɚ/"
+    },
+    "health check": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/hɛlθ tʃɛk/"
+    },
+    "reverse proxy": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/rɪˈvɝs ˈprɑksi/"
+    },
+    "upstream": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈʌpˈstriːm/"
+    },
+    "cache": {
+      "part_of_speech": "noun",
+      "phonetic": "/kæʃ/"
+    },
+    "cache miss": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/kæʃ mɪs/"
+    },
+    "CORS error": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/kɔrz ˈɛrɚ/"
+    },
+    "503 Service Unavailable": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪv oʊ θriː ˈsɝvəs ˌʌnəˈveɪləbəl/"
+    },
+    "504 Gateway Timeout": {
+      "part_of_speech": "error message",
+      "phonetic": "/faɪv oʊ fɔr ˈɡeɪˌtweɪ ˈtaɪˌmaʊt/"
+    },
+    "troubleshoot": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˈtrʌbəlˌʃuːt/"
+    },
+    "diagnose": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˌdaɪəɡˈnoʊs/"
+    },
+    "reproduce": {
+      "part_of_speech": "verb",
+      "phonetic": "/ˌriːprəˈduːs/"
+    },
+    "root cause": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ruːt kɑz/"
+    },
+    "symptom": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈsɪmptəm/"
+    },
+    "workaround": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈwɝkɚˈaʊnd/"
+    },
+    "incident": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈɪnsədənt/"
+    },
+    "outage": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈaʊtədʒ/"
+    },
+    "maintenance": {
+      "part_of_speech": "noun",
+      "phonetic": "/ˈmeɪntənəns/"
+    },
+    "support ticket": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/səˈpɔrt ˈtɪkət/"
+    },
+    "steps to reproduce": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/stɛps tuː ˌriːprəˈduːs/"
+    },
+    "expected behavior": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ɪkˈspɛktəd bɪˈheɪvjɚ/"
+    },
+    "actual behavior": {
+      "part_of_speech": "noun phrase",
+      "phonetic": "/ˈæktʃəwəl bɪˈheɪvjɚ/"
+    },
+    "resolved": {
+      "part_of_speech": "adjective",
+      "phonetic": "/riˈzɑlvd/"
+    },
+    "pending investigation": {
+      "part_of_speech": "status message",
+      "phonetic": "/ˈpɛndɪŋ ˌɪnˌvɛstəˈɡeɪʃən/"
+    }
+  }
+}

@@ -4,9 +4,11 @@ import {transaction} from '../database.mjs';
 
 // Independently authored text only. Rows: term, Vietnamese sense, English example, Vietnamese example.
 const raw=readFileSync(new URL('./system-network-vocabulary.json',import.meta.url),'utf8');
+const pronunciationRaw=readFileSync(new URL('./system-network-pronunciation.json',import.meta.url),'utf8');
+const pronunciation=JSON.parse(pronunciationRaw).entries;
 export const systemNetworkVocabulary=JSON.parse(raw);
 export const systemNetworkSource='openlearn:system-network:v1';
-const digest=createHash('sha256').update(raw).digest('hex');
+const digest=createHash('sha256').update(raw).update(pronunciationRaw).digest('hex');
 const examples=new Map();
 const keys=new Set(),terms=new Set();
 for(const set of systemNetworkVocabulary.sets){
@@ -15,6 +17,7 @@ for(const set of systemNetworkVocabulary.sets){
   for(const row of set.words){
     if(row.length!==4||row.some(s=>typeof s!=='string'||!s.trim()))throw Error('Incomplete system/network vocabulary row');
     const term=row[0].toLowerCase();
+    if(!pronunciation[row[0]]?.part_of_speech||!pronunciation[row[0]]?.phonetic)throw Error('Missing system/network pronunciation: '+row[0]);
     if(terms.has(term))throw Error('Duplicate system/network term: '+term);
     terms.add(term);examples.set(term+'\0'+row[2],row[3]);
   }
@@ -54,9 +57,10 @@ export function seedSystemNetworkVocabulary(db,{ownerId,movePublic=false}={}){
         set={id:Number(result.lastInsertRowid)};
       }else db.prepare('UPDATE study_sets SET title=?,description=?,updated_at=? WHERE id=?').run(topic.title,description,now,set.id);
       for(const [position,[term,definition,example]] of topic.words.entries()){
+        const {part_of_speech,phonetic}=pronunciation[term];
         const old=db.prepare('SELECT id FROM words WHERE set_id=? AND term=? COLLATE NOCASE ORDER BY id LIMIT 1').get(set.id,term);
-        if(old)db.prepare('UPDATE words SET definition=?,example=?,position=? WHERE id=?').run(definition,example,position,old.id);
-        else db.prepare('INSERT INTO words(set_id,term,definition,example,position) VALUES(?,?,?,?,?)').run(set.id,term,definition,example,position);
+        if(old)db.prepare('UPDATE words SET definition=?,example=?,part_of_speech=?,phonetic=?,position=? WHERE id=?').run(definition,example,part_of_speech,phonetic,position,old.id);
+        else db.prepare('INSERT INTO words(set_id,term,definition,example,part_of_speech,phonetic,position) VALUES(?,?,?,?,?,?,?)').run(set.id,term,definition,example,part_of_speech,phonetic,position);
       }
       // Keep word IDs and all personal notes / progress on content updates.
       db.prepare('INSERT INTO path_sets(path_id,set_id,position) VALUES(?,?,?) ON CONFLICT(path_id,set_id) DO UPDATE SET position=excluded.position').run(path.id,set.id,index);

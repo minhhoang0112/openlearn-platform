@@ -490,9 +490,11 @@ export const StudySetView: React.FC = () => {
                   <div className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
                     {currentWord.term}
                   </div>
-                  <div className="text-sm md:text-base font-semibold text-slate-500 dark:text-slate-400">
-                    {currentWord.part_of_speech || 'word'} - {currentWord.phonetic || ''}
-                  </div>
+                  {(currentWord.part_of_speech?.trim() || currentWord.phonetic?.trim()) && (
+                    <div className="text-sm md:text-base font-semibold text-slate-500 dark:text-slate-400">
+                      {[currentWord.part_of_speech?.trim(), currentWord.phonetic?.trim()].filter(Boolean).join(' · ')}
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
@@ -654,9 +656,11 @@ export const StudySetView: React.FC = () => {
                       <div className="text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight [overflow-wrap:anywhere]">
                         {w.term}
                       </div>
-                      <div className="text-xs text-slate-400 font-medium truncate mt-0.5">
-                        {w.part_of_speech || 'noun'} - {w.phonetic || ''}
-                      </div>
+                      {(w.part_of_speech?.trim() || w.phonetic?.trim()) && (
+                        <div className="text-xs text-slate-400 font-medium truncate mt-0.5">
+                          {[w.part_of_speech?.trim(), w.phonetic?.trim()].filter(Boolean).join(' · ')}
+                        </div>
+                      )}
                     </div>
                   </div>
 
