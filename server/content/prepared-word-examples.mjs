@@ -1,3 +1,4 @@
+import {systemNetworkExampleTranslation} from './system-network-vocabulary.mjs';
 // Authored English/Vietnamese examples; only exact listed Vietnamese senses match.
 const rows=[
   ['mother',['mẹ','má'],'My mother is in the kitchen.','Mẹ tôi đang ở trong bếp.'],
@@ -45,6 +46,10 @@ const rows=[
 const normal=s=>s.normalize('NFKC').trim().toLowerCase().replace(/[.!?]+$/,'');
 export const preparedExampleCount=rows.length;
 export function preparedWordExample(word){
+  if(word.example_source==='library'&&!word.example_translation?.trim()){
+    const translation=systemNetworkExampleTranslation(word);
+    if(translation)return {...word,example_translation:translation,example_source:'prepared',translation_source:'prepared'};
+  }
   if(word.example_source==='ai'&&word.example?.trim()&&!word.example_translation?.trim()){
     const known=rows.find(row=>row[2]===word.example.trim());
     if(known)return {...word,example_translation:known[3],translation_source:'prepared'};

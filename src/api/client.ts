@@ -83,6 +83,7 @@ export interface SetProgress {
 }
 
 export interface SetCard {
+  collection_id?: number | null;
   id: number; title: string; description: string; learning_language: string; native_language: string;
   visibility: 'private' | 'public'; tag: string; source: string; content_status: string;
   word_count: number; mastered_count: number; saved: boolean; author: { id: number | null; name: string };
@@ -193,6 +194,7 @@ export interface ReadingTranslationResponse {
 }
 
 export interface PathCard {
+  kind?: 'vocabulary_collection' | 'learning_path';
   id: number; title: string; description: string; learning_language: string; native_language: string;
   visibility: 'private' | 'public'; tag: string; source: string; content_status: string;
   expected_set_count: number; set_count: number; saved: boolean; author: { id: number | null; name: string };

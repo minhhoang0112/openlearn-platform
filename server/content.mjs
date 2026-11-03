@@ -23,6 +23,8 @@ export function contentService(db) {
     return db.prepare(`SELECT w.*,COALESCE(n.example,w.example) example,COALESCE(n.translation,'') example_translation,COALESCE(n.synonyms,w.synonyms) synonyms,COALESCE(n.origin,'library') example_source,COALESCE(p.status,'new') status,COALESCE(p.starred,0) starred,p.due_at,p.last_reviewed_at FROM words w LEFT JOIN word_progress p ON w.id=p.word_id AND p.user_id=? LEFT JOIN word_notes n ON n.word_id=w.id AND n.user_id=? WHERE w.set_id=? ORDER BY w.position,w.id`).all(user?.id ?? -1,user?.id ?? -1,setId).map(w=>{const value={...w,starred:!!w.starred};return languages?.learning_language==='en'&&languages?.native_language==='vi'?preparedWordExample(value):value;});
   }
   function card(row,user,kind='set') {
+    const collection = kind==='path' && row.source==='openlearn:system-network:v1';
+    const parent = kind==='set' ? db.prepare("SELECT p.id FROM learning_paths p JOIN path_sets ps ON ps.path_id=p.id WHERE ps.set_id=? AND p.owner_id IS ? AND p.source='openlearn:system-network:v1' ORDER BY p.id LIMIT 1").get(row.id,row.owner_id) : null;
     const saved = !!user && !!db.prepare('SELECT 1 FROM bookmarks WHERE user_id=? AND kind=? AND resource_id=?').get(user.id,kind,row.id);
     const count = kind === 'set' ? db.prepare('SELECT COUNT(*) n FROM words WHERE set_id=?').get(row.id).n : db.prepare(`SELECT COUNT(*) n FROM path_sets ps JOIN study_sets s ON s.id=ps.set_id WHERE ps.path_id=? AND (s.visibility='public' OR s.owner_id=?)`).get(row.id,user?.id??-1).n;
     const author = row.owner_id ? db.prepare('SELECT id,name FROM users WHERE id=?').get(row.owner_id) : {id:null,name:'Reference content'};
@@ -33,7 +35,7 @@ export function contentService(db) {
       const session=user?db.prepare('SELECT id,mode,completed_at,updated_at FROM study_sessions WHERE user_id=? AND set_id=? ORDER BY updated_at DESC,rowid DESC LIMIT 1').get(user.id,row.id):null;
       progress={total_words:count,reviewed_words:tracked.reviewed??0,learning_words:tracked.learning??0,mastered_words:learned,due_words:tracked.due??0,state:count===0?'empty':learned===count?'mastered':session||tracked.reviewed>0?'in_progress':'not_started',last_session:session??null};
     }
-    return { ...row,saved,author,[kind==='set'?'word_count':'set_count']:count,...(kind==='set'?{mastered_count:learned,progress}:{}) };
+    return { ...row,saved,author,[kind==='set'?'word_count':'set_count']:count,...(kind==='set'?{mastered_count:learned,progress,collection_id:parent?.id??null}:{kind:collection?'vocabulary_collection':'learning_path'}) };
   }
   function validateWord(input) {
     if (!input || typeof input !== 'object') fail(400,'VALIDATION_ERROR','Each word must be an object.');

@@ -619,7 +619,7 @@ export const StudySetView: React.FC = () => {
 
       {/* 4. Vocabulary List Section matching Image 3 100% */}
       <div className="space-y-4 pt-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <h2 className="text-sm font-bold text-slate-900 dark:text-white">
               Danh sách từ
@@ -643,14 +643,15 @@ export const StudySetView: React.FC = () => {
               return (
                 <div
                   key={w.id}
-                  className="p-4 md:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition flex items-center justify-between gap-4"
+                  data-testid={`vocabulary-list-row-${w.id}`}
+                  className="p-4 md:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition grid grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] items-start gap-x-5 gap-y-3"
                 >
                   {/* Left Column: Thumbnail + Term + Part of speech + Phonetic + Synonym */}
-                  <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="order-1 flex items-start gap-3.5 min-w-0">
                     {thumbnail}
 
                     <div className="min-w-0">
-                      <div className="text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight">
+                      <div className="text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight [overflow-wrap:anywhere]">
                         {w.term}
                       </div>
                       <div className="text-xs text-slate-400 font-medium truncate mt-0.5">
@@ -660,8 +661,8 @@ export const StudySetView: React.FC = () => {
                   </div>
 
                   {/* Middle/Right Column: Definition + Example (with lock indicator) */}
-                  <div className="flex items-center gap-6">
-                    <div className="min-w-0 max-w-xs md:max-w-md">
+                  <div className="contents">
+                    <div data-testid={`vocabulary-list-meaning-${w.id}`} className="order-3 md:order-2 col-span-2 md:col-span-1 min-w-0 text-left [overflow-wrap:anywhere]">
                       <div className="text-xs md:text-sm font-bold text-slate-900 dark:text-white">
                         {w.definition}
                       </div>
@@ -671,7 +672,7 @@ export const StudySetView: React.FC = () => {
                     </div>
 
                     {/* Star & Audio Actions matching Image 3 */}
-                    <div className="flex items-center gap-1 shrink-0">
+                    <div className="order-2 md:order-3 flex items-center justify-end gap-1 shrink-0">
                       <button
                         onClick={(e) => handleToggleStar(w, e)}
                         aria-label={w.starred ? `Bỏ đánh dấu sao cho từ ${w.term}` : `Đánh dấu sao cho từ ${w.term}`}

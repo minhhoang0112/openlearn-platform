@@ -77,6 +77,7 @@ export const LearningPathView: React.FC = () => {
   }
 
   const actualSets = pathData.sets || [];
+  const isCollection = pathData.kind === 'vocabulary_collection';
   const totalSlots = actualSets.length;
   const masteredSets = actualSets.filter((s) => normalizeSetProgress(s).state === 'mastered').length;
   const inProgressSets = actualSets.filter((s) => normalizeSetProgress(s).state === 'in_progress').length;
@@ -122,7 +123,7 @@ export const LearningPathView: React.FC = () => {
                 {pathData.title}
               </h1>
               <span className="px-2.5 py-0.5 text-xs font-bold rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/60">
-                {pathData.tag || 'Lộ trình'}
+                {isCollection ? 'Bộ thẻ theo chủ đề' : pathData.tag || 'Lộ trình'}
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
@@ -131,7 +132,7 @@ export const LearningPathView: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        {!isCollection && <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleToggleSave}
@@ -144,7 +145,7 @@ export const LearningPathView: React.FC = () => {
             <Bookmark className={`w-4 h-4 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
             <span>{saved ? 'Đã lưu lộ trình' : 'Lưu lộ trình'}</span>
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* Progress & Milestone Overview Card */}
@@ -156,7 +157,7 @@ export const LearningPathView: React.FC = () => {
             </div>
             <div>
               <div className="text-base font-bold text-slate-900 dark:text-white">
-                Tiến độ lộ trình học tập
+                {isCollection ? 'Tiến độ bộ thẻ' : 'Tiến độ lộ trình học tập'}
               </div>
               <div className="text-xs text-slate-500 dark:text-slate-400">
                 {masteredSets} / {totalSlots} bộ đã thuộc • {inProgressSets} bộ đang học •{' '}
@@ -182,7 +183,7 @@ export const LearningPathView: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between px-1">
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
-            Danh sách {totalSlots} bộ thẻ hiện có
+            {isCollection ? `${totalSlots} bộ thẻ con` : `Danh sách ${totalSlots} bộ thẻ hiện có`}
           </h2>
           <span className="text-xs text-slate-400">Trạng thái thực từ tiến độ học</span>
         </div>

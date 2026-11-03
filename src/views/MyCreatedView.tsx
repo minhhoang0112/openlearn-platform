@@ -17,19 +17,25 @@ export const MyCreatedView: React.FC = () => {
 
   const [tab, setTab] = useState<'my_sets' | 'saved_sets' | 'saved_paths'>('my_sets');
   const [sets, setSets] = useState<SetCard[]>([]);
+  const [savedSets, setSavedSets] = useState<SetCard[]>([]);
   const [paths, setPaths] = useState<PathCard[]>([]);
+  const [ownedPaths, setOwnedPaths] = useState<PathCard[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadLibrary = useCallback(async (showSpinner = false) => {
     if (showSpinner) setLoading(true);
-    const [sRes, pRes] = await Promise.allSettled([
-      api.getSets(tab === 'my_sets' ? 'mine' : 'saved'),
+    const [sRes, pRes, ownedRes, savedRes] = await Promise.allSettled([
+      api.getSets('mine'),
       api.getPaths('saved'),
+      api.getPaths('mine'),
+      api.getSets('saved'),
     ]);
     if (sRes.status === 'fulfilled') setSets(sRes.value.items || []);
     if (pRes.status === 'fulfilled') setPaths(pRes.value.items || []);
+    if (ownedRes.status === 'fulfilled') setOwnedPaths(ownedRes.value.items || []);
+    if (savedRes.status === 'fulfilled') setSavedSets(savedRes.value.items || []);
     if (showSpinner) setLoading(false);
-  }, [tab]);
+  }, []);
 
   useEffect(() => {
     void loadLibrary(true);
@@ -51,8 +57,11 @@ export const MyCreatedView: React.FC = () => {
     );
   }
 
-  const savedSets = sets.filter((s) => s.saved);
   const savedPaths = paths.filter((p) => p.saved);
+  const collections = ownedPaths.filter(p => p.kind === 'vocabulary_collection');
+  const collectionIds = new Set(collections.map(p => p.id));
+  const standaloneSets = sets.filter(s => !s.collection_id || !collectionIds.has(s.collection_id));
+  const learningPaths = ownedPaths.filter(p => p.kind !== 'vocabulary_collection');
 
   const renderSetCard = (set: SetCard) => {
     const prog = normalizeSetProgress(set);
@@ -165,7 +174,7 @@ export const MyCreatedView: React.FC = () => {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Quản lý tài liệu học cá nhân và khám phá bộ từ, lộ trình mới
+            Lưu và quản lý các bộ thẻ bạn đã tạo hoặc đã lưu. Bấm vào bộ chính để xem các bộ con.
           </p>
         </div>
 
@@ -209,7 +218,7 @@ export const MyCreatedView: React.FC = () => {
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            Bộ thẻ đã tạo ({sets.length})
+            Bộ thẻ đã tạo ({standaloneSets.length + collections.length})
           </button>
           <button
             onClick={() => setTab('saved_sets')}
@@ -244,14 +253,44 @@ export const MyCreatedView: React.FC = () => {
       </div>
 
       {/* Tab Contents */}
+      {tab === 'my_sets' && learningPaths.length > 0 && (
+        <section aria-label="Lộ trình đã tạo" className="space-y-3">
+          <h2 className="text-base font-bold text-slate-900 dark:text-white">Lộ trình đã tạo</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {learningPaths.map(p => (
+              <button key={p.id} type="button" data-testid={`library-owned-path-${p.id}`}
+                onClick={() => navigate(withNavigationContext(`/learning-path/${p.id}`, {
+                  source: 'library', from: '/my-created', pathId: p.id, pathTitle: p.title,
+                }))}
+                className="text-left p-5 rounded-2xl border border-sky-200 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/30 space-y-2 hover:border-sky-500 transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sky-500">
+                <h3 className="font-bold text-slate-900 dark:text-white">{p.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3">{p.description}</p>
+                <span className="text-xs font-bold text-sky-700 dark:text-sky-300 inline-flex items-center gap-2">{p.set_count} bộ thẻ · Xem lộ trình <ArrowRight className="w-4 h-4" /></span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
       {tab === 'my_sets' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {sets.length === 0 ? (
+          {collections.map(p => (
+            <button key={`collection-${p.id}`} type="button" data-testid={`library-collection-${p.id}`}
+              onClick={() => navigate(withNavigationContext(`/learning-path/${p.id}`, {
+                source: 'library', from: '/my-created', pathId: p.id, pathTitle: p.title,
+              }))}
+              className="text-left p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 hover:border-indigo-500 transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500">
+              <span className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400"><FolderHeart className="w-4 h-4" />Bộ thẻ theo chủ đề</span>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">{p.title}</h3>
+              <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">{p.description}</p>
+              <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 inline-flex items-center gap-2">{p.set_count} bộ con · Mở bộ thẻ <ArrowRight className="w-4 h-4" /></span>
+            </button>
+          ))}
+          {standaloneSets.length === 0 && collections.length === 0 ? (
             <div className="col-span-full py-16 text-center text-xs text-slate-400">
               Bạn chưa có bộ thẻ nào. Nhấp vào &ldquo;Tạo bộ thẻ mới&rdquo; để bắt đầu!
             </div>
           ) : (
-            sets.map(renderSetCard)
+            standaloneSets.map(renderSetCard)
           )}
         </div>
       )}

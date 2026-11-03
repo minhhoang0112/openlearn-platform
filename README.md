@@ -1,8 +1,36 @@
-# OpenLearn
+<p align="center">
+  <a href="https://github.com/minhhoang0112/openlearn-platform">
+    <img src="public/logo.svg" width="128" height="128" alt="OpenLearn Platform Logo" />
+  </a>
+</p>
 
-Nền tảng học tiếng Anh: flashcard, học từ vựng và ôn SRS, luyện nghe / shadowing, đọc hiểu, ngữ pháp và gia sư giao tiếp AI bằng giọng nói hoặc văn bản.
+<h1 align="center">OpenLearn Platform</h1>
 
-Frontend: React 19, TypeScript, Vite 6, Tailwind CSS. Backend: HTTP server Node.js và SQLite tích hợp trong Node; không cần cài Express hay máy chủ cơ sở dữ liệu riêng. Repo giữ mã FE/BE, giáo trình, kiểm thử và công cụ để bạn phát triển tiếp.
+<p align="center">
+  <strong>Nền tảng học tiếng Anh thông minh thế hệ mới: SRS Flashcard, Luyện nghe &amp; Shadowing, Gia sư AI tương tác bằng giọng nói</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-%E2%89%A524.15-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js version" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-6.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Database-SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/AI-Gemini%20Live-8E75C2?style=flat-square&logo=google-gemini&logoColor=white" alt="Gemini AI" />
+</p>
+
+<p align="center">
+  <a href="#t%E1%BA%A3i-v%E1%BB%81-v%C3%A0-ch%E1%BA%A1y">Bắt đầu nhanh</a> •
+  <a href="#b%E1%BA%ADt-ai-t%C3%B9y-ch%E1%BB%8Dn">Cấu hình AI</a> •
+  <a href="#c%C3%A0i-t%E1%BB%AB-%C4%91i%E1%BB%83n-anh--vi%E1%BB%87t-l%E1%BB%9Bn-t%C3%B9y-ch%E1%BB%8Dn">Từ điển Offline</a> •
+  <a href="#ph%C3%A1t-tri%E1%BB%83n-v%C3%A0-ki%E1%BB%83m-th%E1%BB%AD">Lệnh &amp; Kiểm thử</a> •
+  <a href="docs/INDEX.md">Tài liệu kiến trúc</a>
+</p>
+
+---
+
+Frontend: **React 19**, **TypeScript**, **Vite 6**, **Tailwind CSS**. Backend: HTTP server **Node.js** và **SQLite tích hợp** (`node:sqlite`); không cần cài Express hay máy chủ cơ sở dữ liệu bên ngoài. Repo lưu trữ toàn diện mã FE/BE, giáo trình chuẩn, hệ thống kiểm thử tự động và công cụ phát triển.
 
 ## Tải về và chạy
 

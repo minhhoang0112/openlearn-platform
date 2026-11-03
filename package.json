@@ -10,6 +10,7 @@
     "start:api": "node --use-env-proxy server/index.mjs",
     "test:api": "node --test server/tests/*.test.mjs",
     "dictionary:import": "node --use-env-proxy scripts/import-english-vietnamese-dictionary.mjs",
+    "course:system-network": "node scripts/create-system-network-course.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
