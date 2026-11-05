@@ -63,6 +63,7 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/classes/:id/assignments/:assignment_id/submit | Required | Submit a completed, server-graded study session |
 | GET | /api/v1/classes/:id/assignments/:assignment_id/results | Required | Teacher-only real assignment results |
 | POST | /api/v1/feedback | Required | Store a bug report or suggestion locally |
+| DELETE | /api/v1/settings/ai | Required | Use shared server task routing instead of personal AI overrides |
 | POST | /api/v1/words/:id/learning-details | Required | Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits |
 | GET | /api/v1/settings/ai | Required | Own AI settings without exposing API keys |
 | PUT | /api/v1/settings/ai | Required | Save personal Gemini key or local Ollama model on the backend |
@@ -78,7 +79,25 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/conversations/:id/messages | Required | Generate and atomically persist learner message and AI reply; failures preserve history |
 | POST | /api/v1/conversations/:id/hint | Required | Get a contextual response hint without inserting fake conversation messages |
 | POST | /api/v1/conversations/:id/messages/:message_id/translation | Required | Translate and cache an owned message in Vietnamese |
+| GET | /api/v1/communication/catalog | Required |  |
+| POST | /api/v1/communication/sessions | Required |  |
+| GET | /api/v1/communication/sessions | Required |  |
+| GET | /api/v1/communication/sessions/:id | Required |  |
+| GET | /api/v1/communication/sessions/:id/turns | Required |  |
+| GET | /api/v1/communication/sessions/:id/export | Required |  |
+| DELETE | /api/v1/communication/sessions/:id | Required |  |
+| POST | /api/v1/communication/sessions/:id/resume | Required |  |
+| POST | /api/v1/communication/sessions/:id/messages | Required |  |
+| POST | /api/v1/communication/sessions/:id/finish | Required |  |
+| POST | /api/v1/communication/sessions/:id/turns/:turn_id/translation | Required |  |
+| POST | /api/v1/communication/sessions/:id/turns/:turn_id/audio | Required |  |
+| GET | /api/v1/communication/memories | Required |  |
+| POST | /api/v1/communication/memories | Required |  |
+| PATCH | /api/v1/communication/memories/:id | Required |  |
+| DELETE | /api/v1/communication/memories/:id | Required |  |
+| GET | /api/v1/communication/capabilities | Required |  |
 | GET | /api/v1/srs/practice | Required | Read-only per-set SRS practice scopes for all learning modes; real counts, selected IDs and explicit scheduling effects |
+| GET | /api/v1/sets/:id/readiness | Required | Own exact selected-word readiness after private/prepared example enrichment; no AI generation |
 | GET | /api/v1/dictionary/entry | Required | Exact English word/phrase details for synonym popovers, with local Vietnamese senses and examples; no AI |
 | POST | /api/v1/dictionary/translate | Required | Translate entered word/phrase/short sentence EN↔VI: exact local entries first, then MyMemory with bounded private cache; never substitutes a similar word or calls Gemini |
 | GET | /api/v1/sets/:id/lessons | Required | Observed comprehensive plan: five words per lesson, five named steps |
@@ -98,6 +117,27 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | GET | /api/v1/course-learning-sessions/:id | Required | Resume exact course step and feedback without answer keys |
 | PUT | /api/v1/course-learning-sessions/:id/draft | Required | Persist a private course quiz draft before grading |
 | POST | /api/v1/course-learning-sessions/:id/steps/:step_id/complete | Required | Complete the current course step; speech checks transcript only, final quiz grades on server atomically |
+| GET | /api/v1/courses/:id/guided-map | Required | Seven-activity A1 course map with server-enforced prerequisites and own progress |
+| POST | /api/v1/course-lessons/:id/guided-session | Required | Start or resume an A1 guided session without resetting older lesson history |
+| GET | /api/v1/guided-course-sessions/:id | Required | Own guided task, persisted feedback and exact resume cursor; future answers excluded |
+| POST | /api/v1/guided-course-sessions/:id/answer | Required | Grade one guided task, save feedback, review mistakes and unlock only after actual mastery; optimistic concurrency guard |
+| POST | /api/v1/guided-course-sessions/:id/listen | Required | Current listening sentence for client TTS; not a secret answer or a pronunciation score |
+| POST | /api/v1/guided-course-sessions/:id/pronunciation | Required | Optional actual-audio pronunciation feedback; own current speaking task, private dedup/cache, no invented scores or raw recording persistence |
+| GET | /api/v1/toeic-foundation | Optional | TOEIC foundation curriculum: phases 1–2, authored content, no predicted test score |
+| GET | /api/v1/toeic-foundation/roadmap | Required | Own TOEIC modules, prerequisites and recommended next unit |
+| GET | /api/v1/toeic-foundation/today | Required | One next action, flexible time budget and TOEIC-specific due words |
+| POST | /api/v1/toeic-foundation/enroll | Required | Opt in to TOEIC foundation without resetting any earlier progress |
+| PUT | /api/v1/toeic-foundation/profile | Required | Change own TOEIC study preferences; preserve completed work and other user settings |
+| GET | /api/v1/toeic-foundation/units/:id | Required | Bilingual TOEIC teaching material; no assessment answer bank |
+| GET | /api/v1/toeic-foundation/vocabulary | Required | Paginated TOEIC vocabulary with own SRS state; filter phase, week or due=true |
+| POST | /api/v1/toeic-foundation/units/:id/sessions | Required | Start/resume an unlocked TOEIC module; server controls all learning state |
+| POST | /api/v1/toeic-foundation/checkpoints/:week/sessions | Required | Weekly 20-question checkpoint; 80% first-pass plus error remediation required |
+| GET | /api/v1/toeic-foundation/sessions/:id | Required | Own resumable TOEIC current question and pending feedback only |
+| POST | /api/v1/toeic-foundation/review/sessions | Required | Owned TOEIC due-word review, maximum 30, with normal SRS and no course-unlock credit |
+| POST | /api/v1/toeic-foundation/sessions/:id/listen | Required | Current English TTS text only; does not move or grade the session |
+| POST | /api/v1/toeic-foundation/sessions/:id/help | Required | Reveal current explanation; assisted answers must be retried without help |
+| POST | /api/v1/toeic-foundation/sessions/:id/answer | Required | Grade one current response atomically, persist feedback and retry mistakes; guard stale revision |
+| GET | /api/v1/toeic-foundation/mistakes | Required | Own TOEIC learning mistakes and remediation state; no other learner data |
 | POST | /api/v1/exercise-attempts/:id/translation | Required | Read cached Vietnamese reading translation or explicitly request AI once; never grade or replace learner answers |
 | GET | /api/v1/exercise-attempts/:id/questions | Required | Reading full-page safe questions and saved selections; only graded feedback reveals answers |
 | PUT | /api/v1/exercise-attempts/:id/drafts | Required | Persist or clear reading full-page selections without grading |
@@ -116,10 +156,13 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | POST | /api/v1/learning/mistakes/:id/reviews | Required | Idempotent spaced review; resolve after two unassisted correct recalls on due dates, not repeated clicks |
 | GET | /api/v1/learning/programs | Required | Published pilot programs and actual lesson counts; separate foundation and IT/System tracks |
 | GET | /api/v1/learning/programs/:id | Required | Real program lessons, objectives and own completion; no answer keys |
-| GET | /api/v1/learning/today | Required | Stable own local-day plan from available content, active sessions and real due reviews |
+| GET | /api/v1/learning/today | Required | Stable own local-day plan with budget-sized sequential lesson goals and due reviews |
+| POST | /api/v1/learning/today/adjust | Required | Explicitly resize remaining daily work with revision checking; preserve completed goals, lesson drafts and profile |
+| POST | /api/v1/learning/today/items/:item_id/start | Required | Start or resume the exact pinned lesson/version for a daily goal without AI or losing existing work |
 | GET | /api/v1/learning/media/:id | Required | Authenticated saved English TTS WAV, including range requests; no external AI call |
 | POST | /api/v1/learning/sessions | Required | Start/resume own pinned-version lesson session without invoking Gemini |
 | GET | /api/v1/learning/sessions/:id | Required | Restore exact V2 lesson step, draft and feedback; no future answer keys |
+| POST | /api/v1/learning/sessions/:id/support/open | Required | Open version-matched authored learning support; persist assistance before submission without AI, draft loss or progress changes |
 | PUT | /api/v1/learning/sessions/:id/draft | Required | Validate and persist own step draft with optimistic revision control |
 | POST | /api/v1/learning/sessions/:id/submit | Required | Grade deterministic tasks or record explicit self-review, atomically and idempotently; never fabricate AI scores |
 | POST | /api/v1/learning/sessions/:id/advance | Required | Advance only after saved feedback; completion records activity, not a claim of mastery |
@@ -133,6 +176,7 @@ Generated from the registered server handlers. See API-CONTRACT.md for payloads.
 | GET | /api/v1/learning/progress | Required | Own evidence-based V2 progress by local date; no fabricated skill or proficiency scores |
 | GET | /api/v1/learning/history | Required | Own resumable/completed V2 session history with real step counts and pinned content versions |
 | GET | /api/v1/learning/sessions/:id/evidence | Required | Read own submitted writing/transcripts and graded evidence after reload; no future answer keys |
+| GET | /api/v1/learning/activity | Required | Own persisted activity across learning engines by local date; separate from V2 skill assessment |
 | GET | /api/v1/learning/sessions/:id/ai-feedback | Required | Read own saved V2 AI feedback without invoking a model or spending request slots |
 | POST | /api/v1/learning/sessions/:id/steps/:step_id/ai-feedback | Required | User-triggered qualitative feedback on saved writing/transcript, cached/deduplicated and separate from grades; no pronunciation score |
 | GET | /api/v1/learning/sessions/:id/audio-reviews | Required | Own cached V2 qualitative audio feedback and actual provider capability; no model call |

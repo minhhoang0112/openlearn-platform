@@ -18,6 +18,11 @@ import { ConversationView } from "./views/ConversationView";
 import { GrammarView } from "./views/GrammarView";
 import { ReadingView } from "./views/ReadingView";
 import { CoursesView } from "./views/CoursesView";
+import {CoursesView as LegacyCoursesView} from './views/LegacyCoursesView';
+import {GuidedCourseLessonView} from './views/GuidedCourseLessonView';
+import { ToeicCourseView } from './views/ToeicCourseView';
+import { ToeicUnitView } from './views/ToeicUnitView';
+import { ToeicSessionView } from './views/ToeicSessionView';
 import { ClassesView } from "./views/ClassesView";
 import { RankingView } from "./views/RankingView";
 import { RepetitionStudyView } from "./views/RepetitionStudyView";
@@ -71,7 +76,7 @@ const AppContent: React.FC = () => {
   // Routing renderer
   const renderCurrentView = () => {
     if (path.split('?')[0]==='/communication'||/^\/communication\/[\w-]+$/.test(path.split('?')[0])) return <CommunicationView/>;
-    if (/^\/courses\/\d+\/lesson\/\d+/.test(path)) return <CourseLessonView />;
+    if (/^\/courses\/\d+\/lesson\/\d+/.test(path)) return new URLSearchParams(path.split('?')[1]||'').get('guided')==='1'?<GuidedCourseLessonView/>:<CourseLessonView />;
     if (/^\/lesson-run\/[a-zA-Z0-9-]+/.test(path)) return <LessonRunView />;
     if (/^\/materials\/[a-zA-Z0-9-]+/.test(path)) return <MaterialDetailView />;
     if (path.startsWith("/materials")) return <MaterialsHubView />;
@@ -123,8 +128,17 @@ const AppContent: React.FC = () => {
     if (path.startsWith("/reading/")) {
       return <ReadingView />;
     }
+    if (/^\/courses\/toeic\/sessions\/[a-zA-Z0-9-]+/.test(path)) {
+      return <ToeicSessionView />;
+    }
+    if (/^\/courses\/toeic\/units\/[a-zA-Z0-9-]+/.test(path)) {
+      return <ToeicUnitView />;
+    }
+    if (path.startsWith("/courses/toeic")) {
+      return <ToeicCourseView />;
+    }
     if (path.startsWith("/courses")) {
-      return <CoursesView />;
+      return new URLSearchParams(path.split('?')[1]||'').get('legacy')==='1'?<LegacyCoursesView/>:<CoursesView />;
     }
     if (path.startsWith("/classes") || path.startsWith("/class/")) {
       return <ClassesView />;

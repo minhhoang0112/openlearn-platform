@@ -1,5 +1,10 @@
 # Tài liệu OpenLearn
 
+- [TOEIC nền tảng — BE/API](TOEIC-FOUNDATION-API.md), [bàn giao FE và test cho Anti](TOEIC-FOUNDATION-ANTI.md).
+- [Kiểm tra tích hợp TOEIC và các lỗi đã sửa](TOEIC-FOUNDATION-REVIEW.md).
+
+- [Khóa học có hướng dẫn V2 — A1](GUIDED-COURSES-V2.md).
+
 Để cài web, đọc [README](../README.md). Hướng dẫn hiện tại:
 
 - [API](API-CONTRACT.md), [danh mục route](API-ROUTES.md).

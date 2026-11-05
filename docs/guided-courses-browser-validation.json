@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-03T15:51:43.848Z",
+  "checks": [
+    "Dedicated sidebar, 30-lesson map, real prerequisite message and spoken part vocabulary",
+    "Wrong answer feedback and exact task survive reload without completing the lesson",
+    "All seven activity types, mistake retries, real local recording playback, simulated speech transcript and listening TTS work end to end",
+    "Next-lesson unlock, course return and 390px mobile map/lesson have no horizontal overflow",
+    "Existing program route and original homepage remain accessible"
+  ],
+  "page_errors": [],
+  "passed": true
+}

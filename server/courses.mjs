@@ -109,5 +109,5 @@ export function courseService(db,{seed=true}={}) {
     route('GET','/course-lessons/:id',c=>{const row=lessonAccess(c.params.id,c.user);if(!row.content)fail(409,'CONTENT_NOT_IMPORTED','Only lesson metadata is available. Import authorized lesson material first.');const content=JSON.parse(row.content);return {...row,content:{...content,questions:content.questions.map(({answer,correct_option_id,...q})=>q)}};},{summary:'Course lesson content without answer keys'});
     route('POST','/course-lessons/:id/submit',c=>gradeCourseLesson(db,lessonAccess(c.params.id,c.user),c.user,c.body),{summary:'Grade an imported course lesson and persist learner completion'});
   }
-  return {registerRoutes,lessonAccess};
+  return {registerRoutes,lessonAccess,access};
 }

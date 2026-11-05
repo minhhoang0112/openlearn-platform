@@ -16,6 +16,7 @@ export function courseLearningService(db,courses){
     const row=db.prepare('SELECT * FROM course_learning_sessions WHERE id=? AND user_id=?').get(id,user.id);
     if(!row)fail(404,'NOT_FOUND','Course learning session not found.');
     const lesson=courses.lessonAccess(row.lesson_id,user),state=JSON.parse(row.state);
+    if(state.engine)fail(409,'WRONG_ENGINE','Mở phiên này bằng đúng chế độ khóa học.');
     if(state.content_digest!==digest(lesson))fail(409,'COURSE_LESSON_CHANGED','Nội dung bài đã thay đổi. Hãy bắt đầu một lượt học mới.');
     return {row,lesson,state};
   }
@@ -47,14 +48,14 @@ export function courseLearningService(db,courses){
     route('POST','/course-lessons/:id/sessions',c=>{
       const lesson=courses.lessonAccess(c.params.id,c.user);if(!lesson.content)fail(409,'CONTENT_NOT_IMPORTED','Lesson content has not been imported.');
       if(c.body.resume!==false){
-        const old=db.prepare('SELECT id,state FROM course_learning_sessions WHERE user_id=? AND lesson_id=? AND completed_at IS NULL ORDER BY updated_at DESC LIMIT 1').get(c.user.id,lesson.id);
+        const old=db.prepare("SELECT id,state FROM course_learning_sessions WHERE user_id=? AND lesson_id=? AND completed_at IS NULL AND json_extract(state,'$.engine') IS NULL ORDER BY updated_at DESC LIMIT 1").get(c.user.id,lesson.id);
         if(old&&JSON.parse(old.state).content_digest===digest(lesson))return {...view(owned(old.id,c.user)),replayed:true};
       }
       const stamp=now(),id=randomUUID();db.prepare('INSERT INTO course_learning_sessions VALUES(?,?,?,?,?,?,?)').run(id,c.user.id,lesson.id,JSON.stringify(build(lesson)),stamp,stamp,null);
       c.status=201;return {...view(owned(id,c.user)),replayed:false};
     },{summary:'Build a real course lesson flow from its phrases/questions, or resume the saved step'});
     route('GET','/course-learning-sessions',c=>{
-      const rows=db.prepare("SELECT s.id,s.lesson_id,s.updated_at,s.completed_at,l.title,p.course_id FROM course_learning_sessions s JOIN course_lessons l ON l.id=s.lesson_id JOIN course_parts p ON p.id=l.part_id JOIN courses c ON c.id=p.course_id WHERE s.user_id=? AND(c.visibility='public' OR c.owner_id=?) ORDER BY s.updated_at DESC LIMIT 100").all(c.user.id,c.user.id);
+      const rows=db.prepare("SELECT s.id,s.lesson_id,s.updated_at,s.completed_at,l.title,p.course_id FROM course_learning_sessions s JOIN course_lessons l ON l.id=s.lesson_id JOIN course_parts p ON p.id=l.part_id JOIN courses c ON c.id=p.course_id WHERE s.user_id=? AND json_extract(s.state,'$.engine') IS NULL AND(c.visibility='public' OR c.owner_id=?) ORDER BY s.updated_at DESC LIMIT 100").all(c.user.id,c.user.id);
       return {items:rows.filter(r=>!c.query.has('lesson_id')||r.lesson_id===Number(c.query.get('lesson_id')))};
     },{summary:'Own resumable course lesson history'});
     route('GET','/course-learning-sessions/:id',c=>view(owned(c.params.id,c.user)),{summary:'Resume exact course step and feedback without answer keys'});

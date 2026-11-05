@@ -559,18 +559,10 @@ export const DashboardView: React.FC = () => {
             </h3>
           </div>
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Học phát âm chuẩn cùng AI ngay qua phương pháp shadowing & phản xạ
-            trực tiếp.
+            Bắt đầu từ A1: học từ, nghe, xếp câu và luyện nói theo từng bài ngắn.
           </p>
           <button
-            onClick={() =>
-              navigate(
-                withNavigationContext("/category/nen-tang", {
-                  source: "library",
-                  from: currentExploreUrl,
-                }),
-              )
-            }
+            onClick={() => navigate('/courses')}
             className="mt-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition"
           >
             <span>Tiếp tục</span>

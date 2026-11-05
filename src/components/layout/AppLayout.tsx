@@ -144,6 +144,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     { label: 'Trang chủ', route: '/', icon: Home },
     { label: 'Học hôm nay', route: '/today', icon: Calendar },
     { label: 'Lộ trình', route: '/my-program', icon: GraduationCap },
+    { label: 'Khóa học', route: '/courses', icon: BookOpen },
     { label: 'Thư viện', route: '/my-created', icon: FolderHeart },
     { label: 'Luyện tập', route: '/practice', icon: Layers },
     { label: 'Giao tiếp AI', route: '/communication', icon: MessageCircle },
@@ -862,6 +863,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           path.startsWith('/grammar/') ||
           path.startsWith('/exam/') ||
           path.startsWith('/dictation/') ||
+          path.startsWith('/courses/toeic/sessions/') ||
           path.startsWith('/listening/practice/')
             ? 'bottom-24 md:bottom-6 right-4 md:right-6'
             : 'bottom-6 right-4 md:right-6'

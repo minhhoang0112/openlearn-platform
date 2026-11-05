@@ -1,3 +1,7 @@
+> 05/11/2026: TOEIC nền tảng Giai đoạn 1–2: BE/nội dung 40 bài + 8 checkpoint, 540 mục từ, 120 câu song ngữ, tám hội thoại, bốn phần bắt buộc và phát âm tùy chọn; engine toeic_foundation_v1 trong schema 15. Contract 1.26.0 / 196 routes. Đọc TOEIC-FOUNDATION-API.md và TOEIC-FOUNDATION-ANTI.md. FE và test tích hợp chờ Anti; Codex chỉ kiểm cú pháp/smoke SQLite in-memory, chưa nghiệm thu browser. Không sửa FE trong đợt này.
+
+> 03/11/2026: Khóa học A1 V2 có sidebar riêng /courses, 30 bài x 7 nhóm hoạt động, lưu nhận xét và ôn lỗi, chặn mở bài sớm ở BE. Giữ /my-program và session cũ. Đọc GUIDED-COURSES-V2.md. Contract 1.25.0 / schema15 / 181 HTTP routes.
+
 > 02/11/2026: Chấm nghĩa đã hỗ trợ đảo danh sách nghĩa, thiếu dấu Việt được tính đúng với feedback vàng, typo khả nghi vàng nhưng không tăng mastery. Đọc VOCABULARY-GRADING.md. Metadata grading giữ qua replay, tự sửa cập nhật lại; không tự tiếp khỏi vàng. Sửa ánh xạ chiều en-vi/vi-en. 152 ca BE, 5 nhóm Chrome chấm nghĩa và build đạt.
 
 > 02/11/2026: Đã nhập kho Anh–Việt chữ, 119.032 mục/190.480 nghĩa, SQLite 38,5 MB, không ảnh/audio. Popup và Tra từ cùng dùng kho. Đọc LOCAL-DICTIONARY.md và DICTIONARY-DATA-NOTICE.md; deploy máy mới chạy npm run dictionary:import (dữ liệu gitignore). 147 ca BE, 5 nhóm Chrome từ điển và build đạt. Không đổi schema người học.

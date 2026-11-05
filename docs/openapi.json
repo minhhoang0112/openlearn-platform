@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "OpenQuiz Independent Backend",
-    "version": "1.18.0",
+    "version": "1.26.0",
     "description": "Route inventory. See docs/UPGRADE-V2-STATUS.md for implemented V2 routes and docs/ANTI-BE-HANDOFF.md for existing functionality."
   },
   "servers": [
@@ -3070,10 +3070,10 @@
         }
       }
     },
-    "/api/v1/words/{id}/learning-details": {
-      "post": {
-        "summary": "Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits",
-        "operationId": "post_words__id_learning_details",
+    "/api/v1/settings/ai": {
+      "delete": {
+        "summary": "Use shared server task routing instead of personal AI overrides",
+        "operationId": "delete_settings_ai",
         "security": [
           {
             "sessionCookie": []
@@ -3081,13 +3081,94 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "X-Requested-With",
+            "in": "header",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
             }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
           },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "get": {
+        "summary": "Own AI settings without exposing API keys",
+        "operationId": "get_settings_ai",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "put": {
+        "summary": "Save personal Gemini key or local Ollama model on the backend",
+        "operationId": "put_settings_ai",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
           {
             "name": "X-Requested-With",
             "in": "header",
@@ -3136,49 +3217,24 @@
         }
       }
     },
-    "/api/v1/settings/ai": {
-      "get": {
-        "summary": "Own AI settings without exposing API keys",
-        "operationId": "get_settings_ai",
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success envelope: {data, request_id}"
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Sign in required"
-          },
-          "403": {
-            "description": "Not authorized"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "409": {
-            "description": "Invalid state or conflict"
-          },
-          "503": {
-            "description": "Optional provider not configured"
-          }
-        }
-      },
-      "put": {
-        "summary": "Save personal Gemini key or local Ollama model on the backend",
-        "operationId": "put_settings_ai",
+    "/api/v1/words/{id}/learning-details": {
+      "post": {
+        "summary": "Read prepared/cached details with allow_ai:false; explicit AI completion otherwise, cached reads never consume AI limits",
+        "operationId": "post_words__id_learning_details",
         "security": [
           {
             "sessionCookie": []
           }
         ],
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "X-Requested-With",
             "in": "header",
@@ -3893,6 +3949,930 @@
         }
       }
     },
+    "/api/v1/communication/catalog": {
+      "get": {
+        "summary": "/communication/catalog",
+        "operationId": "get_communication_catalog",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions": {
+      "post": {
+        "summary": "/communication/sessions",
+        "operationId": "post_communication_sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "get": {
+        "summary": "/communication/sessions",
+        "operationId": "get_communication_sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}": {
+      "get": {
+        "summary": "/communication/sessions/:id",
+        "operationId": "get_communication_sessions__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "delete": {
+        "summary": "/communication/sessions/:id",
+        "operationId": "delete_communication_sessions__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/turns": {
+      "get": {
+        "summary": "/communication/sessions/:id/turns",
+        "operationId": "get_communication_sessions__id_turns",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/export": {
+      "get": {
+        "summary": "/communication/sessions/:id/export",
+        "operationId": "get_communication_sessions__id_export",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/resume": {
+      "post": {
+        "summary": "/communication/sessions/:id/resume",
+        "operationId": "post_communication_sessions__id_resume",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/messages": {
+      "post": {
+        "summary": "/communication/sessions/:id/messages",
+        "operationId": "post_communication_sessions__id_messages",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/finish": {
+      "post": {
+        "summary": "/communication/sessions/:id/finish",
+        "operationId": "post_communication_sessions__id_finish",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/turns/{turn_id}/translation": {
+      "post": {
+        "summary": "/communication/sessions/:id/turns/:turn_id/translation",
+        "operationId": "post_communication_sessions__id_turns__turn_id_translation",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "turn_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/sessions/{id}/turns/{turn_id}/audio": {
+      "post": {
+        "summary": "/communication/sessions/:id/turns/:turn_id/audio",
+        "operationId": "post_communication_sessions__id_turns__turn_id_audio",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "turn_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/memories": {
+      "get": {
+        "summary": "/communication/memories",
+        "operationId": "get_communication_memories",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "post": {
+        "summary": "/communication/memories",
+        "operationId": "post_communication_memories",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/memories/{id}": {
+      "patch": {
+        "summary": "/communication/memories/:id",
+        "operationId": "patch_communication_memories__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      },
+      "delete": {
+        "summary": "/communication/memories/:id",
+        "operationId": "delete_communication_memories__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/communication/capabilities": {
+      "get": {
+        "summary": "/communication/capabilities",
+        "operationId": "get_communication_capabilities",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
     "/api/v1/srs/practice": {
       "get": {
         "summary": "Read-only per-set SRS practice scopes for all learning modes; real counts, selected IDs and explicit scheduling effects",
@@ -3903,6 +4883,50 @@
           }
         ],
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/sets/{id}/readiness": {
+      "get": {
+        "summary": "Own exact selected-word readiness after private/prepared example enrichment; no AI generation",
+        "operationId": "get_sets__id_readiness",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
@@ -4987,6 +6011,1121 @@
         }
       }
     },
+    "/api/v1/courses/{id}/guided-map": {
+      "get": {
+        "summary": "Seven-activity A1 course map with server-enforced prerequisites and own progress",
+        "operationId": "get_courses__id_guided_map",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/course-lessons/{id}/guided-session": {
+      "post": {
+        "summary": "Start or resume an A1 guided session without resetting older lesson history",
+        "operationId": "post_course_lessons__id_guided_session",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/guided-course-sessions/{id}": {
+      "get": {
+        "summary": "Own guided task, persisted feedback and exact resume cursor; future answers excluded",
+        "operationId": "get_guided_course_sessions__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/guided-course-sessions/{id}/answer": {
+      "post": {
+        "summary": "Grade one guided task, save feedback, review mistakes and unlock only after actual mastery; optimistic concurrency guard",
+        "operationId": "post_guided_course_sessions__id_answer",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/guided-course-sessions/{id}/listen": {
+      "post": {
+        "summary": "Current listening sentence for client TTS; not a secret answer or a pronunciation score",
+        "operationId": "post_guided_course_sessions__id_listen",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/guided-course-sessions/{id}/pronunciation": {
+      "post": {
+        "summary": "Optional actual-audio pronunciation feedback; own current speaking task, private dedup/cache, no invented scores or raw recording persistence",
+        "operationId": "post_guided_course_sessions__id_pronunciation",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation": {
+      "get": {
+        "summary": "TOEIC foundation curriculum: phases 1–2, authored content, no predicted test score",
+        "operationId": "get_toeic_foundation",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/roadmap": {
+      "get": {
+        "summary": "Own TOEIC modules, prerequisites and recommended next unit",
+        "operationId": "get_toeic_foundation_roadmap",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/today": {
+      "get": {
+        "summary": "One next action, flexible time budget and TOEIC-specific due words",
+        "operationId": "get_toeic_foundation_today",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/enroll": {
+      "post": {
+        "summary": "Opt in to TOEIC foundation without resetting any earlier progress",
+        "operationId": "post_toeic_foundation_enroll",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/profile": {
+      "put": {
+        "summary": "Change own TOEIC study preferences; preserve completed work and other user settings",
+        "operationId": "put_toeic_foundation_profile",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/units/{id}": {
+      "get": {
+        "summary": "Bilingual TOEIC teaching material; no assessment answer bank",
+        "operationId": "get_toeic_foundation_units__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/vocabulary": {
+      "get": {
+        "summary": "Paginated TOEIC vocabulary with own SRS state; filter phase, week or due=true",
+        "operationId": "get_toeic_foundation_vocabulary",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/units/{id}/sessions": {
+      "post": {
+        "summary": "Start/resume an unlocked TOEIC module; server controls all learning state",
+        "operationId": "post_toeic_foundation_units__id_sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/checkpoints/{week}/sessions": {
+      "post": {
+        "summary": "Weekly 20-question checkpoint; 80% first-pass plus error remediation required",
+        "operationId": "post_toeic_foundation_checkpoints__week_sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "week",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/sessions/{id}": {
+      "get": {
+        "summary": "Own resumable TOEIC current question and pending feedback only",
+        "operationId": "get_toeic_foundation_sessions__id",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/review/sessions": {
+      "post": {
+        "summary": "Owned TOEIC due-word review, maximum 30, with normal SRS and no course-unlock credit",
+        "operationId": "post_toeic_foundation_review_sessions",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/sessions/{id}/listen": {
+      "post": {
+        "summary": "Current English TTS text only; does not move or grade the session",
+        "operationId": "post_toeic_foundation_sessions__id_listen",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/sessions/{id}/help": {
+      "post": {
+        "summary": "Reveal current explanation; assisted answers must be retried without help",
+        "operationId": "post_toeic_foundation_sessions__id_help",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/sessions/{id}/answer": {
+      "post": {
+        "summary": "Grade one current response atomically, persist feedback and retry mistakes; guard stale revision",
+        "operationId": "post_toeic_foundation_sessions__id_answer",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/toeic-foundation/mistakes": {
+      "get": {
+        "summary": "Own TOEIC learning mistakes and remediation state; no other learner data",
+        "operationId": "get_toeic_foundation_mistakes",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
     "/api/v1/exercise-attempts/{id}/translation": {
       "post": {
         "summary": "Read cached Vietnamese reading translation or explicitly request AI once; never grade or replace learner answers",
@@ -5919,7 +8058,7 @@
     },
     "/api/v1/learning/today": {
       "get": {
-        "summary": "Stable own local-day plan from available content, active sessions and real due reviews",
+        "summary": "Stable own local-day plan with budget-sized sequential lesson goals and due reviews",
         "operationId": "get_learning_today",
         "security": [
           {
@@ -5927,6 +8066,130 @@
           }
         ],
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/learning/today/adjust": {
+      "post": {
+        "summary": "Explicitly resize remaining daily work with revision checking; preserve completed goals, lesson drafts and profile",
+        "operationId": "post_learning_today_adjust",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/learning/today/items/{item_id}/start": {
+      "post": {
+        "summary": "Start or resume the exact pinned lesson/version for a daily goal without AI or losing existing work",
+        "operationId": "post_learning_today_items__item_id_start",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
@@ -6073,6 +8336,72 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/learning/sessions/{id}/support/open": {
+      "post": {
+        "summary": "Open version-matched authored learning support; persist assistance before submission without AI, draft loss or progress changes",
+        "operationId": "post_learning_sessions__id_support_open",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Requested-With",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OpenQuiz"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
@@ -6733,6 +9062,41 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Success envelope: {data, request_id}"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Invalid state or conflict"
+          },
+          "503": {
+            "description": "Optional provider not configured"
+          }
+        }
+      }
+    },
+    "/api/v1/learning/activity": {
+      "get": {
+        "summary": "Own persisted activity across learning engines by local date; separate from V2 skill assessment",
+        "operationId": "get_learning_activity",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Success envelope: {data, request_id}"
